@@ -1,0 +1,83 @@
+<template>
+	<require from="resources/attributes/enter-press"></require>
+	<div class="fill headbar height" style="height: 80px">
+		<span class="title">Bookmarks</span>
+	</div>
+	<div class="fill content" style="top: 80px">
+		<div class="fill padding20" style="left-: 300px">
+			<!-- bookmark filter bar -->
+			<div style="margin-top: 0px">
+				<!-- <div class="form-inline" style="display: inline; width-: 400px;"> -->
+				<!-- 	<label> -->
+				<!-- 		Bookmark Type: -->
+				<!-- 		&nbsp; -->
+				<!-- 		<div class="input-group" style-="left: 4px; top: -2px"> -->
+				<!-- 			<select value.bind="bookmarkType" class="form-control" style="display: inline; width: calc(100% - 0px); top: -2px"> -->
+				<!-- 				<option model.bind="undefined">All</option> -->
+				<!-- 				<option repeat.for="bookmarkType of bookmarkTypes | keys" model.bind="bookmarkType"> -->
+				<!-- 					${bookmarkTypes[bookmarkType]}</option> -->
+				<!-- 			</select> -->
+				<!-- 		</div> -->
+				<!-- 	</label> -->
+				<!-- </div> -->
+				<!-- &nbsp; -->
+				<!-- &nbsp; -->
+				<strong>Filter:</strong>
+				<div class="form-inline" style="display: inline; width: 200px;">
+					<label>
+						<!-- Filter:&nbsp; -->
+						<div class="input-group" style="left: 4px; top: -2px; width: 200px">
+							<input type="text" class="form-control" placeholder="Filter text..." value.bind="filterTextInput"
+								style-="display: inline; width: calc(100% - 80px)" enter-press.call="filterText = filterTextInput" />
+							<span class="input-group-btn">
+								<button class="btn btn-default" click.delegate="filterText = filterTextInput">Filter</button>
+							</span>
+						</div>
+					</label>
+				</div>
+			</div>
+			<!-- bookmarks -->
+			<require from="resources/elements/scroll-table.html"></require>
+
+			<div class="fill padding20h noselect" style="top: 64px; bottom: 74px">
+				<scroll-table class="margin20h">
+					<template replace-part="head">
+						<th style="width: 220px"><div>Type</div></th>
+						<th><div>Title</div></th>
+						<th style="width: 300px"><div>Created</div></th>
+					</template>
+					<template replace-part="body">
+						<tr repeat.for="bookmark of bookmarks" style=""
+							click.delegate="selectBookmark(bookmark)" dblclick.delegate="viewBookmark(bookmark, $event)" click.trigger=""
+							hammer-swipe.call="!selectedBookmark && editBookmark(bookmark)"
+							class="${selectedBookmark==bookmark?'selected':''}">
+							<td class="truncate" title.one-time="bookmarkTypes[bookmark.type]">${bookmarkTypes[bookmark.type]}</td>
+							<td class="truncate" title.one-time="bookmark.title">${bookmark.title}</td>
+							<td class="nowrap">
+								${bookmark.timeAdded.fromNow()}
+								<span style="float: right; margin-right: 10px">
+									${bookmark.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]')}
+								</span>
+							</td>
+						</tr>
+					</template>
+				</scroll-table>
+			</div>
+			<!-- edit bookmark -->
+			<div class="fill left bottom margin20">
+				<button class="btn btn-dark"
+					disabled.bind="!selectedBookmark" click.delegate="viewBookmark(selectedBookmark, $event)">
+					View Selected Bookmark
+				</button>
+				&nbsp;
+				<button class="btn btn-dark" disabled.bind="!selectedBookmark" click.delegate="editBookmark(selectedBookmark)">
+					Edit Selected Bookmark &nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>
+				</button>
+				<!-- &nbsp; -->
+				<!-- <button class="btn btn-dark" click.delegate="createNewBookmark()"> -->
+				<!-- 	Create New Bookmark &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
+				<!-- </button> -->
+			</div>
+		</div>
+	</div>
+</template>

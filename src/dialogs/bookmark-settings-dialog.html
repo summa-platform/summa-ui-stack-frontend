@@ -1,0 +1,35 @@
+<template bindable="model, new, edit, remove">
+	<require from="setting-panels/bookmark-settings"></require>
+	<require from="resources/elements/modal"></require>
+	<!-- New Query Dialog -->
+	<modal open.one-way-out="new" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="{}"
+		-title="Create a new bookmark">
+		<template replace-part="header">
+			<h4 class="modal-title" id="myModalLabel">Create a new ${bookmarkTypes[model.type]} bookmark</h4>
+		</template>
+		<template replace-part="body">
+			<bookmark-settings bookmark.bind="model" validate.bind="$parent.validate"></bookmark-settings>
+		</template>
+		<template replace-part="footer">
+			<button type="button" class="btn btn-success"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+	</modal>
+	<!-- Edit Query Dialog -->
+	<modal open.one-way-out="edit" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="model"
+		-title="Edit bookmark">
+		<template replace-part="header">
+			<h4 class="modal-title" id="myModalLabel">Edit ${bookmarkTypes[model.type]} bookmark</h4>
+		</template>
+		<template replace-part="body">
+			<bookmark-settings bookmark.bind="model" validate.bind="$parent.validate"></bookmark-settings>
+		</template>
+		<template replace-part="footer">
+			<button type="button" class="btn btn-warning"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-danger" data-dismiss="modal" click.delegate="remove({$model:$this})">Delete</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+	</modal>
+</template>

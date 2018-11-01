@@ -1,0 +1,16 @@
+
+icon {
+	display: inline-block;
+	position: relative;
+}
+
+icon .glyphicon {
+	width: 32px;
+	font-size: xx-large;
+	text-align: center;
+	color: white;
+}
+
+icon .glyphicon.active {
+	color: #9dc3f7;
+}

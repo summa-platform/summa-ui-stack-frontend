@@ -1,0 +1,12 @@
+<template>
+	<require from="./text-with-entities.css"></require>
+	<div repeat.for="sentence of sentences" class.bind="asList ? 'sentence' : ''">
+		<span repeat.for="span of sentence">
+			<template if.one-time="!span.entities & oneTime">${span.text}</template>
+			<a if.one-time="span.entities"
+				href.one-time="'#/entities/'+(span.entities[0].id || span.entities[0].baseForm)"
+				title.one-time="span.title"
+				css="color: ${span.color}">${span.text}</a>
+		</span>
+	</div>
+</template>

@@ -1,0 +1,56 @@
+<template>
+	<require from="resources/elements/keywords"></require>
+	<require from="resources/attributes/enter-press"></require>
+	<template with.bind="feed">
+		<div class="form-group" style="margin-bottom: 0px">
+			<label style="width: 100%">
+				Feed Name
+				<!-- <em>Hint text - guidance on how to effectively name a feed and an example feed name</em> -->
+				<input type="text" class="form-control" value.bind="name & validate" />
+			</label>
+		</div>
+		<br />
+		<!-- <label style="width: 100%"> -->
+		<!-- 	Feed Origin -->
+		<!-- 	<select value.bind="feedType" class="form-control" style="display: inline; width: calc(100% - 0px)"> -->
+		<!-- 		<option repeat.for="feedType of $parent.feedTypes" model.bind="feedType.internalval">${feedType.label}</option> -->
+		<!-- 	</select> -->
+		<!-- </label> -->
+		<!-- <br /> -->
+
+		<!-- <br /> -->
+		<!-- <div class="form-group" style="margin-bottom: 0px"> -->
+		<!-- 	<label style="width: 100%"> -->
+		<!-- 		URL -->
+		<!-- 		([- <em></em> -]) -->
+		<!-- 		<input type="text" class="form-control" value.bind="url & validate" /> -->
+		<!-- 	</label> -->
+		<!-- </div> -->
+		<br />
+		<div class="form-group ${selectedFeedGroupError?'has-error':''}" style="margin-bottom: 0px">
+			<label style="width: 100%">
+				Groups
+				<br/>
+				<!-- <em></em> -->
+					<!-- class="form-control" style="display: inline; width: calc(100% - 60px)"> -->
+				<select value.bind="$parent.selectedFeedGroup" enter-press.call="addSelectedFeedGroup()"
+					change.delegate="addSelectedFeedGroup()"
+					class="form-control" style="display: inline; width: 100%">
+					<option model.bind="undefined">Select Feed Group</option>
+					<option repeat.for="feedGroup of $parent.allFeedGroups" model.bind="feedGroup">${feedGroup.name}</option>
+				</select>
+				<!-- <button class="btn btn-default" click.trigger="addSelectedFeedGroup()" style="width: 60px; position: relative; top: -1px">Add</button> -->
+			</label>
+			<div class="help-block" if.bind="selectedFeedGroupError">${selectedFeedGroupError}</div>
+		</div>
+		<strong>You have selected:</strong>
+		<br />
+		<span if.bind="!feedGroups || feedGroups.length == 0">No Feed Groups Selected</span>
+		<keywords items.bind="feedGroups">
+			<template replace-part="title">${item.name & oneTime}</template>
+		</keywords>
+		<!-- <br /> -->
+		<!-- ([- TODO: remove this -]) -->
+		<!-- <button class="btn" click.trigger="log()">DEBUG: log object</button> <em>TODO: remove this</em> -->
+	</template>
+</template>

@@ -1,0 +1,33 @@
+<template>
+	<!-- from: https://gist.run/?id=acf8253329939b2e046cd0e3394351fe -->
+	<require from="./autocomplete.css"></require>
+	<input type="text" autocomplete="off"
+				class="autocomplete-input ${inputClass}"
+				css="${inputStyle}"
+				ref="inputElement"
+				aria-autocomplete="list"
+				aria-expanded.bind="expanded"
+				aria-owns.one-time="'au-autocomplate-' + id + '-suggestions'"
+				aria-activedescendant.bind="index >= 0 ? 'au-autocomplate-' + id + '-suggestion-' + index : ''"
+				id.one-time="'au-autocomplete-' + id"
+				placeholder.bind="placeholder"
+				value.bind="inputValue & debounce:delay"
+				keydown.delegate="keydown($event.which)"
+				blur.trigger="blur()">
+	<ul class="suggestions autocomplete-suggestions {ulClass}" role="listbox"
+			if.bind="expanded"
+			id.one-time="'au-autocomplate-' + id + '-suggestions'"
+			css="${ulCss}"
+			ref="suggestionsUL">
+		<li repeat.for="suggestion of suggestions" 
+				id.one-time="'au-autocomplate-' + id + '-suggestion-' + $index"
+				role="option"
+				class-name.bind="($index === index ? 'selected' : '') + ' suggestion autocomplete-suggestion' + ' ' + liClass"
+				css="${liCss}"
+				mousedown.delegate="suggestionClicked(suggestion)">
+			<template replaceable part="suggestion">
+				${suggestion}
+			</template>
+		</li>
+	</ul>
+</template>

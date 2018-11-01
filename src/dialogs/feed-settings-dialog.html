@@ -1,0 +1,49 @@
+<template bindable="model, new, edit, remove">
+	<require from="setting-panels/feed-settings"></require>
+	<require from="resources/elements/modal"></require>
+	<require from="resources/elements/feedback-button"></require>
+	<require from="resources/elements/histogram"></require>
+	<!-- New Feed Dialog -->
+	<modal open.one-way-out="new" options.bind="{ keyboard: true }" title="Add a new feed to SUMMA">
+		<template replace-part="body">
+			<feed-settings feed.bind="model" validate.bind="$parent.validate"></feed-settings>
+		</template>
+		<template replace-part="footer">
+				<!-- click.delegate="$parent.resolve($this)" -->
+			<button type="button" class="btn btn-success"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+		<template replace-part="fade">
+			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback-button> -->
+		</template>
+	</modal>
+	<!-- Edit Feed Dialog -->
+	<modal open.one-way-out="edit" options.bind="{ keyboard: true }" title-="Edit feed" -model.bind="model">
+		<template replace-part="header">
+			<h4 class="modal-title">${name}</h4>
+		</template>
+		<template replace-part="body">
+			<div>
+				<strong>Statistics</strong>
+				<br />
+				<div style="position: relative; height: 100px; width: 100%">
+					<histogram data.bind="bins" select.call="selectBin($bin, $evt, $parent.resolve)" width="566px" height="100px"></histogram>
+				</div>
+				<!-- <em>TODO: some statistics here...</em> -->
+			</div>
+			<br />
+			<feed-settings feed.bind="model" validate.bind="$parent.validate"></feed-settings>
+		</template>
+		<template replace-part="footer">
+				<!-- click.delegate="$parent.resolve($this)" -->
+			<button type="button" class="btn btn-success"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-danger" data-dismiss="modal" click.delegate="remove({$model:$this})">Delete</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+		<template replace-part="fade">
+			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback> -->
+		</template>
+	</modal>
+</template>

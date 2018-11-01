@@ -1,0 +1,54 @@
+<template>
+	<require from="resources/value-converters/json"></require>
+	<require from="resources/elements/timeline"></require>
+	<require from="./live.css"></require>
+	<div class="fill content default-cursor" style="top: 0px; margin: 20px">
+		<label style="width: 220px">
+			Date Time:&nbsp;&nbsp;
+			<div style="display: inline-block; position: relative; width: 140px; -top: 10px; padding-right: 10px; font-weight: normal">
+				<select ref="dateTimeTagElement" value.bind="dateTimeTag" -change.delegate="dateTimeTagChanged(dateTimeTag)"
+					class="form-control" style="display: inline-block; -width: 100px; -top: 10px; -right: 200px; -position: absolute">
+					<option value.bind="dateTimeTag" selected if.bind="dateTimeTagPresetValues.indexOf(dateTimeTag) == -1">${dateTimeTag}</option>
+					<option value="now" selected>now</option>
+					<option value="-1h">-1 hour</option>
+					<option value="-2h">-2 hours</option>
+					<option value="-4h">-4 hours</option>
+					<option value="-6h">-6 hours</option>
+					<option value="-12h">-12 hours</option>
+					<option value="-24h">-24 hours</option>
+					<option value="-2d">-2 days</option>
+					<option value="-1w">-1 week</option>
+					<option value="-2w">-2 weeks</option>
+					<option value="-3w">-3 weeks</option>
+					<option value="-4w">-4 weeks</option>
+					<!-- <option value="-5w">-5 weeks</option> -->
+					<!-- <option value="-6w">-6 weeks</option> -->
+					<!-- <option value="-7w">-7 weeks</option> -->
+					<!-- <option value="-8w">-8 weeks</option> -->
+					<!-- <option value="-9w">-9 weeks</option> -->
+					<option value="date-time">date-time</option>
+				</select>
+			</div>
+		</label>
+		<div style="display: inline-block; position: relative; width: 196px; margin-top: -13px; top: 12px"
+			show.bind="dateTimeTag == 'date-time'">
+			<abp-datetime-picker value.bind="dateTimeString" style="font-weight: normal"></abp-datetime-picker>
+		</div>
+
+		<div class="fill" style="padding-top: 10px; -overflow-y: scroll; top: 46px">
+		<strong>Live feeds:</strong>
+		<div class="fill" style="overflow-y: scroll; overflow-x: hidden; top: 32px">
+			<br />
+			<div repeat.for="feed of feeds" class="row" style="margin-bottom: 20px; padding-left-: 20px">
+				<div class="col-md-2 truncate">
+					${feed.feed.name}
+				</div>
+				<div class="col-md-8 noselect" style="position: relative; height: 280px; -max-width: 960px; -border: 1px solid red; width: 80%">
+					<timeline data.bind="feed" select.call="selectItem($id, $evt)"></timeline>
+				</div>
+			</div>
+
+		</div>
+		</div>
+	</div>
+</template>

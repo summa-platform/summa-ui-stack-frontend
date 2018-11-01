@@ -1,0 +1,10 @@
+<template>
+	<require from="login.css"></require>
+	<form class="login-form" submit.delegate="login()">
+		SUMMA PLATFORM
+		<input class="form-control" type="text" placeholder="email" value.bind="email" />
+		<input class="form-control" type="password" placeholder="password" value.bind="password" />
+		<button class="btn btn-primary" type="submit">Login</button>
+		<span class="error">${error}</span>
+	</form>
+</template>

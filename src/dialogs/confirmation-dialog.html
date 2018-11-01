@@ -1,0 +1,14 @@
+<template bindable="open">
+	<require from="resources/elements/modal"></require>
+	<modal open.one-way-out="open" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="{}"
+		title="${title}">
+		<template replace-part="body">
+			${body}
+		</template>
+		<template replace-part="footer">
+			<button type="button" class="btn btn-${btnClass||'success'}"
+				click.delegate="$parent.resolve(okValue||true)" style="float: left">${btnTitle||'OK'}</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+	</modal>
+</template>

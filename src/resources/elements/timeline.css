@@ -1,0 +1,33 @@
+
+svg .item text {
+    fill: gray;
+    stroke: black;
+    stroke-width: 0.2;
+}
+
+svg .item:hover {
+    fill-opacity: 0.8;
+    /* fill: rgb(81, 169, 240) !important; */
+    cursor: pointer;
+}
+
+svg .item:hover tspan {
+    fill-opacity: 1.0;
+}
+
+svg .item:hover text {
+    /* filter: url(#text-background); */
+    font-weight: bold;
+    fill: black;
+    /* stroke: white; */
+}
+
+.timelineSeries_0:hover {
+    fill-opacity: 0.8;
+    /* fill: rgb(81, 169, 240) !important; */
+    cursor: pointer;
+}
+
+svg text.keywords tspan {
+    /* fill: gray; */
+}

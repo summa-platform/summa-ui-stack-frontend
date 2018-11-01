@@ -1,0 +1,5 @@
+<template>
+	<require from="./icon.css"></require>
+	<span class="glyphicon glyphicon-${glyphicon} ${active?'active':''}" aria-hidden="true" if.bind="glyphicon"></span>
+	<compose view-model.bind="'./'+svgicon" if.bind="svgicon" model.bind="model"></compose>
+</template>

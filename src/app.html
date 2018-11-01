@@ -1,0 +1,57 @@
+<template>
+	<require from="style.css"></require>
+	<require from="icons/icon"></require>
+	<require from="icons/alt-icon"></require>
+	<div id="main-container">
+		<div id="main-content">
+			<div class="fill" style="width: 80px; right: 0px; background-color: #333333; padding-top: 10px">
+				<ul class="root-nav">
+					<li repeat.for="route of router.navigation" role="presentation"
+						class="${route.isActive || route.config.settings.menu &&
+								route.config.settings.menu === router.currentInstruction.config.settings.menu ? 'active' : ''}
+								${route.disabled ? 'disabled' : ''}">
+						<a href="${route.href}"
+							class="${route.isActive || route.config.settings.menu
+									&& route.config.settings.menu === router.currentInstruction.config.settings.menu ? 'active' : ''}
+									${route.disabled ? 'disabled' : ''}">
+							<icon svgicon.bind="route.settings.svgicon"
+								glyphicon.bind="route.settings.glyphicon"
+								active.bind="route.isActive || route.config.settings.menu
+												&& route.config.settings.menu === router.currentInstruction.config.settings.menu"
+								style="width: 32px; position: relative"></icon>
+							<!-- NOTE: additionally check activity by route.config.settings.menu instead of just route.isActive -->
+							<div class="label">${route.title}</div>
+						</a>
+					</li>
+					<li role="presentation"
+						style="color: white; font-size: small; font-weight: lighter; position: absolute; bottom: 20px">
+						<strong style="font-size: xx-small">Logged in as</strong>
+						<div class="truncate" style="width: 70px" title.bind="store.currentUser.name">
+							${store.currentUser.name}
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="fill" style="left: 80px">
+				<router-view></router-view>
+			</div>
+
+			<loading-indicator loading.bind="router.isNavigating || store.isRequesting"></loading-indicator>
+
+			<button type="button" class="btn btn-xs btn-info" click.trigger="feedback()"
+				style="position: absolute; z-index: 10000; bottom: 10px; left: 4px;" title="Feedback" data-toggle="tooltip" data-placement="top">
+				<span style="font-size: x-small">Feedback</span>
+				<span class="glyphicon glyphicon-envelope" aria-hidden="true" style="font-size: x-small"></span>
+			</button>
+
+			<button type="button" class="btn btn-default toggle"
+				class.bind="altTouch?'active':''" click.trigger="toggleAltTouch()"
+				style="position: fixed; z-index: 10000; bottom: 10px; right: 4px; padding-top: 8px; padding-bottom: 4px"
+				title="Alternate click/touch: open items in new tab">
+				<!-- &#8997; -->
+				<alt-icon model.bind="{ color: '#000000'}" width="14px" height="16px" -style="float: right; margin: 1px"></alt-icon>
+			</button>
+		</div>
+		<div id="notification-container" style="width: 500px; float: right; margin: 10px; position: relative"></div>
+	</div>
+</template>

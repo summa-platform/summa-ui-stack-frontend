@@ -1,0 +1,11 @@
+<template>
+	<require from="./transcript.css"></require>
+	<!-- css prevent copy with pseudo-elements: https://danoc.me/blog/css-prevent-copy/ -->
+	<template repeat.for="span of spans">
+		<span css="opacity: ${0.1+span.confidence*0.9 & oneTime}" class="${span.pause?'pause':'' & oneTime}"
+			data-pseudo-content="${span.pseudo&&(span.pseudo+'&nbsp;')||'' & oneTime}"
+			title="${span.word & oneTime}"
+			dir="${rtl&&!span.pause&&span.word!='<unk>'?'rtl':'ltr' & oneTime}"
+			click.trigger="select($index) & oneTime">${span.word&&(span.word+'&nbsp;')||'' & oneTime}</span>
+	</template>
+</template>

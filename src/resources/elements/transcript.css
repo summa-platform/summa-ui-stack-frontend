@@ -1,0 +1,71 @@
+
+transcript > span {
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 0px;
+	margin-right: 1px;
+	border-radius: 4px;
+	display: inline-block;
+	transition: background-color 1s linear;
+	font-size: 14px;
+}
+
+/* transcript.ar > span { */
+transcript > span[dir="rtl"] {
+	padding-left: 0px;
+	padding-right: 3px;
+}
+transcript > span[dir="ltr"] {
+	padding-left: 3px;
+	padding-right: 0px;
+}
+
+transcript > span.active {
+	background-color: #9dc3f7;
+	transition: background-color 0s linear;
+}
+
+transcript > span.pause {
+	display: inline;
+	color: grey;
+	font-style: italic;
+	font-size: 0px;	/* hide non-pseudo pause span, istead will show pseudo span */
+}
+
+/* https://danoc.me/blog/css-prevent-copy/ */
+transcript > span.pause[data-pseudo-content]::before {
+	content: attr(data-pseudo-content);
+	/* same as non-pseudo span elements */
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 0px;
+	margin-right: 1px;
+	border-radius: 4px;
+	/* display: inline-block; */
+	transition: background-color 1s linear;
+	font-size: 14px;
+	/* must be inline for wrapping */
+	display: inline;
+}
+
+/* transcript.ar > span.pause[data-pseudo-content]::before { */
+transcript > span[dir="rtl"].pause[data-pseudo-content]::before {
+	padding-left: 0px;
+	padding-right: 3px;
+}
+
+transcript > span[dir="ltr"].pause[data-pseudo-content]::before {
+	padding-left: 3px;
+	padding-right: 0px;
+}
+
+/* active pause pseudo span */
+transcript > span.active[data-pseudo-content]::before {
+	/* background-color: #9dc3f7; */
+	/* background-color: #c39df7; */
+	background-color: #f7c39d;
+	/* background-color: #c3f79d; */
+	/* background-color: #f79dc3; */
+	/* background-color: #9df7c3; */
+	transition: background-color 0s linear;
+}

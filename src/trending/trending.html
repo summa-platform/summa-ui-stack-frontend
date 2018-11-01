@@ -1,0 +1,135 @@
+<template>
+	<require from="resources/value-converters/json"></require>
+	<require from="resources/elements/histogram"></require>
+	<div class="fill headbar height" style="height: 80px">
+		<button class="btn btn-dark" style="float: right" click.delegate="newQuery()">
+			Create a new query &nbsp;
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+		<span class="title">Trending stories</span>
+		<div style="-display: inline" class="path-bar default-cursor nowrap">
+			<span class="truncate node">
+				<!-- <a route-href="route: trending" class="truncate node"> -->
+					<strong>Queries</strong>
+				<!-- </a> -->
+			</span>
+			<!-- <span if.bind="params.queryID" class="truncate node"> -->
+			<span -if.bind="selectedQuery" class="truncate node">
+				&nbsp;&gt;
+				<a route-href="route: stories; params.bind: {queryID: selectedQuery && selectedQuery.id || 'all'}"
+					title="Stories of Query: ${selectQuery && selectedQuery.name || 'All'}">
+					<!-- <span title="Stories of Query: ${selectedQuery.name}"> -->
+						<span class="prefix">Stories of Query:</span> ${selectedQuery && selectedQuery.name || 'All'}
+					<!-- </span> -->
+				</a>
+			</span>
+		</div>
+	</div>
+	<div class="fill content default-cursor" style="top: 80px">
+		<div class="fill left" style="width: 300px">
+			<div class="padding20">
+			<span class="sub-title">Select Query</span>
+			</div>
+			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
+				<li click.delegate="selectQuery()" dblclick.delegate="storiesForQuery(undefined, $event)" click.trigger=""
+					class="${!selectedQuery?'selected':''}"><strong>All</strong>
+					<a href="#/trending/all/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a></li>
+				</li>
+				<li repeat.for="query of allQueries" click.delegate="selectQuery(query)" click.trigger=""
+					dblclick.delegate="storiesForQuery(query, $event)"
+					class="${selectedQuery === query?'selected':''}">${query.name}
+					<a href="#/trending/${query.id}/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a>
+					<!-- hammer-press.call="storiesForQuery(query)" -->
+				</li>
+			</ul>
+		</div>
+		<div class="fill padding20" style="left: 300px">
+			<span class="sub-title" -if.bind="selectedQuery">
+				${selectQuery && selectedQuery.name || 'All Stories'}
+				<span -if.bind="selectedQuery">
+					&gt;
+					<span style="font-size: smaller">
+					<a route-href="route: stories; params.bind: {queryID: selectedQuery && selectedQuery.id || 'all'}">View Stories</a>
+					</span>
+				</span>
+				<!-- <button class="btn btn-dark" -style="float: right" click.delegate="storiesForQuery(selectedQuery)"> -->
+				<!-- 	View Stories -->
+				<!-- 	([- <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -]) -->
+				<!-- </button> -->
+				<!-- <span class="glyphicon glyphicon-pencil pointer" aria-hidden="true" click.delegate="editFeedGroup(selectedFeedGroup)"></span> -->
+			</span>
+			<div class="fill light-border padding20"
+				style="margin-top: 60px; margin-bottom: 74px; overflow-y: scroll; border-left: none; border-right: none" -show.bind="selectedQuery">
+				<!-- TODO: trending statistics here -->
+				<!-- TRENDY STATISTICS HERE PLEASE -->
+				<!-- <br /> -->
+				<!-- Selected Query Object (debug): ${selectedQuery|json} -->
+
+				<!-- <div class="fill"> -->
+
+				<!-- <div repeat.for="entityTrending of selectedQuery.trending" class="row" style="margin-bottom: 20px; padding-left-: 20px"> -->
+				<div if.bind="selectedQuery">
+					<strong>Selected entities:</strong>
+					<br />
+					<div repeat.for="trend of trending.selectedEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
+						<div class="col-md-2">
+							<a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a>
+						</div>
+						<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
+							<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
+							<!-- ${entityTrending.bins|json} -->
+						</div>
+					</div>
+					<div if.bind="!trending.selectedEntities || trending.selectedEntities.length == 0">
+						<em>No entities selected for this query.</em>
+					</div>
+					<br />
+				</div>
+
+				<strong>Top entities:</strong>
+				<br />
+				<div repeat.for="trend of trending.topKEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
+					<div class="col-md-2">
+						<a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a>
+					</div>
+					<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
+						<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
+						<!-- ${entityTrending.bins|json} -->
+					</div>
+				</div>
+				<div if.bind="!trending.topKEntities">No top entities</div>
+
+				<!-- <div class="container-fluid"> -->
+				<!-- <div repeat.for="entityTrending of selectedQuery.trending" class="row" style="margin-bottom: 20px"> -->
+				<!-- 	<div class="col-md-2"> -->
+				<!-- 		${entityTrending.entity} -->
+				<!-- 	</div> -->
+				<!-- 	<div class="col-md-6" style="position: relative; height: 100px"> -->
+				<!-- 		<histogram data.bind="entityTrending.bins"></histogram> -->
+				<!-- 		${entityTrending.bins|json} -->
+				<!-- 	</div> -->
+				<!-- </div> -->
+				<!-- </div> -->
+
+				<!-- <div repeat.for="[key,value] of selectedQuery.trending | iterable"> -->
+				<!-- 	${key} -->
+				<!-- </div> -->
+				<!-- edit feed -->
+			</div>
+			<button class="btn btn-dark fill left bottom margin20"
+				disabled.bind="!selectedQuery" if.bind="selectedQuery" click.delegate="editQuery(selectedQuery)">
+				Edit Selected Query
+				&nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>
+			</button>
+			<!-- <div style="margin-top-: 20px" show.bind="!selectedQuery"> -->
+			<!-- 	<em>Hint: select query at left panel</em> -->
+			<!-- </div> -->
+		</div>
+	</div>
+	<!-- New/Edit Query Dialogs -->
+	<!-- <require from="dialogs/query-settings-dialog.html"></require> -->
+	<!-- <query-settings-dialog -model.bind="{}" -->
+	<!-- 	new.one-way-out="newQueryModal" -->
+	<!-- 	edit.one-way-out="editQueryModal" -->
+	<!-- 	remove.call="removeQuery($model)"></query-settings-dialog> -->
+</template>

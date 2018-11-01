@@ -1,0 +1,12 @@
+
+.transcript .ar, .transcript .fa {
+	direction: rtl;
+}
+
+.teaser .ar, .teaser .fa {
+	direction: rtl;
+}
+
+.main-text .ar, .main-text .fa {
+	direction: rtl;
+}

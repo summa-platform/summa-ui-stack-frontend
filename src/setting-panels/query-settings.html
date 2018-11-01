@@ -1,0 +1,71 @@
+<template>
+	<require from="resources/elements/keywords"></require>
+	<require from="resources/elements/autocomplete"></require>
+	<require from="resources/attributes/enter-press"></require>
+	<template with.bind="query">
+		<div class="form-group">
+			<label style="width: 100%">
+				Query Name
+				<!-- <em>Hint text - guidance on how to effectively name a query and an example query name</em> -->
+				<input type="text" class="form-control" value.bind="name & validate" />
+			</label>
+		</div>
+		<!-- <br /> -->
+		<label style="width: 100%">
+			<!-- Which feed groups would you like SUMMA to monitor for this query? -->
+			Feed Groups
+			<!-- <em>You can select up to 'x' feed groups. If you cannot find a group that you need please contanct your system administrator</em> -->
+			<!-- <input type="button" class="form-control" /> -->
+				<!-- class="form-control" style="display: inline; width: calc(100% - 60px)"> -->
+			<select value.bind="$parent.selectedFeedGroup" enter-press.call="addSelectedFeedGroup()"
+				change.delegate="addSelectedFeedGroup()"
+				class="form-control" style="display: inline; width: 100%">
+				<option model.bind="undefined">Select Feed Group</option>
+				<option repeat.for="feedGroup of allFeedGroups" model.bind="feedGroup">${feedGroup.name}</option>
+			</select>
+			<!-- <button class="btn btn-default" click.delegate="addSelectedFeedGroup()" -->
+			<!-- 	style="width: 60px; position: relative; top: -1px">Add</button> -->
+		</label>
+		<strong>You have selected:</strong>
+		<br />
+		<span if.bind="!feedGroups || feedGroups.length == 0">All Feed Groups</span>
+		<keywords items.bind="feedGroups">
+			<template replace-part="title">${item.name & oneTime}</template>
+		</keywords>
+		<br />
+		<!-- <label style="width: 100%"> -->
+		<!-- 	Entities -->
+		<!-- 	<em>Hint text - guidance on entities</em> -->
+		<!-- 	<input type="text" value.bind="selectedEntity" class="form-control" style="display: inline; width: calc(100% - 66px);" /> -->
+		<!-- 	<button class="btn btn-default" click.delegate="addSelectedEntity()" -->
+		<!-- 		style="width: 60px; position: relative; top: -1px; left: -4px"> -->
+		<!-- 		Add -->
+		<!-- 	</button> -->
+		<!-- </label> -->
+		<label style="width: 100%">
+			Entities
+			<!-- <em style="font-weight: normal">(Enter some text to search for entities, select and press enter to add)</em> -->
+			<autocomplete service.bind="entitySuggester" value.bind="selectedEntity" select.delegate="entitySelected($event)"
+					placeholder="Enter entity..."
+					style-="background-color: #fee" class="form-control">
+				<template replace-part="suggestion">
+					<span title="${suggestion.baseForm}">${suggestion.baseForm}</span>
+				</template>
+			</autocomplete>
+		</label>
+		<strong>Selected entities:</strong>
+		<br />
+		<span if.bind="!namedEntities || namedEntities.length == 0">Any Entity</span>
+		<keywords items.bind="namedEntities">
+			<template replace-part="title">
+				${entityTitle(item) & oneTime}
+			</template>
+			<!-- <template replace-part="title">${typeof $this === 'string' ? $this : baseForm}</template> -->
+		</keywords>
+		<!-- <br /> -->
+		<!-- <br /> -->
+		<!-- TODO: remove this -->
+		<!-- <button class="btn" click.trigger="log()">DEBUG: log object</button> <em>TODO: remove this</em> -->
+	</template>
+
+</template>

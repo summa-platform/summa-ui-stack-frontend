@@ -1,0 +1,18 @@
+<template>
+	<!-- <require from="bootstrap/css/bootstrap.min.css"></require> -->
+	<ul class="nav ${tabsClass} ${vertical ? 'nav-stacked' : ''}">
+		<li repeat.for="tab of tabs" class="nav-item ${tab.active ? 'active' : ''} ${tab.disabled ? 'disabled' : ''}" css="${headerStyle}">
+			<a class="nav-link ${tab.active ? 'active' : ''} ${tab.disabled ? 'disabled' : ''}"
+				href="javascript:void(0)" click.delegate="selectTab(tab)" innerhtml.bind="tab.header"></a>
+		</li>
+	</ul>
+	<!-- <div class="tab-content fill" style="left: 140px; padding-left: 10px; background-color: #fff"> -->
+		<!-- <require from="./routed-tab"></require> -->
+		<div css="${contentStyle}">
+		<slot></slot>
+		</div>
+		<!-- <router-view><slot></slot></router-view> -->
+		<!-- <router-view></router-view> -->
+	<!-- </div> -->
+	<!-- <slot name="content"><router-view></router-view></slot> -->
+</template>

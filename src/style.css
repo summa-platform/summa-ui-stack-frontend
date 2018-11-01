@@ -1,0 +1,449 @@
+
+html, body {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+#main-container {
+	position: absolute;
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+	overflow: auto;
+}
+
+#main-content {
+	position: absolute;
+	min-height: 700px;
+	min-width: 1460px;
+	width: 100%;
+	height: 100%;
+}
+
+.fill {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+}
+
+.fill.height.top,.fill.top,.fill.height:not(.bottom) {
+	bottom: auto;
+}
+
+.fill.height.bottom,.fill.bottom {
+	top: auto;
+}
+
+.fill.width.left,.fill.left,.fill.width:not(.right) {
+	right: auto;
+}
+
+.fill.width.right,.fill.right {
+	left: auto;
+}
+
+
+.pointer {
+	cursor: pointer;
+}
+
+.default-cursor {
+	cursor: default;
+}
+.default-pointer {
+	cursor: default;
+}
+
+
+.pos {
+	position: relative;
+}
+
+
+.border {
+	border: 1px solid #aaa;
+}
+
+.light-border {
+	border: 1px solid #ddd;
+}
+
+.border-top {
+	border-top: 1px solid #aaa;
+}
+
+.border-top-light {
+	border-top: 1px solid #ddd;
+}
+
+.border-top-bottom {
+	border-left: none;
+	border-right: none;
+}
+
+
+.headbar {
+	padding: 20px;
+	border-bottom: 1px solid #aaa;
+}
+
+.headbar > .title {
+	/* font-size: x-large; */
+}
+
+.headbar .btn {
+	/* color: white; */
+	/* background-color: #333; */
+}
+
+
+.content > .fill.left,.content > .fill.width:not(.right) {
+	border-right: 1px solid #aaa;
+}
+
+.content {
+	/* padding-bottom: 20px; */
+}
+
+
+.padding20 {
+	padding: 20px;
+}
+
+.padding20h {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.padding20v {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.margin20 {
+	margin: 20px;
+}
+
+.margin20h {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.margin20v {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.margin20b {
+	margin-bottom: 20px;
+}
+
+
+.btn-dark,.btn-dark:focus {
+	background-color: #333;
+	color: white;
+}
+
+.btn-dark:hover,.btn-dark:hover:focus {
+	background-color: #555;
+	color: white;
+}
+
+.title {
+	font-size: x-large;
+}
+
+.sub-title {
+	font-size: large;
+	cursor: default;
+}
+
+/* http://stackoverflow.com/questions/10374171/how-to-make-twitter-bootstraps-pre-blocks-scroll-horizontally */
+pre {
+	overflow-x: auto;
+	word-wrap: normal;
+	white-space: pre;
+}
+
+
+/* root nav */
+ul.root-nav {
+	padding-left: 0px;
+}
+ul.root-nav > li {
+	margin: 6px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+ul.root-nav a {
+	text-decoration: none;
+}
+ul.root-nav > li .label {
+	display: block;
+	width: 100%;
+	text-align: center;
+	font-size: small;
+	font-weight: lighter;
+}
+ul.root-nav > li.active .label {
+	color: #9dc3f7;
+}
+
+
+/* div.root-nav { */
+/* 	padding-left: 0px; */
+/* 	margin: 6px; */
+/* 	margin-bottom: 20px; */
+/* 	text-decoration: none; */
+/* } */
+/* div.root-nav .label { */
+/* 	display: block; */
+/* 	/* width: 60px; */ */
+/* 	width: 100%; */
+/* 	text-align: center; */
+/* 	font-size: small; */
+/* 	font-weight: lighter; */
+/* } */
+/* div.root-nav span.glyphicon { */
+/* 	font-size: xx-large; */
+/* 	width: 60px; */
+/* 	text-align: center; */
+/* 	margin-bottom: 6px; */
+/* 	color: white; */
+/* } */
+
+
+
+label > em {
+	display: block;
+	font-style: italic;
+	font-weight: normal;
+}
+
+
+
+
+ul.list {
+	padding: 0px;
+}
+ul.list > li {
+	display: block;
+	padding: 10px 20px;
+	/* background-color: #9dc3f7; */
+}
+ul.list > li:nth-child(even) {
+	background-color: #eee;
+}
+ul.list > li:nth-child(odd) {
+	background-color: #f8f8f8;
+}
+ul.list > li.selected,ul.list > li.selected:hover {
+	background-color: #9dc3f7;
+}
+ul.list > li:hover {
+	background-color: #CDE1FD;
+}
+ul.list > li.inactive {
+	color: #999;
+}
+
+
+
+.btn:focus {
+	outline: none;
+}
+
+.btn.active:focus {
+	outline: none;
+}
+
+.btn.btn-default.toggle:focus:not(.active),.btn.btn-default.toggle:hover:not(.active) {
+	background-color: #fff;
+}
+.btn.btn-default.toggle:focus,.btn.btn-default.toggle:hover {
+	background-color: #e6e6e6;
+}
+
+
+.truncate {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: top;
+}
+td.truncate {
+	max-width: 1px;
+	display: table-cell;
+	/* vertical-align: top; */
+}
+td.nowrap {
+	white-space: nowrap;
+}
+.nowrap {
+	white-space: nowrap;
+}
+
+.path-bar .node {
+	max-width: 300px;
+}
+.path-bar .prefix {
+	text-decoration: none;
+	color: gray;
+}
+
+
+.noselect {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none;   /* Chrome/Safari/Opera */
+	-khtml-user-select: none;    /* Konqueror */
+	-moz-user-select: none;      /* Firefox */
+	-ms-user-select: none;       /* Internet Explorer/Edge */
+	user-select: none;           /* Non-prefixed version, currently
+								  not supported by any browser */
+	cursor: default;
+}
+
+.textselect {
+	-webkit-touch-callout: text; /* iOS Safari */
+	-webkit-user-select: text;   /* Chrome/Safari/Opera */
+	-khtml-user-select: text;    /* Konqueror */
+	-moz-user-select: text;      /* Firefox */
+	-ms-user-select: text;       /* Internet Explorer/Edge */
+	user-select: text;           /* Non-prefixed version, currently
+								  not supported by any browser */
+	cursor: text;
+}
+
+.row.bottom-pad {
+	margin-bottom: 10px;
+}
+
+.tooltip-inner {
+	font-size: large;
+}
+
+
+
+.topic-keyword {
+	/* border: 1px solid #4cf; */
+	border: 1px solid #9dc3f7;
+	border-radius: 16px;
+	padding: 3px 8px;
+	/* background-color: #9dc3f7; */
+	/* color: white; */
+	margin: 2px 2px;
+	/* white-space: nowrap; */
+	display: inline-block;
+	cursor: default;
+
+	padding: 2px;
+	padding-left: 4px;
+	padding-right: 5px;
+	border-radius: 8px;
+
+	/* background-color: #999; */
+	border-color: #999;
+}
+.topic-keyword.clickable {
+	cursor: pointer;
+}
+.topic-keyword:hover {
+	/* color: white; */
+	opacity: 1.0 !important;
+	/* background-color: #cde1fd; */
+	/* border-color: #cde1fd; */
+	/* background-color: #ddd; */
+	border-color: #999;
+	/* border-color: #eee; */
+}
+.topic-keyword.selected {
+	opacity: 1.0 !important;
+	/* background-color: #ddd; */
+	/* border-color: #999; */
+	border: 1px solid black;
+}
+
+h3 > span {
+	height: 30px;
+}
+
+span.glyphicon.right4:before {
+	margin-right: 4px;
+}
+
+
+/* notifications */
+notification-host .alert {
+	opacity: 0.8;
+	margin-bottom: 14px;
+	padding: 10px 14px;
+}
+notification-host .alert:hover {
+	opacity: 1;
+	transition: opacity .2s linear;
+}
+notification-host .alert button {
+	line-height: 16px;
+	display: none;
+}
+notification-host .alert:hover button {
+	display: block;
+}
+
+
+#nprogress .bar {
+	z-index: 10000 !important;
+}
+
+#nprogress .spin {
+	z-index: 10000 !important;
+}
+
+aubs-tabset.fill > .tab-content {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 42px;
+	bottom: 0px;
+}
+
+aubs-tabset.fill > .tab-content > aubs-tab.fill > .tab-pane {
+	/* position: absolute; */
+	/* left: 0px; */
+	/* right: 0px; */
+	/* top: 0px; */
+	/* bottom: 0px; */
+}
+
+aubs-pagination .pagination {
+	margin: 10px 0px;
+}
+
+
+
+
+.flash-add {
+   -webkit-animation: blink ease-out 1.1s;
+   animation: blink ease-out 1.1s;
+}
+
+@-webkit-keyframes blink {
+   50% { background-color: #9dc3f7; border-color: #9dc3f7; }
+   0%, 100% { background-color: #cde1fd; border-color: #cde1fd; }
+}
+
+@keyframes blink {
+   50% { background-color: #9dc3f7; border-color: #9dc3f7; }
+   0%, 100% { background-color: #cde1fd; border-color: #cde1fd; }
+}
+
+
+ul.dropdown-menu > li:hover {
+	background-color: #eee;
+}

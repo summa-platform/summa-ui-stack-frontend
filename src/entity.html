@@ -1,0 +1,124 @@
+<template>
+	<require from="resources/attributes/enter-press"></require>
+	<div class="fill headbar height" style="height: 80px">
+		<span class="title">Entity</span><br />
+		<div style="-display: inline" class="path-bar default-cursor nowrap">
+			<span class="truncate node">
+				<a route-href="route: entities" class="truncate node">Entities</a>
+			</span>
+			<span if.bind="params.queryID" class="truncate node">
+				&nbsp;&gt;
+				<!-- <a route-href="route: stories; params.bind: {queryID: params.queryID}" title="Stories of Query: ${query.name}"> -->
+						<span title="Stories of Query: ${query.name}">
+							<strong><span class="prefix">Stories of Query:</span> ${query.name}</strong>
+						</span>
+				<!-- </a> -->
+			</span>
+			<span if.bind="entity" class="truncate node">
+				&nbsp;&gt;
+				<!-- <a route-href="route: entity; params.bind: {entityID: selected.baseForm}" title="Entity: ${selected.baseForm}"> -->
+				<!-- 	<span title="Entity: ${selected.baseForm}"> -->
+						<strong><span class="prefix">Entity:</span> ${entity.baseForm}</strong>
+					</span>
+				<!-- </a> -->
+			</span>
+		</div>
+	</div>
+	<require from="resources/elements/scroll-table.html"></require>
+	<div class="fill content" style="top: 80px">
+		<div class="fill padding20h" style="top: 10px; bottom: 20px; right: auto; width: 300px">
+			<h4>Entity</h4>
+			<br />
+			<strong>Base Form:</strong> ${entity.baseForm}
+			<br />
+			<br />
+			<strong>Type:</strong> ${entity.type}
+			<br />
+			<br />
+			<strong>Aliases:</strong> 
+			<br />
+			<br />
+			<strong>Image:</strong> 
+			<br />
+			<br />
+			<a href="https://en.wikipedia.org/wiki/${entity.baseForm}" target="_blank">Wikipedia</a>
+		</div>
+		<div class="fill padding20h" style="top: 10px; bottom: 20px; left: 300px; width: calc(50% - 150px); right: auto; bottom-: 74px;">
+			<h4>Mentions</h4>
+			<scroll-table class="margin20h" style="top: 36px; bottom: 74px">
+				<template replace-part="head">
+					<!-- <th style="width: 80px"><div>Instances</div></th> -->
+					<th><div>Media Item</div></th>
+					<!-- <th style="width: 300px"><div>Time Added</div></th> -->
+					<th style="width: 140px"><div>Time Added</div></th>
+				</template>
+				<template replace-part="body">
+					<tr repeat.for="mediaItem of entityDetails.mentions" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
+						dblclick.delegate="viewMediaItem(mediaItem, $event)"
+						class="${selectedMediaItem === mediaItem?'selected':''}">
+						<td class="truncate" title.one-time="mediaItem.engTitle">
+							${mediaItem.engTitle & oneTime}
+						</td>
+						<td class="nowrap">
+							${mediaItem.timeAdded.fromNow()}
+							<!-- <span style="float: right; margin-right: 10px"> -->
+							<!-- 	${mediaItem.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]')} -->
+							<!-- </span> -->
+						</td>
+					</tr>
+				</template>
+			</scroll-table>
+			<button class="btn btn-dark fill left bottom margin20"
+				disabled.bind="!selectedMediaItem" click.delegate="viewMediaItem(selectedMediaItem, $event)">
+				View Selected Media Item
+			</button>
+		</div>
+		<div class="fill padding20h" style="top: 10px; bottom: 20px; left: calc(50% + 150px); bottom-: 74px; padding-left: 0px">
+			<h4>Facts</h4>
+			<div class="fill margin20h" style="position: absolute; top: 36px; margin-left: 0px; bottom: 74px">
+				<scroll-table>
+					<template replace-part="head">
+						<!-- <th style="width: 80px"><div>Instances</div></th> -->
+						<th><div>Relation</div></th>
+					</template>
+					<template replace-part="body">
+						<tr repeat.for="relation of entityDetails.relationships" -click.delegate="selectStory(story)"
+							-dblclick.delegate="viewStory(story, $event)"
+							class="${selectedStory === story?'-selected':''}">
+							<td class="truncate" style="white-space: normal">
+								<span if.bind="relation.roles.ARG1.length > 0">[&nbsp;<span repeat.for="item of relation.roles.ARG1"><span
+									if.one-time="!$first">, </span><a
+									href="#/entities/${relation.entities[item.id].id & oneTime}">${
+										relation.entities[item.id].baseForm || item.text & oneTime}</a></span>&nbsp;]</span>
+								${relation.roles.ARG2 & oneTime}
+								<span if.bind="relation.roles.ARG0.length > 0">[&nbsp;<span repeat.for="item of relation.roles.ARG0"><span
+									if.one-time="!$first">, </span><a
+									href="#/entities/${relation.entities[item.id].id & oneTime}">${
+										relation.entities[item.id].baseForm || item.text & oneTime}</a></span>&nbsp;]</span>
+								<!-- from source<span if.one-time="relation.sources.length > 1">s</span>:  -->
+								<!-- <span repeat.for="source of relation.sources & oneTime"><span -->
+								<!-- 		if.one-time="!$first">, </span><a -->
+								<!-- 		title.one-time="source.title" -->
+								<!-- 		href="#/trending/media-items/${source.id & oneTime}">${source.id.split('-')[0] & oneTime}</a></span> -->
+								<!-- from <a href="#/trending/media-items/${relation.source & oneTime}">(source)</a> -->
+								<br />
+								<span style="font-size: 12px;">Source<span if.one-time="relation.sources.length > 1">s</span>:</span>
+								<li repeat.for="source of relation.sources">
+									<a title.one-time="source.title" class="truncate" style="width: calc(100% - 40px)"
+										href="#/trending/media-items/${source.id & oneTime}">${source.title & oneTime}</a></li>
+							</td>
+						</tr>
+					</template>
+				</scroll-table>
+			</div>
+			<!-- <button class="btn btn-dark fill left bottom margin20" -->
+			<!-- 	disabled.bind="!selectedMediaItem" click.delegate="viewMediaItem(selectedMediaItem, $event)"> -->
+			<!-- 	View Selected Media Item -->
+			<!-- </button> -->
+		</div>
+		<!-- <button class="btn btn-dark fill left bottom margin20" -->
+		<!-- 	disabled.bind="!selected" click.delegate="view(selected, $event)"> -->
+		<!-- 	View Selected Entity -->
+		<!-- </button> -->
+	</div>
+</template>

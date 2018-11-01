@@ -1,0 +1,234 @@
+<template>
+	<div class="fill headbar height" style="height: 80px">
+		<!-- <button class="btn btn-dark" style="float: right" click.delegate="newQuery()"> -->
+		<!-- 	Create a new query &nbsp; -->
+		<!-- 	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
+		<!-- </button> -->
+		<span class="title">Media Item</span>
+		&nbsp;
+		<bookmark-border model.bind="{ color: '#000000'}" width="24px" height="24px" style="cursor: pointer"
+			title="Create Bookmark" click.trigger="createNewBookmark()"></bookmark-border>
+		<div style="-display: inline" class="path-bar default-cursor nowrap">
+			<!-- <span class="truncate node"> -->
+			<!-- 	<a route-href="route: trending" class="truncate node">Queries</a> -->
+			<!-- </span> -->
+			<!-- <span if.bind="params.queryID && params.queryID != 'all'" class="truncate node"> -->
+			<!-- <span if.bind="params.queryID && params.queryID != 'all'" class="truncate node"> -->
+			<!-- 	&nbsp;&gt; -->
+			<!-- 	<a route-href="route: stories; params.bind: {queryID: params.queryID}" title="Stories of Query: ${query.name}"> -->
+			<!-- 		<span class="prefix">Stories of Query:</span> ${query.name} -->
+			<!-- 	</a> -->
+			<!-- </span> -->
+			<!-- <span if.bind="params.storyID" class="truncate node"> -->
+			<!-- 	&nbsp;&gt; -->
+			<!-- 	<a route-href="route: story; params.bind: {queryID: params.queryID, storyID: params.storyID}" title="Story: ${story.title}"> -->
+			<!-- 		<span class="prefix">Story:</span> ${story.title} -->
+			<!-- 	</a> -->
+			<!-- </span> -->
+			<!-- <span if.bind="params.pastHour && params.entity && params.queryID" class="truncate node"> -->
+			<!-- 	&nbsp;&gt; -->
+			<!-- 		([- title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -]) -->
+			<!-- 		([- <span title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -]) -->
+			<!-- 	<a route-href="route: hour-media-items; params.bind: {queryID: params.queryID, pastHour: params.pastHour, entity: params.entity}" -->
+			<!-- 		title.bind="title"> -->
+			<!-- 		<span title.bind="title"> -->
+			<!-- 			([- <strong> -]) -->
+			<!-- 				<span class="prefix">Media Items with Entity</span> -->
+			<!-- 				${params.entity} -->
+			<!-- 				<span class="prefix">of Query</span> -->
+			<!-- 				${query.name || 'All'} -->
+			<!-- 				<span class="prefix">from</span> -->
+			<!-- 				${pastHour}h -->
+			<!-- 				<span class="prefix">ago</span> -->
+			<!-- 			([- </strong> -]) -->
+			<!-- 		</span> -->
+			<!-- 	</a> -->
+			<!-- </span> -->
+			<!-- <span if.bind="params.pastHour && params.feedID" class="truncate node"> -->
+			<!-- 	&nbsp;&gt; -->
+			<!-- 		([- title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -]) -->
+			<!-- 		([- <span title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -]) -->
+			<!-- 	<a route-href="route: feed-hour-media-items; params.bind: {feedID: params.feedID, pastHour: params.pastHour}" -->
+			<!-- 		title.bind="title"> -->
+			<!-- 		<span title.bind="title"> -->
+			<!-- 			([- <strong> -]) -->
+			<!-- 				<span class="prefix">Media Items for Feed</span> -->
+			<!-- 				${feed.name} -->
+			<!-- 				<span class="prefix">from</span> -->
+			<!-- 				${pastHour}h -->
+			<!-- 				<span class="prefix">ago</span> -->
+			<!-- 			([- </strong> -]) -->
+			<!-- 		</span> -->
+			<!-- 	</a> -->
+			<!-- </span> -->
+			<!-- <span if.bind="params.mediaItemID" class="truncate node"> -->
+			<!-- 	&nbsp;&gt; -->
+			<!-- 	([- <a route-href="route: media-item; params.bind: {queryID: params.queryID, storyID: params.storyID, mediaItemID: params.mediaItemID}" -]) -->
+			<!-- 	([- 	title="Media Item: ${mediaItemTitle}"> -]) -->
+			<!-- 	([- 	title="Media Item: ${mediaItem.title.english}"> -]) -->
+			<!-- 		<span title="Media Item: ${mediaItemTitle}"> -->
+			<!-- 		([- <span title="Media Item: ${mediaItem.title.english}"> -]) -->
+			<!-- 			<strong><span class="prefix">Media Item:</span> ${mediaItemTitle}</strong> -->
+			<!-- 			([- <strong><span class="prefix">Media Item:</span> ${mediaItem.title.english}</strong> -]) -->
+			<!-- 		</span> -->
+			<!-- 	([- </a> -]) -->
+			<!-- </span> -->
+		</div>
+	</div>
+	<require from="resources/elements/scroll-table.html"></require>
+	<require from="resources/elements/keywords"></require>
+	<require from="resources/elements/text-with-entities"></require>
+	<require from="resources/value-converters/number-format"></require>
+	<require from="icons/bookmark-border"></require>
+	<require from="./media-item.css"></require>
+	<div class="fill content" style="top: 80px">
+		<div class="fill margin20">
+			<require from="resources/attributes/url-like"></require>
+			<require from="resources/elements/universal-video"></require>
+			<require from="resources/elements/tab"></require>
+			<require from="resources/elements/tabset"></require>
+			<require from="resources/elements/transcript"></require>
+			<template with.bind="mediaItem">
+				<span style="float: right; font-size: x-small; text-align: right; top: -6px; position: relative">
+					<em>
+						Added: ${mediaItem.timeAdded.fromNow()}
+						(${mediaItem.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]')})
+						<br />
+						Changed: ${mediaItem.timeLastChanged.fromNow()}
+						(${mediaItem.timeLastChanged.utc().format('YYYY-MM-DD HH:mm [UTC]')})
+						<br />
+						Source: ${mediaItem.source.name}
+					</em>
+				</span>
+				<h3 style="margin-top: 0px">
+					<div class="truncate" style="max-width: calc(100% - 240px); height: 30px; position: absolute; top: -6px"
+						title="${title.english || title.original}">${title.english || title.original}</div>
+					<!-- <span style="font-size: small" if.bind="story.mediaItems">(${story.mediaItems.length})</span> -->
+				</h3>
+				<div class="fill border-" style="top: 40px">
+					<div class="fill -light-border" style="right: 50%; margin-right: 10px; overflow-y: scroll" if.bind="originalMultiMedia.videoURL">
+						<div ref="videoSection">
+							<universal-video class="light-border" src.bind="originalMultiMedia.videoURL"
+								if.bind="originalMultiMedia.videoURL" time.bind="videoTime" video.bind="video" loaded.call="videoLoaded()"></universal-video>
+							<br />
+							<div if.bind="mediaItem.prevId || mediaItem.nextId">
+								<button class="btn btn-dark"
+									click.delegate="openMediaItem(mediaItem.prevId, $event)" if.bind="mediaItem.prevId">
+									Previous Chunk Media Item
+								</button>
+								&nbsp;&nbsp;&nbsp;
+								<button class="btn btn-dark" style="float: right"
+									click.delegate="openMediaItem(mediaItem.nextId, $event)" if.bind="mediaItem.nextId">
+									Next Chunk Media Item
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="fill -light-border" style="right: 50%; margin-right: 10px; overflow-y: scroll; top: 410px" if.bind="originalMultiMedia.videoURL" ref="neighboursSection">
+						<scroll-table class="-margin20h" style="margin-top: 10px" ref="neighboursTable">
+							<template replace-part="head">
+								<th><div>Media Item</div></th>
+								<th style="width: calc(50%-150px)"><div>Topics</div></th>
+								<th style="width: 300px"><div>Time Added</div></th>
+							</template>
+							<template replace-part="body">
+								<tr repeat.for="mediaItem of neighbourMediaItems" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
+									dblclick.delegate="viewMediaItem(mediaItem, $event)" data-itemid.bind="mediaItem.id"
+									class="${selectedMediaItem === mediaItem?'selected':''}" css="font-weight: ${mediaItem.id == currentMediaItem.id ? 'bold' : 'normal'}">
+									<td class="truncate" title.one-time="mediaItem.title">
+										${mediaItem.title}</td>
+									<td class="truncate" style="-font-size: 9px" title.bind="mediaItem.topics">
+										${mediaItem.topics}</td>
+									<td>
+										${relativeTime(currentMediaItem.timeAdded, mediaItem.timeAdded)}
+										<!-- ${mediaItem.timeAdded.from(selectedMediaItem.timeAdded).homanize(true)} -->
+										<span style="float: right; margin-right: 10px">
+											${mediaItem.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]')}
+										</span>
+									</td>
+								</tr>
+							</template>
+						</scroll-table>
+					</div>
+					<!-- <div class="fill border" style="left: 50%; margin-left: 10px; overflow-y: scroll"> -->
+					<div class="fill light-border" css="left: ${originalMultiMedia.videoURL?'50%':'0px'}"
+						style="margin-left-: 10px; overflow-y: scroll; padding: 10px"
+						-if.bind="teaser.english || teaser.original">
+						<div if.bind="teaser.english || teaser.original" class="teaser">
+							<strong>Teaser:</strong><br/>
+							<tabset content-style="margin-top: 10px">
+								<tab header="English" if.bind="teaser.english">
+									<!-- ${teaser.english} -->
+									<text-with-entities text.bind="teaser.english"
+										mentions.bind="namedEntities.mentionsIn.teaser"
+										entities.bind="namedEntities.entities"></text-with-entities>
+								</tab>
+								<tab header="Original (${detectedLangCode})" if.bind="teaser.original" class="${detectedLangCode}">
+									${teaser.original}
+								</tab>
+							</tabset>
+							<br />
+						</div>
+						<div show.bind="detectedTopics">
+							<strong>Topics:</strong><br/>
+							<span repeat.for="topic of detectedTopics" class="topic-keyword"
+								css="opacity: ${0.4+topic[1]*0.6}"
+								title="${topic[0]}: ${topic[1] | numberFormat:'0.0%'}">
+								${topic[0]} (${topic[1] | numberFormat:'0.[0]%'})
+							</span><br />
+							<br />
+						</div>
+						<div if.bind="summary">
+							<strong>Summary:</strong><br/>
+							<text-with-entities text.bind="summary"
+								mentions.bind="namedEntities.mentionsIn.summary"
+								entities.bind="namedEntities.entities"></text-with-entities>
+							<br /><br />
+						</div>
+						<div if.bind="mainText.original || mainText.english" class="main-text">
+							<strong>Main Text:</strong><br/>
+							<tabset content-style="margin-top: 10px">
+								<tab header="English" if.bind="mainText.english">
+									<!-- ${mainText.english} -->
+									<text-with-entities text.bind="mainText.english"
+										mentions.bind="namedEntities.mentionsIn.mainText"
+										entities.bind="namedEntities.entities"></text-with-entities>
+								</tab>
+								<tab header="Original (${detectedLangCode})" if.bind="mainText.original" class="${detectedLangCode}">
+									${mainText.original}
+								</tab>
+							</tabset>
+							<br />
+						</div>
+						<div if.bind="!$parent.store.currentUser.data.hideTranscript &&
+										((transcript.original.wordTimestampsAndConfidences && transcript.original.wordTimestampsAndConfidences.length > 0)
+										|| (transcript.english.wordTimestampsAndConfidences && transcript.english.wordTimestampsAndConfidences.length > 0)
+										|| transcript.original.text || transcript.english.text)"
+							class="transcript">
+							<strong>Transcript:</strong><br />
+							<tabset content-style="margin-top: 10px">
+								<tab header="Original Live (${detectedLangCode})"
+									style="position: relative" if.bind="transcript.original.wordTimestampsAndConfidences">
+									<transcript segments.bind="transcript.original.wordTimestampsAndConfidences"
+										time.bind="videoTime" video.bind="video" rtl.bind="detectedLangCode == 'ar' || detectedLangCode == 'fa'"
+										class="${detectedLangCode}"
+										style="display: block; width: 100%"></transcript>
+								</tab>
+								<tab header="English" if.bind="transcript.english.text">
+									<!-- ${transcript.english.text} -->
+									<text-with-entities text.bind="transcript.english.text"
+										mentions.bind="namedEntities.mentionsIn.transcript"
+										entities.bind="namedEntities.entities"></text-with-entities>
+									<!-- ${transcript.english.text} -->
+								</tab>
+								<tab header="Original (${detectedLangCode})" if.bind="transcript.original.text" class="${detectedLangCode}">
+									${transcript.original.text}
+								</tab>
+							</tabset>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
+</template>

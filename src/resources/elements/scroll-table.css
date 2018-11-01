@@ -1,0 +1,113 @@
+
+/* https://jsfiddle.net/dPixie/byB9d/3/ */
+/* http://stackoverflow.com/questions/17067294/html-table-with-100-width-with-vertical-scroll-inside-tbody */
+/* https://codepen.io/tjvantoll/pen/JEKIu */
+/* http://stackoverflow.com/questions/19559197/how-to-make-scrollable-table-with-fixed-headers-using-css */
+
+scroll-table {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+scroll-table div.table-container {
+	overflow-y: auto;
+	margin-top: 34px;
+	border: 1px solid #aaa;
+	display: block;
+	height: calc(100% - 34px);
+}
+scroll-table div.table-header-background {
+	/* display: none; */
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: 36px;
+	background-color: #ccc;
+	border-bottom: 1px solid #ddd;
+	border: 1px solid #aaa;
+}
+table.table > thead > tr > th {
+	height: 0px;
+	line-height: 0px;
+	padding: 0px;
+	margin: 0px;
+	border: none;
+	border-spacing: 0px;
+	/* color: transparent; */
+}
+table.table {
+	margin-bottom: 0px;
+	border: none;
+	/* border-bottom: 1px solid #aaa; */
+}
+/* Xtable.table { */
+/* 	/* display: block; */ */
+/* 	width: 100%; */
+/* 	border-spacing: 0px; */
+/* } */
+
+table.table th {
+	/* position: relative; */
+}
+table.table th:first-child div {
+	border: none;
+	margin-left: 0px;
+}
+table.table th div {
+	/* fine tuning */
+	margin-top: 1px;
+	margin-left: -1px;
+	border-left: 1px solid #ddd;
+
+	/* display: none; */
+
+	padding: 8px;
+	background-color: #ccc;
+
+	position: absolute;
+	/* background: transparent; */
+	/* color: #fff; */
+	color: black;
+	top: 0px;
+	line-height: normal;
+
+}
+
+
+
+table.table thead {
+	/* display: block; */
+}
+table.table tbody {
+	/* display: block; */
+	/* overflow: auto; */
+}
+table.table th {
+	background-color: #ccc;
+}
+table.table.list th {
+	border-bottom: 1px solid #aaa;
+}
+table.table th:not(:first-child) {
+	border-left: 1px solid #aaa;
+}
+table.table td:not(:first-child) {
+	border-left: 1px solid #aaa;
+}
+table.table tr:nth-child(odd) {
+	background-color: #f8f8f8;
+}
+table.table tr:nth-child(even) {
+	background-color: #eee;
+}
+
+table.table tbody tr:hover {
+	/* background-color: #f5f5f5; */
+	background-color: #CDE1FD;
+}
+table.table tbody tr.selected,table.table tbody tr.selected:hover {
+	background-color: #9dc3f7;
+}

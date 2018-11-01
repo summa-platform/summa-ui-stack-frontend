@@ -1,0 +1,50 @@
+<template>
+	<require from="resources/elements/keywords"></require>
+	<require from="resources/attributes/enter-press"></require>
+	<template with.bind="feedback">
+		<!-- <div if.bind="!edit"> -->
+		<div show.bind="!edit">
+			<div class="form-group" style="margin-bottom: 0px">
+				<label style="width: 100%" class="noselect">
+					Comments
+					<!-- <em></em> -->
+					<textarea type="text" class="form-control" value.bind="comment & validate" style="max-width: 100%; height: 100px"></textarea>
+				</label>
+			</div>
+			<label style="width: 100%" class="noselect">
+				Rating
+				<select value.bind="rating"
+					class="form-control" style="display: inline; -width: calc(100% - 60px)">
+					<option repeat.for="ratingType of ratingTypes" model.bind="ratingType.internalval">${ratingType.label}</option>
+				</select>
+			</label>
+			<div class="form-group" style="margin-bottom: 0px">
+				<label style="width: 100%" class="noselect">
+					URL
+					<!-- <em></em> -->
+					<input type="text" class="form-control" value.bind="guiPath & validate" />
+				</label>
+			</div>
+			<label style="width: 100%; margin-top: 10px" class="noselect">
+				<!-- <em></em> -->
+				<input type="checkbox" checked.bind="includeScreenshot" />
+				Include Screenshot
+			</label>
+			<label style="width: 100%" if.bind="includeScreenshot" class="noselect">
+				<!-- Screenshot -->
+				<!-- <em></em> -->
+				<img src.bind="screenshotBase64" class="border" style="width: 100%; margin: 8px 0px"></img>
+			</label>
+		</div>
+		<!-- <div if.bind="edit"> -->
+		<div show.bind="edit">
+			<label style="width: 100%" class="noselect">
+				Status
+				<select value.bind="metadata.status"
+					class="form-control" style="display: inline; -width: calc(100% - 60px)">
+					<option repeat.for="status of statuses" model.bind="status.value" if.bind="!status.hidden">${status.label}</option>
+				</select>
+			</label>
+		</div>
+	</template>
+</template>

@@ -1,0 +1,17 @@
+
+
+text-with-entities a {
+	cursor: pointer;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+text-with-entities div.sentence {
+	display: list-item;
+	margin-left: 1.3em;
+	list-style-type: circle;
+}
+
+/* text-with-entities a:hover { */
+/* 	text-decoration: none; */
+/* } */

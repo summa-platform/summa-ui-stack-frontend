@@ -1,0 +1,34 @@
+/* histogram { */
+/*   font: 10px sans-serif; */
+/* } */
+/*  */
+/* histogram .bar rect { */
+/*   shape-rendering: crispEdges; */
+/* } */
+/*  */
+/* histogram .bar text { */
+/*   fill: #999999; */
+/* } */
+/*  */
+/* histogram .axis path, .axis line { */
+/*   fill: none; */
+/*   stroke: #000; */
+/*   shape-rendering: crispEdges; */
+/* } */
+
+histogram .bar rect {
+  /* fill: steelblue; */
+  fill: #999;
+}
+histogram .bar:hover rect {
+  fill: #bbb;
+  cursor: pointer;
+}
+
+histogram .bar text {
+  /* fill: #fff; */
+  font: 10px sans-serif;
+}
+histogram .bar:hover text {
+  cursor: pointer;
+}

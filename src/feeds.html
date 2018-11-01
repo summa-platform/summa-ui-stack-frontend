@@ -1,0 +1,100 @@
+<template>
+	<require from="resources/attributes/enter-press"></require>
+	<div class="fill headbar height" style="height: 80px">
+		<span class="title">Feed Management</span>
+		<!-- <button class="btn btn-dark" style="float: right" click.trigger="newFeedOrFeedGroup()"> -->
+		<!-- 	Add a new feed/feed group &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
+		<!-- </button> -->
+		<button class="btn btn-dark" style="float: right" click.trigger="createFeedGroup()">
+			Create New Feed Group &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+	</div>
+	<div class="fill content" style="top: 80px">
+		<div class="fill left noselect cursor-default" style="width: 300px">
+			<div class="padding20">
+			<span class="sub-title">Select Feed Group</span>
+			</div>
+			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
+				<li class="${selectedFeedGroup?'':'selected'}" click.delegate="selectFeedGroup()" click.trigger=""><strong>All</strong></li>
+				<li repeat.for="feedGroup of allFeedGroups"
+					hammer-swipe.call="editFeedGroup(feedGroup, $event.hammerEvent)"
+					click.delegate="selectFeedGroup(feedGroup)" dblclick.delegate="editFeedGroup(feedGroup)" click.trigger=""
+					class="${selectedFeedGroup === feedGroup?'selected':''}">${feedGroup.name}</li>
+			</ul>
+		</div>
+		<div class="fill padding20" style="left: 300px">
+			<!-- <require from="feed-settings"></require> -->
+			<!-- <feed-settings></feed-settings> -->
+
+			<!-- feed group -->
+			<span class="sub-title" show.bind="!selectedFeedGroup">All Feeds</span>
+			<span class="sub-title" show.bind="selectedFeedGroup">
+				${selectedFeedGroup.name}
+				<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true" click.delegate="editFeedGroup(selectedFeedGroup)"></span>
+			</span>
+			<!-- feed filter bar -->
+			<div style="margin-top: 20px">
+				<div class="form-inline" style="display: inline; width-: 400px;">
+					<label>
+						Feed Origin:
+						&nbsp;
+						<div class="input-group" style-="left: 4px; top: -2px">
+							<select value.bind="feedType" class="form-control" style="display: inline; width: calc(100% - 0px); top: -2px">
+								<option model.bind="undefined">All</option>
+								<option repeat.for="feedType of feedTypes" model.bind="feedType.internalval">${feedType.label}</option>
+							</select>
+						</div>
+					</label>
+				</div>
+				&nbsp;
+				&nbsp;
+				<div class="form-inline" style="display: inline; width: 200px;">
+					<label>
+						<!-- Filter:&nbsp; -->
+						<div class="input-group" style="left: 4px; top: -2px; width: 200px">
+							<input type="text" class="form-control" placeholder="Filter text..." value.bind="filterTextInput" style-="display: inline; width: calc(100% - 80px)" enter-press.call="filterText = filterTextInput">
+							<span class="input-group-btn">
+								<button class="btn btn-default" click.delegate="filterText = filterTextInput">Filter</button>
+							</span>
+						</div>
+					</label>
+				</div>
+			</div>
+			<!-- feeds -->
+			<require from="resources/elements/scroll-table.html"></require>
+			<!-- <require from="table.css"></require> -->
+
+			<div class="fill padding20h noselect" style="top: 116px; bottom: 74px">
+				<scroll-table class="margin20h">
+					<template replace-part="head">
+						<th><div>Feed</div></th>
+						<th style="width: 220px"><div>Feed Origin</div></th>
+						<th style="width: 140px"><div>Status</div></th>
+					</template>
+					<template replace-part="body">
+							<!-- click.delegate="selectFeed(feed)" dblclick.delegate="!selectedFeedGroup && editFeed(feed)" click.trigger="" -->
+						<tr repeat.for="feed of feeds"
+							click.delegate="selectFeed(feed)" dblclick.delegate="editFeed(feed)" click.trigger=""
+							hammer-swipe.call="!selectedFeedGroup && editFeed(feed)"
+							class="${selectedFeed==feed?'selected':''}">
+							<td class="truncate" title.one-time="feed.name">${feed.name}</td>
+							<td class="truncate" title.one-time="feedTypeTitle[feed.type || feed.feedType]">${feedTypeTitle[feed.type || feed.feedType]}</td>
+							<td class="truncate" title.one-time="feed.status">${feed.status}</td>
+						</tr>
+					</template>
+				</scroll-table>
+			</div>
+			<!-- edit feed -->
+			<div class="fill left bottom margin20" if.bind="!selectedFeedGroup">
+				<button class="btn btn-dark" disabled.bind="!selectedFeed" click.delegate="editFeed(selectedFeed)">
+					Edit Selected Feed &nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>
+				</button>
+				&nbsp;
+				<button class="btn btn-dark" disabled.bind="selectedFeedGroup" click.delegate="createNewFeed()">
+					Create New Feed &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+</template>

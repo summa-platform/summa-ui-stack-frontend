@@ -1,0 +1,13 @@
+<template>
+	<require from="./keywords.css"></require>
+	<span repeat.for="item of items" class="keyword ${animate?'au-animate':''}">
+		<span class="kw-title">
+			<!-- <template with.bind="item"> -->
+				<template replaceable part="title">
+					${item}
+				</template>
+			<!-- </template> -->
+		</span>
+		<span style="margin-left: 4px" class="glyphicon glyphicon-remove" click.delegate="remove($index)"></span> <!-- TODO: use index -->
+	</span>
+</template>

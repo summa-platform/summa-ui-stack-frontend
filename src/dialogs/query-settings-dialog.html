@@ -1,0 +1,36 @@
+<template bindable="model, new, edit, remove">
+	<require from="setting-panels/query-settings"></require>
+	<require from="resources/elements/modal"></require>
+	<require from="resources/elements/feedback-button"></require>
+	<!-- New Query Dialog -->
+	<modal open.one-way-out="new" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="{}"
+		title="Create a new query">
+		<template replace-part="body">
+			<query-settings query.bind="model" validate.bind="$parent.validate"></query-settings>
+		</template>
+		<template replace-part="footer">
+			<button type="button" class="btn btn-success"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+		<template replace-part="fade">
+			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback-button> -->
+		</template>
+	</modal>
+	<!-- Edit Query Dialog -->
+	<modal open.one-way-out="edit" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="model"
+		title="Edit query">
+		<template replace-part="body">
+			<query-settings query.bind="model" validate.bind="$parent.validate"></query-settings>
+		</template>
+		<template replace-part="footer">
+			<button type="button" class="btn btn-warning"
+				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
+			<button type="button" class="btn btn-danger" data-dismiss="modal" click.delegate="remove({$model:$this})">Delete</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		</template>
+		<template replace-part="fade">
+			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback-button> -->
+		</template>
+	</modal>
+</template>

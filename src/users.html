@@ -1,0 +1,75 @@
+<template>
+	<require from="resources/attributes/enter-press"></require>
+	<!-- <require from="setting-panels/user-settings"></require> -->
+	<div class="fill headbar height" style="height: 80px">
+		<span class="title">Users</span>
+		<button class="btn btn-dark" style="float: right" click.trigger="newUser()">
+			Create New User &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+	</div>
+	<div class="fill content" style="top: 80px">
+		<div class="fill left" style="width: 300px">
+			<div class="padding20">
+				<span class="sub-title">Select User</span>
+			</div>
+			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
+				<!-- <li class="${selectedUser === currentUser?'selected':''}" click.delegate="selectUser(currentUser)"> -->
+				<!-- 	<strong>Current User</strong> -->
+				<!-- </li> -->
+				<li repeat.for="user of users" click.delegate="selectUser(user)" click.trigger=""
+					class="${selectedUser === user?'selected':''} ${user.isSuspended?'inactive':''}">
+					${user.name} <strong if.bind="user === currentUser">(current)</strong>
+				</li>
+			</ul>
+		</div>
+		<div class="fill padding20" style="left: 300px">
+			<!-- ${selectedUser|json} -->
+			<template with.bind="selectedUser">
+				<div>
+					<span class="sub-title" show-.bind="selectedUser">${selectedUser.name || 'Current User'}</span>
+				</div>
+				<br/>
+				<div class="container-fluid">
+					<div class="row bottom-pad">
+						<div class="col-md-2">
+							<strong>Name</strong>
+						</div>
+						<div class="col-md-4">
+							${name}
+						</div>
+					</div>
+					<div class="row bottom-pad">
+						<div class="col-md-2">
+							<strong>E-mail</strong>
+						</div>
+						<div class="col-md-4">
+							${email}
+						</div>
+					</div>
+					<div class="row bottom-pad">
+						<div class="col-md-2">
+							<strong>Role</strong>
+						</div>
+						<div class="col-md-4">
+							${roleTypes[role]}
+						</div>
+					</div>
+					<div class="row bottom-pad">
+						<div class="col-md-2">
+							<strong>Status</strong>
+						</div>
+						<div class="col-md-4">
+							<span if.bind="isSuspended">Suspended</span>
+							<span if.bind="!isSuspended">Active</span>
+						</div>
+					</div>
+				</div>
+			</template>
+			<div class="fill left bottom margin20" if.bind="selectedUser">
+				<button class="btn btn-dark" disabled.bind="!selectedUser" click.delegate="editUser(selectedUser)">
+					Edit Selected User &nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</template>

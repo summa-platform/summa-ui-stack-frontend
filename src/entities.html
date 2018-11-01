@@ -1,0 +1,130 @@
+<template>
+	<require from="resources/attributes/enter-press"></require>
+	<div class="fill headbar height" style="height: 80px">
+		<span class="title">Entities</span><br />
+		<div style="-display: inline" class="path-bar default-cursor nowrap">
+			<span class="truncate node">
+				<strong>Entities</strong>
+				<!-- <a route-href="route: entities" class="truncate node">Entities</a> -->
+				<!-- <a route-href="route: trending" class="truncate node">Queries</a> -->
+				<!-- <a route-href="route: query-trending-id; params.bind: {queryID: params.queryID}" class="truncate node">Queries</a> -->
+			</span>
+			<span if.bind="selected" class="truncate node">
+				&nbsp;&gt;
+				<a route-href="route: entities; params.bind: {entityID: selected.id}" title="Entity: ${selected.baseForm}">
+					<span title="Entity: ${selected.baseForm}">
+						<span class="prefix">Entity:</span> ${selected.baseForm}
+					</span>
+				</a>
+			</span>
+		</div>
+	</div>
+	<require from="resources/elements/scroll-table.html"></require>
+	<div class="fill content" style="top: 80px">
+		<div class="padding20">
+			<h3 style="margin-top: 0px">
+				<span class="truncate" style="max-width: 90%" title="${story.title}">${query.name}</span>
+				<span style="font-size: small" if.bind="query.stories">(${query.stories.length})</span>
+			</h3>
+		</div>
+		<div class="fill content padding20h" style="top: 10px">
+			<!-- <div class="form-inline" style="display: inline; width-: 400px;"> -->
+			<!-- 	<label> -->
+			<!-- 		Sort by: -->
+			<!-- 		&nbsp; -->
+			<!-- 		<div class="input-group" style-="left: 4px; top: -2px"> -->
+			<!-- 			<select value.bind="sortBy" class="form-control" style="display: inline; width: calc(100% - 0px)"> -->
+			<!-- 				<option model.bind="'most'">Most Instances</option> -->
+			<!-- 				<option model.bind="'least'">Least Instances</option> -->
+			<!-- 				<option model.bind="'newest'">Newest</option> -->
+			<!-- 				<option model.bind="'oldest'">Oldest</option> -->
+			<!-- 			</select> -->
+			<!-- 		</div> -->
+			<!-- 	</label> -->
+			<!-- </div> -->
+			<!-- &nbsp; -->
+			<!-- &nbsp; -->
+			<!-- &nbsp; -->
+			<!-- &nbsp; -->
+			<div class="form-inline" style="display: inline; width-: 400px">
+				<label>
+					<span style="position: relative; top: 2px">
+					Search:
+					</span>
+					<div class="input-group" style="left: 4px; top: 0px">
+						<input type="text" class="form-control" placeholder="Enter entity name..." value.bind="filterTextInput" style-="display: inline; width: calc(100% - 80px)" enter-press.call="search(filterTextInput)">
+						<span class="input-group-btn">
+							<button class="btn btn-default" click.delegate="search(filterTextInput)">Search</button>
+						</span>
+					</div>
+				</label>
+			</div>
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			<!-- <div class="form-inline" style="display: inline; width-: 400px;"> -->
+			<!-- 	<label> -->
+			<!-- 		Filter: -->
+			<!-- 	</label> -->
+			<!-- </div> -->
+			<!-- &nbsp; -->
+			<!-- &nbsp; -->
+			<div class="dropdown" style="display: inline-block">
+				<button id="type" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Entity Types
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="type">
+					<li class="padding20h" repeat.for="entityType of entityTypes | keys">
+						<label><input type="checkbox" checked.bind="entityTypes[entityType]" />&nbsp;${entityType}</label>
+					</li>
+				</ul>
+			</div>
+			&nbsp;
+			&nbsp;
+			<!-- &nbsp; -->
+			<!-- &nbsp; -->
+			<!-- <div class="form-inline" style="display: inline; width-: 400px;"> -->
+			<!-- 	<div class="input-group" style-="left: 4px; top: -2px"> -->
+			<!-- 		<select value.bind="filterSettings.latest" class="form-control" style="display: inline; width: calc(100% - 0px)"> -->
+			<!-- 			<option model.bind="undefined">Anytime</option> -->
+			<!-- 			<option model.bind="30">Last 30 minutes</option> -->
+			<!-- 			<option model.bind="1*60">Last hour</option> -->
+			<!-- 			<option model.bind="2*60">Last 2 hours</option> -->
+			<!-- 			<option model.bind="3*60">Last 3 hours</option> -->
+			<!-- 			<option model.bind="4*60">Last 4 hours</option> -->
+			<!-- 			<option model.bind="12*60">Last 12 hours</option> -->
+			<!-- 			<option model.bind="24*40">Last 24 hours</option> -->
+			<!-- 		</select> -->
+			<!-- 	</div> -->
+			<!-- </div> -->
+		</div>
+		<!-- <div class="fill padding20h" style="top: 60px; bottom: 74px;"> -->
+		<div class="fill padding20h" style="top: 60px; bottom: 74px;">
+			<scroll-table class="margin20h">
+				<template replace-part="head">
+					<!-- <th style="width: 80px"><div>Instances</div></th> -->
+					<th><div>Name</div></th>
+					<th style="width: 200px"><div>Type</div></th>
+					<th style="width: 100px"><div>Relations</div></th>
+				</template>
+				<template replace-part="body">
+					<!-- <tr repeat.for="story of query.stories" click.delegate="selectStory(story)" -->
+					<tr repeat.for="entity of entities" click.delegate="select(entity)" click.trigger=""
+						dblclick.delegate="view(entity, $event)"
+						class="${selected === entity?'selected':''}">
+						<td class="truncate" title.one-time="entity.baseForm">
+							${entity.baseForm & oneTime}
+						</td>
+						<td>${entity.type & oneTime}</td>
+						<td class="nowrap">${entity.relationshipCount}</td>
+					</tr>
+				</template>
+			</scroll-table>
+		</div>
+		<button class="btn btn-dark fill left bottom margin20"
+			disabled.bind="!selected" click.delegate="view(selected, $event)">
+			View Selected Entity
+		</button>
+	</div>
+</template>

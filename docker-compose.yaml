@@ -1,0 +1,23 @@
+version: '3'
+services:
+  summaui:
+    build: .
+    depends_on:
+      #- summa_db_rest_endpoint
+      - api-proxy # proxy to API
+    links:
+      #- summa_db_rest_endpoint:api
+      - api-proxy:api
+    ports:
+      - "8080:80"
+    # volumes:
+    #   - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+  # test proxy to API configured in api-proxy-nginx.conf
+  api-proxy:
+    image: nginx
+    expose:
+      - "80"
+    volumes:
+      - ./api-proxy-nginx.conf:/etc/nginx/conf.d/default.conf
+
