@@ -3,7 +3,7 @@ RUN npm install -g aurelia-cli yarn
 WORKDIR /src
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
-COPY yarn.lock /src/yarn.lock
+# COPY yarn.lock /src/yarn.lock
 # RUN yarn
 RUN npm install
 
