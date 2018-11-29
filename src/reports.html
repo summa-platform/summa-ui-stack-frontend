@@ -2,10 +2,6 @@
 	<require from="icons/answer"></require>
 	<div class="fill headbar height" style="height: 80px">
 		<span class="title">Reports</span>
-		<!-- <button class="btn btn-dark" style="float: right" click.delegate="newQuery()"> -->
-		<!-- 	Create a new query &nbsp; -->
-		<!-- 	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-		<!-- </button> -->
 	</div>
 	<div class="fill content default-cursor" style="top: 80px">
 		<div class="fill left" style="width: 300px">
@@ -13,7 +9,7 @@
 			<span class="sub-title">Select Report</span>
 			</div>
 			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
-				<li repeat.for="feedback of allFeedback" click.delegate="select(feedback)" click.trigger=""
+				<li repeat.for="feedback of allFeedback" click.delegate="select(feedback)"
 					class="${selectedFeedback == feedback?'selected':''}">
 					${feedback.timeAdded.fromNow()} by ${feedback.user.name}
 					<!-- <span if.bind="feedback.metadata.status"><strong>(${statuses[feedback.metadata.status]})</strong></span> -->
@@ -28,11 +24,6 @@
 			<span class="sub-title">
 				<span if.bind="selectedFeedback">${selectedFeedback.user.name} reported at ${selectedFeedback.timeAdded}</span>
 				<span if.bind="!selectedFeedback">Report</span>
-				<!-- <button class="btn btn-dark" -style="float: right" click.delegate="storiesForQuery(selectedQuery)"> -->
-				<!-- 	View Stories -->
-				<!-- 	([- <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -]) -->
-				<!-- </button> -->
-				<!-- <span class="glyphicon glyphicon-pencil pointer" aria-hidden="true" click.delegate="editFeedGroup(selectedFeedGroup)"></span> -->
 			</span>
 
 			<div class="fill padding20 light-border" style="top: 60px; bottom: 74px; overflow-y: scroll; border-left: none; border-right: none"
@@ -55,10 +46,6 @@
 								<div class="col-md-5">
 									${user.name}
 								</div>
-								<!-- <div class="col-md-6" style="position: relative"> -->
-								<!-- 	<img src.bind="screenshotBase64" if.bind="screenshotBase64" -->
-								<!-- 		style="border: 1px solid #aaa; max-width: 500px; position: absolute; top: 0px"></img> -->
-								<!-- </div> -->
 							</div>
 							<div class="row bottom-pad">
 								<div class="col-md-2">
@@ -110,21 +97,12 @@
 												<!-- (${response.time.utc().format('YYYY-MM-DD HH:mm [UTC]')}) -->
 												by ${getUser(response.user)}
 											</span>
-											<!-- by ${getUser(response.user)} -->
 											<div if.bind="response.user == store.currentUser.id && editResponse === undefined" style="float: right">
-											<!-- <span if.bind="editResponse === undefined"> -->
 												<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true" title="Edit"
 													click.delegate="doEditResponse(response)"></span>
 												&nbsp;
 												<span class="glyphicon glyphicon-remove pointer" aria-hidden="true" title="Remove"
 													click.delegate="removeResponse(response)"></span>
-												<!-- <button class="btn btn-dark btn-xs" click.delegate="doEditResponse(response)"> -->
-												<!-- 	Edit <span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span> -->
-												<!-- </button> -->
-												<!-- &nbsp; -->
-												<!-- <button class="btn btn-dark btn-xs" click.delegate="removeResponse(response)"> -->
-												<!-- 	Remove <span class="glyphicon glyphicon-remove pointer" aria-hidden="true"></span> -->
-												<!-- </button> -->
 											</div>
 										</div>
 										<div if.bind="editResponse === response">
@@ -155,8 +133,6 @@
 									<button class="btn btn-dark btn-xs" if.bind="editResponse === undefined" click.delegate="newResponse()">
 										Add Response <span class="glyphicon glyphicon-plus pointer" aria-hidden="true"></span>
 									</button>
-									<!-- <button class="btn btn-dark btn-xs" disabled.bind-="" click.delegate="enterResponse = true"> -->
-									<!-- 	Add Response <span class="glyphicon glyphicon-plus pointer" aria-hidden="true"></span> -->
 								</div>
 							</div>
 							<div class="row bottom-pad" if.bind="screenshotBase64">
@@ -167,25 +143,13 @@
 						</div>
 						<img src.bind="screenshotBase64" if.bind="screenshotBase64" style="border: 1px solid #aaa; max-width: 900px; margin-left: 20px"></img>
 						<br/>
-						<!-- <strong>Other info:</strong> -->
-						<!-- <pre>${$this | jsonPretty}</pre> -->
 					</template>
 				</div>
-				<!-- <div style="margin-top: 0px" show.bind="!selectedFeedback"> -->
-				<!-- 	<em>Hint: select report at left panel</em> -->
-				<!-- </div> -->
 			</div>
 			<div style="margin-top: 20px" show.bind="!selectedFeedback">
-				<!-- <em>Hint: select report at left panel</em> -->
-				No reports selected.
+				No report selected.
 			</div>
 
-			<!-- edit feed -->
-			<!-- <button class="btn btn-dark fill left bottom margin20" -->
-			<!-- 	disabled.bind="!selectedFeedback" if.bind="selectedFeedback" click.delegate="removeFeedback(selectedFeedback)"> -->
-			<!-- 	Delete Selected Feedback -->
-			<!-- 	&nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span> -->
-			<!-- </button> -->
 			<div class="fill left bottom margin20" if.bind="selectedFeedback">
 				<button class="btn btn-dark" disabled.bind="!selectedFeedback" click.delegate="editReport(selectedFeedback)">
 					Edit Selected Report &nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>

@@ -4,104 +4,71 @@
 	<require from="resources/elements/keywords"></require>
 	<require from="resources/elements/autocomplete"></require>
 	<require from="resources/elements/clustering"></require>
-	<!-- <div class="fill headbar height" style="height: 80px"> -->
-		<!-- <button class="btn btn-dark" style="float: right" click.delegate="newQuery()"> -->
-		<!-- 	Create a new query &nbsp; -->
-		<!-- 	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-		<!-- </button> -->
-		<!-- <span class="title">Trending media items</span> -->
-		<!-- <div style="-display: inline" class="path-bar default-cursor nowrap"> -->
-		<!-- 	<span class="truncate node"> -->
-		<!-- 		([- <a route-href="route: trending" class="truncate node"> -]) -->
-		<!-- 			<strong>Queries</strong> -->
-		<!-- 		([- </a> -]) -->
-		<!-- 	</span> -->
-		<!-- 	([- <span if.bind="params.queryID" class="truncate node"> -]) -->
-		<!-- 	<span -if.bind="selectedQuery" class="truncate node"> -->
-		<!-- 		&nbsp;&gt; -->
-		<!-- 		<a route-href="route: stories; params.bind: {queryID: selectedQuery && selectedQuery.id || 'all'}" -->
-		<!-- 			title="Stories of Query: ${selectQuery && selectedQuery.name || 'All'}"> -->
-		<!-- 			([- <span title="Stories of Query: ${selectedQuery.name}"> -]) -->
-		<!-- 				<span class="prefix">Stories of Query:</span> ${selectedQuery && selectedQuery.name || 'All'} -->
-		<!-- 			([- </span> -]) -->
-		<!-- 		</a> -->
-		<!-- 	</span> -->
-		<!-- </div> -->
-	<!-- </div> -->
+	<require from="bootstrap-select/dist/css/bootstrap-select.min.css"></require>
+	<require from="resources/elements/scroll-table.html"></require>
+	<require from="resources/value-converters/number-format"></require>
+	<require from="resources/elements/keywords.css"></require>
+	<require from="./trending2.css"></require>
 	<div class="fill content default-cursor" style="top: 0px">
 		<div class="fill left" style="width: 260px">
 			<div class="padding20">
 			<span class="sub-title">Pinned Queries</span>
-			<!-- <span class="glyphicon glyphicon-plus" style="cursor: pointer; top: 5px; float: right" click.delegate="pinCurrentQuery()"></span> -->
 			<span class="glyphicon glyphicon-pushpin" style="cursor: pointer; top: 5px; float: right" click.delegate="pinCurrentQuery()"></span>
 			</div>
 			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
-				<!-- <li click.delegate="selectQuery()" dblclick.delegate="storiesForQuery(undefined, $event)" click.trigger="" -->
-				<!-- 	class="${!selectedQuery?'selected':''}"><strong>Current</strong> -->
-				<!-- 	([- <a href="#/trending/all/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a></li> -]) -->
-				<!-- 	([- <span class="glyphicon glyphicon-remove" style="cursor: pointer; float: right"></span> -]) -->
-				<!-- 	([- <span class="glyphicon glyphicon-pin" style="cursor: pointer; float: right"></span> -]) -->
-				<!-- 	<button class="btn btn-dark btn-xs" style="float: right" click.delegate="pinCurrentQuery()">Pin</button> -->
-				<!-- </li> -->
-				<li click.delegate="selectQuery(undefined, undefined, $event)" click.trigger=""
+				<li click.delegate="selectQuery(undefined, undefined, $event)"
 					-dblclick.delegate="storiesForQuery(query, $event)" style="cursor: pointer"
 					class="${selectedQuery === 'asd'?'selected':''} au-animate" title="No filter">
 					<div class="truncate" style="width: calc(100% - 20px); pointer-events: none">All (reset)</div>
-					<!-- &nbsp; &nbsp; &nbsp; -->
-					<!-- <span class="glyphicon glyphicon-edit" style="cursor: pointer; float: right"></span> -->
-					<!-- <a href="#/trending/${query.id}/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a> -->
-					<!-- hammer-press.call="storiesForQuery(query)" -->
+					<!--
+					&nbsp; &nbsp; &nbsp;
+					<span class="glyphicon glyphicon-edit" style="cursor: pointer; float: right"></span>
+					<a href="#/trending/${query.id}/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a>
+					hammer-press.call="storiesForQuery(query)"
+					-->
 				</li>
-				<li repeat.for="query of allQueries" click.delegate="selectQuery(query, undefined, $event)" click.trigger=""
+				<li repeat.for="query of allQueries" click.delegate="selectQuery(query, undefined, $event)"
 					-dblclick.delegate="storiesForQuery(query, $event)" style="cursor: pointer"
 					class="${selectedQuery === query?'selected':''} au-animate" title.bind="query.name">
 					<div class="truncate" style="width: calc(100% - 20px); pointer-events: none">${query.name}</div>
 					<span class="glyphicon glyphicon-remove" style="cursor: pointer; top: 2px; float: right" click.delegate="removeQuery(query, $event)"></span>
-					<!-- &nbsp; &nbsp; &nbsp; -->
-					<!-- <span class="glyphicon glyphicon-edit" style="cursor: pointer; float: right"></span> -->
-					<!-- <a href="#/trending/${query.id}/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a> -->
-					<!-- hammer-press.call="storiesForQuery(query)" -->
+					<!--
+					&nbsp; &nbsp; &nbsp;
+					<span class="glyphicon glyphicon-edit" style="cursor: pointer; float: right"></span>
+					<a href="#/trending/${query.id}/stories" open-new-tab.bind="services.altTouch" style="float: right">view</a>
+					hammer-press.call="storiesForQuery(query)"
+					-->
 				</li>
 			</ul>
 		</div>
 		<div class="fill padding20" style="left: 260px">
-			<!-- <span class="sub-title" -if.bind="selectedQuery"> -->
-			<!-- 	${selectQuery && selectedQuery.name || 'All Stories'} -->
-			<!-- 	<span -if.bind="selectedQuery"> -->
-			<!-- 		&gt; -->
-			<!-- 		<span style="font-size: smaller"> -->
-			<!-- 		<a route-href="route: stories; params.bind: {queryID: selectedQuery && selectedQuery.id || 'all'}">View Stories</a> -->
-			<!-- 		</span> -->
-			<!-- 	</span> -->
-			<!-- 	([- <button class="btn btn-dark" -style="float: right" click.delegate="storiesForQuery(selectedQuery)"> -]) -->
-			<!-- 	([- 	View Stories -]) -->
-			<!-- 	([- 	(([[- <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -]])) -]) -->
-			<!-- 	([- </button> -]) -->
-			<!-- 	([- <span class="glyphicon glyphicon-pencil pointer" aria-hidden="true" click.delegate="editFeedGroup(selectedFeedGroup)"></span> -]) -->
 
-			<require from="bootstrap-select/dist/css/bootstrap-select.min.css"></require>
-			<require from="./trending2.css"></require>
-			<div>
+			<div> <!-- filters section -->
 				<div>
 					<label style="width: 100%">
 						Feed Groups
 						&nbsp;&nbsp;
-						<!-- <select value.bind="selectedFeedGroup" enter-press.call="addSelectedFeedGroup()" -->
-						<!-- 	change.delegate="addSelectedFeedGroup()" -->
-						<!-- 	class="form-control" style="display: inline; width: 300px"> -->
-						<!-- 	<option model.bind="undefined">Select Feed Group</option> -->
-						<!-- 	<option repeat.for="feedGroup of allFeedGroups" model.bind="feedGroup.id">${feedGroup.name}</option> -->
-						<!-- </select> -->
-						<!-- <button class="btn btn-default" click.delegate="addSelectedFeedGroup()" -->
-						<!-- 	style="width: 60px; position: relative; top: -1px">Add</button> -->
+						<!--
+						<#- Old approach -#>
+						<select value.bind="selectedFeedGroup" enter-press.call="addSelectedFeedGroup()"
+							change.delegate="addSelectedFeedGroup()"
+							class="form-control" style="display: inline; width: 300px">
+							<option model.bind="undefined">Select Feed Group</option>
+							<option repeat.for="feedGroup of allFeedGroups" model.bind="feedGroup.id">${feedGroup.name}</option>
+						</select>
+						<button class="btn btn-default" click.delegate="addSelectedFeedGroup()"
+							style="width: 60px; position: relative; top: -1px">Add</button>
+						-->
 
 						<select class="selectpicker" data-live-search="true" multiple ref="feedSelectElement" data-width="70%">
-							<!-- <optgroup label="Selected"> -->
-							<!-- 	<option repeat.for="feedGroup of selectedFeedGroups" value="s-group:${feedGroup.id}" data-subtext="Feed Group" if.bind="!feedGroup.feed"> -->
-							<!-- 		${feedGroup.name || allFeedGroupNames[feedGroup]}</option> -->
-							<!-- 	<option repeat.for="feedGroup of selectedFeedGroups" value="s-feed:${feedGroup.feed}" data-subtext="Feed" if.bind="feedGroup.feed"> -->
-							<!-- 		${feedGroup.name || allFeedNames[feedGroup]}</option> -->
-							<!-- </optgroup> -->
+							<!--
+							<optgroup label="Selected">
+								<option repeat.for="feedGroup of selectedFeedGroups" value="s-group:${feedGroup.id}" data-subtext="Feed Group" if.bind="!feedGroup.feed">
+									${feedGroup.name || allFeedGroupNames[feedGroup]}</option>
+								<option repeat.for="feedGroup of selectedFeedGroups" value="s-feed:${feedGroup.feed}" data-subtext="Feed" if.bind="feedGroup.feed">
+									${feedGroup.name || allFeedNames[feedGroup]}</option>
+							</optgroup>
+							-->
 							<optgroup label="Feed Groups">
 								<option repeat.for="feedGroup of allFeedGroups" value="group:${feedGroup.id}" data-subtext="Feed Group">${feedGroup.name}</option>
 							</optgroup>
@@ -117,7 +84,7 @@
 					</keywords>
 				</div>
 				<div style="margin-top: 6px">
-					<label style-="width: 100%">
+					<label>
 						Entities
 						&nbsp;&nbsp;
 						<autocomplete service.bind="entitySuggester" value.bind="selectedEntity" select.delegate="entitySelected($event)"
@@ -133,20 +100,14 @@
 						<template replace-part="title">
 							${entityTitle(item) & oneTime}
 						</template>
-						<!-- <template replace-part="title">${typeof $this === 'string' ? $this : baseForm}</template> -->
 					</keywords>
 				</div>
 				<div style="margin-top: 8px">
-					<!-- <label style="width: 260px"> -->
 					<div style="width: 386px; display: inline-block; margin-bottom: 5px; font-weight: 700">
 						From&nbsp;&nbsp;
-							<!-- enter-press.call="addSelectedFeedGroup()" -->
-							<!-- change.delegate="addSelectedFeedGroup()" -->
 						<div style="display: inline-block; position: relative; width: 140px; -top: 10px; padding-right: 10px; font-weight: normal">
 							<select ref="fromElement" value.bind="fromTag" -change.delegate="fromTagChanged(fromTag)"
 								class="form-control" style="display: inline-block; -width: 100px; -top: 10px; -right: 200px; -position: absolute">
-								<!-- <option model.bind="undefined">Select Feed Group</option> -->
-							<!-- 	([- <option repeat.for="feedGroup of allFeedGroups" model.bind="100">100</option> -]) -->
 								<option value.bind="fromTag" selected if.bind="fromPresetValues.indexOf(fromTag) == -1">${fromTag}</option>
 								<option value="-1h">-1 hour</option>
 								<option value="-2h">-2 hours</option>
@@ -173,14 +134,11 @@
 						</div>
 					</div>
 					&nbsp;
-					<!-- <label style="width: 260px"> -->
 					<div style="width: 360px; display: inline-block; margin-bottom: 5px; font-weight: 700">
 						to&nbsp;&nbsp; 
 						<div style="display: inline-block; position: relative; width: 140px; -top: 10px; padding-right: 10px; font-weight: normal">
 							<select ref="tillElement" value.bind="tillTag" -change.delegate="tillTagChanged(tillTag)"
 								class="form-control" style="display: inline-block; -width: 100px; -top: 10px; -right: 200px; -position: absolute">
-								<!-- <option model.bind="undefined">Select Feed Group</option> -->
-							<!-- 	([- <option repeat.for="feedGroup of allFeedGroups" model.bind="100">100</option> -]) -->
 								<option value.bind="tillTag" selected if.bind="tillPresetValues.indexOf(tillTag) == -1">${tillTag}</option>
 								<option value="now" -selected>now</option>
 								<option value="-1h">hour ago</option>
@@ -213,7 +171,6 @@
 					&nbsp;&nbsp;
 					<div class="dropdown" style="display: inline-block" aubs-dropdown="auto-close.bind: 'outside'">
 						<button id="type" type="button" class="btn btn-default" aria-haspopup="true" aria-expanded="false" aubs-dropdown-toggle>
-							<!-- Media Types: ${filterMediaTypes | property:'name' | join: ', '} -->
 							Media Types: ${filterMediaTypes | filterObjects:{key:'key',conditions:filters.mediaTypes}
 											| property:'name' | complete:filters.mediaTypes:'All' | empty:'All' | join: ', '
 											& observeProperties:filters.mediaTypes}
@@ -230,7 +187,6 @@
 					&nbsp;&nbsp;
 					<div class="dropdown" style="display: inline-block" aubs-dropdown="auto-close.bind: 'outside'">
 						<button id="lang" type="button" class="btn btn-default" aria-haspopup="true" aria-expanded="false" aubs-dropdown-toggle>
-							<!-- Languages -->
 							Languages: ${filterLanguages | filterObjects:{key:'key',conditions:filters.languages}
 											| property:'name' | complete:filters.languages:'All' | empty:'All' | join: ', '
 											& observeProperties:filters.languages}
@@ -254,272 +210,199 @@
 						style="max-width: 360px; display: inline-block" />
 					&nbsp;&nbsp;
 				</div>
-			</div>
+			</div> <!-- filters section -->
 
-			<!-- <aubs-tabset vertical.bind="vertical" type.bind="type" active.bind="active" class="fill" style="top: 240px; margin: 10px"> -->
+			<!-- content tabs -->
 			<aubs-tabset vertical.bind="vertical" type.bind="type" active.bind="active" class="fill" style="top: 280px; margin: 10px">
-				<!-- <aubs-tab header="My first tab"> -->
-				<!-- 	<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth -->
-				<!-- 	master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro -->
-				<!-- 	keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat -->
-				<!-- 	salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p> -->
-				<!-- </aubs-tab> -->
-				<!-- <aubs-tab header="My second tab" disabled.bind="disabled"> -->
-				<!-- 	Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore -->
-				<!-- 	velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui -->
-				<!-- 	photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo -->
-				<!-- 	nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit -->
-				<!-- 	sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY -->
-				<!-- 	ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente -->
-				<!-- 	accusamus tattooed echo park. -->
-				<!-- </aubs-tab> -->
-
-				<!-- <aubs-tab on-select.call="selected(index)" on-deselect.call="deselected(index)" header="<i class='fa fa-warning'></i> My Third tab"> -->
-				<!-- 	I log to the console on Select and Deselect. -->
-				<!-- </aubs-tab> -->
-				<aubs-tab header="Trending" disabled.bind="disabled" class="fill-">
-			
-			<!-- </span> -->
-			<div class="fill light-border- padding20"
-				style="margin-top-: 60px; margin-bottom-: 74px; overflow-y: scroll; border-left: none; border-right: none" -show.bind="selectedQuery">
-				<!-- TODO: trending statistics here -->
-				<!-- TRENDY STATISTICS HERE PLEASE -->
-				<!-- <br /> -->
-				<!-- Selected Query Object (debug): ${selectedQuery|json} -->
-
-				<!-- <div class="fill"> -->
-
-				<div if.bind="trending.totalBins">
-					<div class="row" stye="margin-bottom: 20px; padding-left-: 20px">
-						<div class="col-md-2">
-							Recently added media items
-						</div>
-						<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
-							<histogram data.bind="trending.totalBins.bins" select.call="selectBin(undefined, $bin, $evt)"></histogram>
-						</div>
-					</div>
-					<br />
-				</div>
-				<!-- <div repeat.for="entityTrending of selectedQuery.trending" class="row" style="margin-bottom: 20px; padding-left-: 20px"> -->
-				<div if.bind="selectedEntities.length > 0">
-					<strong>Selected entities:</strong>
-					<br />
-					<div repeat.for="trend of trending.selectedEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
-						<div class="col-md-2">
-							<a href="#/entities/${trend.id}">${trend.baseForm}</a>
-							<!-- <a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a> -->
-						</div>
-						<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
-							<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
-							<!-- ${entityTrending.bins|json} -->
-						</div>
-					</div>
-					<div if.bind="!trending.selectedEntities || trending.selectedEntities.length == 0">
-						<em>No entities selected for this query.</em>
-					</div>
-					<br />
-				</div>
-
-				<strong>Top entities:</strong>
-				<br />
-				<div repeat.for="trend of trending.topKEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
-					<div class="col-md-2">
-						<a href="#/entities/${trend.id}">${trend.baseForm}</a>
-						<!-- <a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a> -->
-					</div>
-					<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
-						<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
-						<!-- ${entityTrending.bins|json} -->
-					</div>
-				</div>
-				<div if.bind="!trending.topKEntities">No top entities</div>
-
-				<!-- <div class="container-fluid"> -->
-				<!-- <div repeat.for="entityTrending of selectedQuery.trending" class="row" style="margin-bottom: 20px"> -->
-				<!-- 	<div class="col-md-2"> -->
-				<!-- 		${entityTrending.entity} -->
-				<!-- 	</div> -->
-				<!-- 	<div class="col-md-6" style="position: relative; height: 100px"> -->
-				<!-- 		<histogram data.bind="entityTrending.bins"></histogram> -->
-				<!-- 		${entityTrending.bins|json} -->
-				<!-- 	</div> -->
-				<!-- </div> -->
-				<!-- </div> -->
-
-				<!-- <div repeat.for="[key,value] of selectedQuery.trending | iterable"> -->
-				<!-- 	${key} -->
-				<!-- </div> -->
-				<!-- edit feed -->
-			</div>
-			<!-- <button class="btn btn-dark fill left bottom margin20" -->
-			<!-- 	disabled.bind="!selectedQuery" if.bind="selectedQuery" click.delegate="editQuery(selectedQuery)"> -->
-			<!-- 	Edit Selected Query -->
-			<!-- 	&nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span> -->
-			<!-- </button> -->
-			<!-- <div style="margin-top-: 20px" show.bind="!selectedQuery"> -->
-			<!-- 	<em>Hint: select query at left panel</em> -->
-			<!-- </div> -->
+				<!--
+				<#- aubs-tab usage sample -#>
+				<aubs-tab on-select.call="selected(index)" on-deselect.call="deselected(index)" header="<i class='fa fa-warning'></i> My Third tab">
+					I log to the console on Select and Deselect.
 				</aubs-tab>
-	<require from="resources/elements/scroll-table.html"></require>
-	<require from="resources/value-converters/number-format"></require>
+				-->
+
+				<aubs-tab header="Trending" disabled.bind="disabled">
+					<div class="fill light-border- padding20"
+						style="margin-top-: 60px; margin-bottom-: 74px; overflow-y: scroll; border-left: none; border-right: none">
+						<div if.bind="trending.totalBins">
+							<div class="row" stye="margin-bottom: 20px; padding-left-: 20px">
+								<div class="col-md-2">
+									Recently added media items
+								</div>
+								<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
+									<histogram data.bind="trending.totalBins.bins" select.call="selectBin(undefined, $bin, $evt)"></histogram>
+								</div>
+							</div>
+							<br />
+						</div>
+						<div if.bind="selectedEntities.length > 0">
+							<strong>Selected entities:</strong>
+							<br />
+							<div repeat.for="trend of trending.selectedEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
+								<div class="col-md-2">
+									<a href="#/entities/${trend.id}">${trend.baseForm}</a>
+									<!-- <a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a> -->
+								</div>
+								<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
+									<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
+								</div>
+							</div>
+							<div if.bind="!trending.selectedEntities || trending.selectedEntities.length == 0">
+								<em>No entities selected for this query.</em>
+							</div>
+							<br />
+						</div>
+						<strong>Top entities:</strong>
+						<br />
+						<div repeat.for="trend of trending.topKEntities" class="row" style="margin-bottom: 20px; padding-left-: 20px">
+							<div class="col-md-2">
+								<a href="#/entities/${trend.id}">${trend.baseForm}</a>
+								<!-- <a href="#/entities/${getEntity(trend.entity).id}">${trend.entity}</a> -->
+							</div>
+							<div class="col-md-8 noselect" style="position: relative; height: 140px; max-width: 660px">
+								<histogram data.bind="trend.bins" select.call="selectBin(trend, $bin, $evt)"></histogram>
+							</div>
+						</div>
+						<div if.bind="!trending.topKEntities">No top entities</div>
+					</div>
+				</aubs-tab>
 				<aubs-tab header="List" disabled.bind="disabled" class="fill-" style="padding-top: 18px">
 
-				<!-- <label style=""> -->
-				<!-- 	Page:&nbsp;&nbsp; -->
-				<!--  </label> -->
-				<!-- <div style="display-: inline-block; width-: 200px; top: 10px; left: 10px; position: absolute; height: 34px; -text-align: right"> -->
-				<div show.bind="totalCount > 0" style="display: inline-block">
-					<div style="display: inline-block">
+					<div show.bind="totalCount > 0" style="display: inline-block">
+						<div style="display: inline-block">
+							<strong>
+							Page&nbsp;&nbsp;
+							</strong>
+						</div>
+						<div style="display: inline-block; position: relative; height: 34px">
+							<aubs-pagination page-size.bind="perPage" total-items.bind="totalCount" current-page.bind="page" hide-single-page.bind="false"
+								pagination-size.bind="5" direction-links.bind="false"
+								style="font-weight: normal; display: inline-block; float: left"></aubs-pagination>
+						</div>
+						<div style="display: inline-block">
+							<strong>
+							&nbsp;&nbsp;
+							of total ${totalPages} page(s) with ${totalCount} item(s)
+							</strong>
+						</div>
+					</div>
+
+					<div style="display: inline-block; margin-top: 16px" show.bind="totalCount == 0">
 						<strong>
-						Page&nbsp;&nbsp;
+						No items
 						</strong>
 					</div>
-					<div style="display: inline-block; position: relative; height: 34px">
-						<aubs-pagination page-size.bind="perPage" total-items.bind="totalCount" current-page.bind="page" hide-single-page.bind="false"
-							pagination-size.bind="5" direction-links.bind="false"
-							style="font-weight: normal; display: inline-block; float: left"></aubs-pagination>
+					&nbsp;
+					&nbsp;
+					&nbsp;
+					<div class="keyword" style="display: inline-block" if.bind="clusterID">
+						<span class="kw-title">
+							Storyline ID: ${clusterID}
+						</span>
+						<span style="margin-left: 4px" class="glyphicon glyphicon-remove" click.delegate="removeClusterSelection()"></span>
 					</div>
-					<div style="display: inline-block">
-						<strong>
+
+					&nbsp;
+					&nbsp;
+					<label style="display-: inline-block; width: 200px; top: 10px; right: 200px; position: absolute; height: 34px; text-align: right">
+						Per Page:
 						&nbsp;&nbsp;
-						of total ${totalPages} page(s) with ${totalCount} item(s)
-						</strong>
+						<select value.bind="perPage"
+							class="form-control" style="display: inline-block; width: 100px;">
+							<option model.bind="1000">1000</option>
+							<option model.bind="100">100</option>
+							<option model.bind="50">50</option>
+							<option model.bind="20">20</option>
+							<option model.bind="10">10</option>
+						</select>
+					</label>
+
+					<div class="fill -padding20h" style="-top: 50%; -bottom: 74px; right: 200px; top: 40px">
+						<scroll-table class="-margin20h" style="margin-top: 10px">
+							<template replace-part="head">
+								<th style="width: 260px"><div>Source</div></th>
+								<th><div>Media Item</div></th>
+								<!-- <th style="width: 100px"><div>Sentiment</div></th> -->
+								<th style="width: 280px"><div>Time Added</div></th>
+							</template>
+							<template replace-part="body">
+								<tr repeat.for="mediaItem of mediaItems" click.delegate="selectMediaItem(mediaItem)"
+									dblclick.delegate="viewMediaItem(mediaItem, $event)"
+									class="${selectedMediaItem === mediaItem?'selected':''}">
+									<td>
+										<span class="truncate" style="max-width: 210px" title="${mediaItem.source.name}">${mediaItem.source.name}</span>
+										<span style="float: right">
+											<span class="glyphicon glyphicon-facetime-video" title="Has video" aria-hidden="true"
+												if.bind="mediaItem.mediaItemType == 'Video' || mediaItem.mediaItemType == 'livefeed-logical-chunk'"></span>
+											<span style="font-variant-caps: all-small-caps">${mediaItem.detectedLangCode}</span>
+										</span>
+									</td>
+									<td class="truncate" title.one-time="mediaItem.title.english || mediaItem.title.original">
+										${mediaItem.title.english || mediaItem.title.original}</td>
+									<!-- <td class="nowrap">${mediaItem.sentiment}</td> -->
+									<td>
+										${mediaItem.timeAdded.fromNow() & oneTime}
+										<span style="float: right; margin-right: 10px">
+											${mediaItem.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]') & oneTime}
+										</span>
+									</td>
+								</tr>
+							</template>
+						</scroll-table>
 					</div>
-				</div>
-				<!-- </div> -->
 
-				<div style="display: inline-block; margin-top: 16px" show.bind="totalCount == 0">
-					<strong>
-					No items
-					</strong>
-				</div>
-				&nbsp;
-				&nbsp;
-				&nbsp;
-				<require from="resources/elements/keywords.css"></require>
-				<div class="keyword" style="display: inline-block" if.bind="clusterID">
-					<span class="kw-title">
-						Storyline ID: ${clusterID}
-					</span>
-					<span style="margin-left: 4px" class="glyphicon glyphicon-remove" click.delegate="removeClusterSelection()"></span>
-				</div>
+					<div if.bind="highlights" class="fill -height -margin20h" style="left: auto; width: 200px; padding-left: 10px; margin-top: 10px; height: 50%; bottom: auto">
+						<strong>Highlights / summary:</strong><br/>
+						<div class="fill border noselect" style="top: 20px; overflow-y: scroll; margin-left: 10px; bottom: 4px">
+							<div repeat.for="highlight of highlights" style="display: list-item; margin-left: 1.3em; list-style-type: circle; cursor: pointer">
+								<span click.delegate="viewMediaItem({id: highlight.src[0].id}, $event)">${highlight.txt}</span>
+							</div>
+						</div>
+					</div>
 
-				&nbsp;
-				&nbsp;
-				<label style="display-: inline-block; width: 200px; top: 10px; right: 200px; position: absolute; height: 34px; text-align: right">
-					Per Page:
-					&nbsp;&nbsp;
-					<select value.bind="perPage" enter-press.call=""
-						change.delegate=""
-						class="form-control" style="display: inline-block; width: 100px;">
-						<!-- style="display: inline-block; width: 100px; top: 10px; right: 200px; position: absolute; font-weight: normal"> -->
-						<!-- <option model.bind="undefined">Select Feed Group</option> -->
-						<!-- <option repeat.for="feedGroup of allFeedGroups" model.bind="100">100</option> -->
-						<option model.bind="1000">1000</option>
-						<option model.bind="100">100</option>
-						<option model.bind="50">50</option>
-						<option model.bind="20">20</option>
-						<option model.bind="10">10</option>
-					</select>
-				</label>
-
-		<div class="fill -padding20h" style="-top: 50%; -bottom: 74px; right: 200px; top: 40px">
-			<scroll-table class="-margin20h" style="margin-top: 10px">
-				<template replace-part="head">
-					<th style="width: 260px"><div>Source</div></th>
-					<th><div>Media Item</div></th>
-					<!-- <th style="width: 100px"><div>Sentiment</div></th> -->
-					<th style="width: 280px"><div>Time Added</div></th>
-				</template>
-				<template replace-part="body">
-					<tr repeat.for="mediaItem of mediaItems" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
-						dblclick.delegate="viewMediaItem(mediaItem, $event)"
-						class="${selectedMediaItem === mediaItem?'selected':''}">
-						<td>
-							<span class="truncate" style="max-width: 210px" title="${mediaItem.source.name}">${mediaItem.source.name}</span>
-							<span style="float: right">
-								<span class="glyphicon glyphicon-facetime-video" title="Has video" aria-hidden="true"
-									if.bind="mediaItem.mediaItemType == 'Video' || mediaItem.mediaItemType == 'livefeed-logical-chunk'"></span>
-								<span style="font-variant-caps: all-small-caps">${mediaItem.detectedLangCode}</span>
+					<div -if.bind="allTopics" class="fill -height -margin20h" style="left: auto; width: 200px; padding-left: 10px; margin-top: 10px"
+						css="top: ${highlights?'50%':'0px'}">
+						<strong>Topics:</strong><br/>
+						<div class="fill border noselect" style="top: 20px; overflow-y: scroll; margin-left: 10px">
+							<span repeat.for="topic of allTopics" class="topic-keyword clickable ${topic.selected ? 'selected' : ''}"
+								click.delegate="toggleTopic(topic)"
+								css="opacity: ${0.4+topic.confidence*0.6 & oneTime}"
+								title="${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.0%' & oneTime} (${topic.count & oneTime})">
+								<!-- title="Score: ${topic[1] & oneTime}"> -->
+								${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.[0]%' & oneTime} (${topic.count & oneTime})
 							</span>
-						</td>
-						<td class="truncate" title.one-time="mediaItem.title.english || mediaItem.title.original">
-							${mediaItem.title.english || mediaItem.title.original}</td>
-						<!-- <td class="nowrap">${mediaItem.sentiment}</td> -->
-						<!-- <td>${mediaItem.timeAdded}</td> -->
-						<td>
-							${mediaItem.timeAdded.fromNow() & oneTime}
-							<span style="float: right; margin-right: 10px">
-								${mediaItem.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]') & oneTime}
-							</span>
-						</td>
-					</tr>
-				</template>
-			</scroll-table>
-		</div>
-
-		<div if.bind="highlights" class="fill -height -margin20h" style="left: auto; width: 200px; padding-left: 10px; margin-top: 10px; height: 50%; bottom: auto">
-			<strong>Highlights / summary:</strong><br/>
-			<div class="fill border noselect" style="top: 20px; overflow-y: scroll; margin-left: 10px; bottom: 4px">
-				<div repeat.for="highlight of highlights" style="display: list-item; margin-left: 1.3em; list-style-type: circle; cursor: pointer">
-					<span click.delegate="viewMediaItem({id: highlight.src[0].id}, $event)">${highlight.txt}</span>
-				</div>
-			</div>
-		</div>
-
-		<div -if.bind="allTopics" class="fill -height -margin20h" style="left: auto; width: 200px; padding-left: 10px; margin-top: 10px" css="top: ${highlights?'50%':'0px'}">
-			<strong>Topics:</strong><br/>
-			<div class="fill border noselect" style="top: 20px; overflow-y: scroll; margin-left: 10px">
-				<span repeat.for="topic of allTopics" class="topic-keyword clickable ${topic.selected ? 'selected' : ''}"
-					click.delegate="toggleTopic(topic)"
-					css="opacity: ${0.4+topic.confidence*0.6 & oneTime}"
-					title="${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.0%' & oneTime} (${topic.count & oneTime})">
-					<!-- title="Score: ${topic[1] & oneTime}"> -->
-					${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.[0]%' & oneTime} (${topic.count & oneTime})
-				</span>
-				<!-- <span repeat.for="topic of allTopics" class="topic-keyword" -->
-				<!-- 	click.delegate="selectTopic(topic)" -->
-				<!-- 	css="opacity: ${0.4+topic[1]*0.6 & oneTime}" -->
-				<!-- 	title="${topic[0] & oneTime}: ${topic[1] | numberFormat:'0.0%' & oneTime}"> -->
-				<!-- 	([- title="Score: ${topic[1] & oneTime}"> -]) -->
-				<!-- 	${topic[0] & oneTime}: ${topic[1] | numberFormat:'0.[0]%' & oneTime} (${topic[2] & oneTime}) -->
-				<!-- </span> -->
-			</div>
-		</div>
+						</div>
+					</div>
 
 				</aubs-tab>
 				<aubs-tab header="Trending Storylines" disabled.bind="disabled" class="fill-">
 
-				&nbsp;
-				&nbsp;
-				<label style="display-: inline-block; -width: 200px; top: 10px; -right: 200px; position: absolute; height: 34px; text-align: left">
-					Number of top clusters:
-					&nbsp;&nbsp;
-					<select value.bind="topClusters" enter-press.call=""
-						change.delegate=""
-						class="form-control" style="display: inline-block; width: 100px;">
-						<option model.bind="5">5</option>
-						<option model.bind="10">10</option>
-						<option model.bind="15">15</option>
-						<option model.bind="20">20</option>
-						<option model.bind="30">30</option>
-						<option model.bind="40">40</option>
-						<option model.bind="50">50</option>
-					</select>
-				</label>
+					&nbsp;
+					&nbsp;
+					<label style="display-: inline-block; -width: 200px; top: 10px; -right: 200px; position: absolute; height: 34px; text-align: left">
+						Number of top clusters:
+						&nbsp;&nbsp;
+						<select value.bind="topClusters"
+							class="form-control" style="display: inline-block; width: 100px;">
+							<option model.bind="5">5</option>
+							<option model.bind="10">10</option>
+							<option model.bind="15">15</option>
+							<option model.bind="20">20</option>
+							<option model.bind="30">30</option>
+							<option model.bind="40">40</option>
+							<option model.bind="50">50</option>
+						</select>
+					</label>
 
-			<!-- </span> -->
-				<div class="fill light-border- padding20"
-					style="margin-top-: 60px; margin-bottom-: 74px; overflow: visible; border-left: none; border-right: none; top: 54px"
-					-show.bind="selectedQuery">
+					<div class="fill light-border- padding20"
+						style="margin-top-: 60px; margin-bottom-: 74px; overflow: visible; border-left: none; border-right: none; top: 54px">
 
-					<clustering clusters.bind="clusters" select.call="selectCluster($cluster, $event)"></clustering>
+						<clustering clusters.bind="clusters" select.call="selectCluster($cluster, $event)"></clustering>
 
-				</div>
+					</div>
 				</aubs-tab>
 				<aubs-tab header="Storyline List" disabled.bind="disabled" class="fill-">
 
-					<!-- <div style="display-: inline-block; width-: 200px; top: 10px; left: 10px; position: absolute; height: 34px; -text-align: right"> -->
 					<div show.bind="totalCount2 > 0" style="display: inline-block">
 						<div style="display: inline-block">
 							<strong>
@@ -538,37 +421,26 @@
 							</strong>
 						</div>
 					</div>
-					<!-- </div> -->
-
 
 					&nbsp;
 					&nbsp;
 					<label style="display-: inline-block; width: 300px; top: 10px; right: 230px; position: absolute; height: 34px; text-align: right">
 						Sort By:
 						&nbsp;&nbsp;
-						<select value.bind="clustersSortBy" enter-press.call=""
-							change.delegate=""
+						<select value.bind="clustersSortBy"
 							class="form-control" style="display: inline-block; width: 180px;">
-							<!-- style="display: inline-block; width: 100px; top: 10px; right: 200px; position: absolute; font-weight: normal"> -->
-							<!-- <option model.bind="undefined">Select Feed Group</option> -->
-							<!-- <option repeat.for="feedGroup of allFeedGroups" model.bind="100">100</option> -->
 							<option model.bind="'size'">Largest First</option>
 							<option model.bind="'time'">Last Changed First</option>
 						</select>
 					</label>
-
 
 					&nbsp;
 					&nbsp;
 					<label style="display-: inline-block; width: 200px; top: 10px; right: 0px; position: absolute; height: 34px; text-align: right">
 						Per Page:
 						&nbsp;&nbsp;
-						<select value.bind="perPage2" enter-press.call=""
-							change.delegate=""
+						<select value.bind="perPage2"
 							class="form-control" style="display: inline-block; width: 100px;">
-							<!-- style="display: inline-block; width: 100px; top: 10px; right: 200px; position: absolute; font-weight: normal"> -->
-							<!-- <option model.bind="undefined">Select Feed Group</option> -->
-							<!-- <option repeat.for="feedGroup of allFeedGroups" model.bind="100">100</option> -->
 							<option model.bind="1000">1000</option>
 							<option model.bind="100">100</option>
 							<option model.bind="50">50</option>
@@ -587,7 +459,7 @@
 								<th style="width: 280px"><div>Last Updated</div></th>
 							</template>
 							<template replace-part="body">
-								<tr repeat.for="cluster of allClusters" click.delegate="selectListCluster(cluster)" click.trigger=""
+								<tr repeat.for="cluster of allClusters" click.delegate="selectListCluster(cluster)"
 									dblclick.delegate="viewListCluster(cluster, $event)"
 									class="${selectedListCluster === cluster?'selected':''}">
 									<td>${cluster.id}</td>
@@ -595,7 +467,6 @@
 									<td class="truncate" title.one-time="cluster.title || '--- no title ---'">
 										${cluster.title || '--- no title ---'}</td>
 									<!-- <td class="nowrap">${mediaItem.sentiment}</td> -->
-									<!-- <td>${mediaItem.timeAdded}</td> -->
 									<td>
 										${cluster.lastUpdate.fromNow()}
 										<span style="float: right; margin-right: 10px">
@@ -614,7 +485,7 @@
 						<label style="display: inline-block; width: 180px; top: -11px; position: relative; height: 34px; text-align: right">
 							Display
 							&nbsp;&nbsp;
-							<select value.bind="mapItemType" enter-press.call="" change.delegate=""
+							<select value.bind="mapItemType"
 								class="form-control" style="display: inline-block; width: 100px;">
 								<option model.bind="'entity'">Entities</option>
 								<option model.bind="'topic'">Topics</option>
@@ -695,7 +566,7 @@
 									<th style="width: 150px"><div>Time Added (UTC)</div></th>
 								</template>
 								<template replace-part="body">
-									<tr repeat.for="mediaItem of mediaItemsAtLocation" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
+									<tr repeat.for="mediaItem of mediaItemsAtLocation" click.delegate="selectMediaItem(mediaItem)"
 										dblclick.delegate="viewMediaItem(mediaItem, $event)"
 										class="${selectedMediaItem === mediaItem?'selected':''}">
 										<td>
@@ -709,7 +580,6 @@
 										<td class="truncate" title.one-time="mediaItem.title.english || mediaItem.title.original">
 											${mediaItem.title.english || mediaItem.title.original}</td>
 										<!-- <td class="nowrap">${mediaItem.sentiment}</td> -->
-										<!-- <td>${mediaItem.timeAdded}</td> -->
 										<td>
 											${mediaItem.timeAdded.fromNow() & oneTime}
 											<span style="float: right; margin-right: 10px">
@@ -727,10 +597,4 @@
 			</aubs-tabset>
 		</div>
 	</div>
-	<!-- New/Edit Query Dialogs -->
-	<!-- <require from="dialogs/query-settings-dialog.html"></require> -->
-	<!-- <query-settings-dialog -model.bind="{}" -->
-	<!-- 	new.one-way-out="newQueryModal" -->
-	<!-- 	edit.one-way-out="editQueryModal" -->
-	<!-- 	remove.call="removeQuery($model)"></query-settings-dialog> -->
 </template>

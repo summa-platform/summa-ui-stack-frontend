@@ -97,11 +97,11 @@ function D3Timeline() {
 		let scaleFactor = (1/(ending - beginning)) * (width - margin.left - margin.right);
 
 		// draw the axis
-		var xScale = d3.scaleTime()
+		let xScale = d3.scaleTime()
 			.domain([beginning, ending])
 			.range([margin.left, width - margin.right]);
 
-		var xAxis = d3.axisBottom(xScale).tickFormat(self.tickFormat).ticks(d3.timeMinute.every(5));
+		let xAxis = d3.axisBottom(xScale).tickFormat(self.tickFormat).ticks(d3.timeMinute.every(5));
 
 
 		let rows = container.selectAll('g.row').data(data);
@@ -189,7 +189,7 @@ function D3Timeline() {
 					self.mouseout(d, i, data);
 				})
 				.on("click", function (d, i) {
-				  self.click(d, i, data);
+					self.click(d, i, data);
 					// click(d, index, datum);
 				})
 				;
@@ -232,9 +232,9 @@ function D3Timeline() {
 				.call(xAxis);
 		};
 
-		var belowLastItem = (margin.top + (itemHeight + itemMargin) * maxStack);
-		var aboveFirstItem = margin.top;
-		var timeAxisYPosition = showAxisTop ? aboveFirstItem : belowLastItem;
+		let belowLastItem = (margin.top + (itemHeight + itemMargin) * maxStack);
+		let aboveFirstItem = margin.top;
+		let timeAxisYPosition = showAxisTop ? aboveFirstItem : belowLastItem;
 		appendTimeAxis(container, xAxis, timeAxisYPosition);
 
 		let zoom;
@@ -287,7 +287,7 @@ function D3Timeline() {
 				;
 		}
 
-		var containerSize = container.node().getBoundingClientRect();
+		let containerSize = container.node().getBoundingClientRect();
 
 		setHeight();
 
@@ -333,7 +333,7 @@ function D3Timeline() {
 				try {
 					width = parent.attr("width");
 					// if(!width) {
-					// 	throw "width of the timeline is not set. As of Firefox 27, timeline().with(x) needs to be explicitly set in order to render";
+					// 	throw "width of the timeline is not set";
 					// }
 				} catch(err) {
 					console.log(err);

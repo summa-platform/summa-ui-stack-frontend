@@ -7,13 +7,11 @@
 			<feed-group-settings feed-group.bind="model" validate.bind="$parent.validate"></feed-group-settings>
 		</template>
 		<template replace-part="footer">
-				<!-- click.delegate="$parent.resolve($this)" -->
 			<button type="button" class="btn btn-success"
 				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right">Cancel</button>
 		</template>
 		<template replace-part="fade">
-			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback-button> -->
 		</template>
 	</modal>
 	<!-- Edit Feed Group Dialog -->
@@ -22,14 +20,12 @@
 			<feed-group-settings feed-group.bind="model" validate.bind="$parent.validate"></feed-group-settings>
 		</template>
 		<template replace-part="footer">
-				<!-- click.delegate="$parent.resolve($this)" -->
 			<button type="button" class="btn btn-success"
 				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
 			<button type="button" class="btn btn-danger" data-dismiss="modal" click.delegate="remove({$model:$this})">Delete</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right">Cancel</button>
 		</template>
 		<template replace-part="fade">
-			<!-- <feedback-button style="position: fixed; bottom: 10px; left: 10px;"></feedback-button> -->
 		</template>
 	</modal>
 </template>

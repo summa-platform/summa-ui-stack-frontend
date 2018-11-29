@@ -10,9 +10,10 @@ export class Timeline {
 	@bindable height = '100%';
 	@bindable width = '100%';
 
+	isAttached = false;
+
 	constructor(element) {
 		this.element = element;
-		this.svg = d3.select(this.element).select('svg');
 
 		this.timeline = new D3Timeline();
 
@@ -20,7 +21,6 @@ export class Timeline {
 		let clicked = false;
 		
 		this.timeline.click = function (d) {
-			console.log(d); 
 			if(self.select && !clicked) {
 				const event = d3.event;
 				clicked = true;
@@ -38,16 +38,15 @@ export class Timeline {
 	attached() {
 		this.svg = d3.select(this.element).select('svg');
 		this.g = this.svg.append("g");//.attr("width", 50000);
+		this.isAttached = true;
 
-		this.draw(this.items);
+		if(this.items) {
+			this.draw(this.items);
+		}
 	}
 
 	dataChanged(data) {
-		if(data) {
-			this.setData(data);
-		} else {
-			this.setData([]);
-		}
+		this.setData(data || []);
 	}
 
 	setData(data) {
@@ -74,15 +73,14 @@ export class Timeline {
 		items = [items];
 		this.items = items;
 
-		this.draw(items);
+		if(this.isAttached) {
+			this.draw(items);
+		}
 	}
 
 	draw(data) {
-
-		if(!this.g) {
-			return;
+		if(this.g) {
+			this.g.attr("width", 50000).datum(data).call(this.timeline.draw, this.datetime);
 		}
-
-		this.g.attr("width", 50000).datum(data).call(this.timeline.draw, this.datetime);
 	}
 }

@@ -48,5 +48,6 @@ Use docker-compose.integrate.yaml as basis for integrating into summa-platform.
 
 
 ### Configuration
-Front-end uses API url specified in ```config.json```, by default it is set to ```/api``` endpoint, which in turn is proxied to external API configured either in ```api-proxy.conf``` (if run using ```au run```) or ```api-proxy-nginx.conf``` if run with docker.
+
+Front-end uses API URL specified in ```api-proxy.json``` (sample provided in ```api-proxy.sample.json```), by default it is set to ```/api``` endpoint, which in turn is proxied to the external API configured either in ```api-proxy.conf``` (if run using ```au run```) or ```api-proxy-nginx.conf``` if run in docker.
 

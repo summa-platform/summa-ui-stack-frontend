@@ -26,7 +26,7 @@ export default class AuthService {
 			let session = 'current';
 			let user = await this.store.getUser(session);
 			this.store.currentUser = user;
-			console.log('CURRENT USER:', this.store.currentUser);
+			log.debug('current user:', this.store.currentUser);
 			this.session = user.id;
 		} catch(e) {
 			this.session = null;
@@ -34,7 +34,7 @@ export default class AuthService {
 	}
 	
 	async login(email, password) {
-		log.info('login');
+		log.debug('login');
 		this.error = '';
 		try {
 			let login = await this.store.checkPassword(email, password);
@@ -68,7 +68,7 @@ export default class AuthService {
 	}
 
 	async logout() {
-		log.info('LOGGING OUT');
+		log.debug('logout');
 		// localStorage[config.tokenName] = null;
 		localStorage['token'] = undefined;
 		localStorage['session'] = '';

@@ -43,12 +43,6 @@ table.table {
 	border: none;
 	/* border-bottom: 1px solid #aaa; */
 }
-/* Xtable.table { */
-/* 	/* display: block; */ */
-/* 	width: 100%; */
-/* 	border-spacing: 0px; */
-/* } */
-
 table.table th {
 	/* position: relative; */
 }

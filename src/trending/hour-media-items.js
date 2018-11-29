@@ -32,16 +32,10 @@ export class HourMediaItems {
 			this.feed = this.services.feed;
 		}
 		if(this.params.feedID) {
-			// if(this.store.feeds && this.store.feeds.length > 0) {
-			// 	this.feeds = this.store.feeds;
-			// } else {
-			// 	this.store.getFeeds().then(feeds => this.feeds = feeds);
-			// }
 			this.store.getFeed(this.params.feedID).then(feed => { this.feed = feed; this.services.feed = feed; this.setTitle(); });
 		}
 
 		// only needed to set query name in path bar
-		// this.store.getQueryStories(this.params.queryID).then(query => { this.query = query; this.services.query = query; });
 		if(this.params.queryID && this.params.queryID !== 'all')
 		this.store.getQuery(this.params.queryID).then(query => { this.query = query; this.services.query = query; this.setTitle(); });
 		// this.store.getQueryStories(this.params.queryID).then(query => { this.query = query; this.services.query = query; });
@@ -57,8 +51,6 @@ export class HourMediaItems {
 		for(const mediaItem of this.mediaItems) {
 			let detectedTopics = {};
 			for(const [topic, confidence] of mediaItem.detectedTopics) {
-				// console.log(topic, confidence);
-				// detectedTopics[topic] = confidence;
 				detectedTopics[topic] = true;
 				if(!allTopics[topic]) {
 					allTopics[topic] = { count: 1, confidence, label: topic };
@@ -73,7 +65,6 @@ export class HourMediaItems {
 		for(let topic of Object.keys(allTopics)) {
 			topic = allTopics[topic];
 			topic.confidence /= topic.count;
-			// allTopicsArray.push([ topic.name, topic.confidence, topic.count, selected: false ]);
 			topic.selected = false;
 			allTopicsArray.push(topic);
 		}
@@ -84,22 +75,10 @@ export class HourMediaItems {
 
 		// this.storyPromise = this.store.getQueryStory(this.params.queryID, this.params.storyID).then(story => {
 		// 	this.story = story; this.services.story = story; });
-
-		// moved from to attached() because at this point the current route is not yet set up properly
-		// if(this.params.mediaItemID) {
-		// 	let mediaItemID = this.params.mediaItemID;
-		// 	this.storyPromise.then(query => {
-		// 		let mediaItem = story.mediaItems.find(mediaItem => mediaItem.id === mediaItemID);
-		// 		if(mediaItem) {
-		// 			this.selectMediaItem(mediaItem);
-		// 		}
-		// 	});
-		// }
 	}
 
 	toggleTopic(topic) {
 		topic.selected = !topic.selected;
-		// TODO: filter by topics
 		this.filterMediaItems();
 	}
 
@@ -178,7 +157,7 @@ export class HourMediaItems {
 		}
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {
@@ -190,7 +169,6 @@ export class HourMediaItems {
 		let query = await this.services.newQuery();
 		if(query) {
 			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
 		}
 	}
 }

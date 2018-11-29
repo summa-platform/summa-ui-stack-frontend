@@ -104,7 +104,6 @@ export class Transcript {
 				addSpan(chunk);
 			}
 		}
-		// console.log('segments changed');
 	}
 
 	select(index) {

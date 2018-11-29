@@ -23,8 +23,6 @@ export class Entities {
 			for(const entity of entities) {
 				this.entityTypes[entity.type] = true;
 			}
-			// this.filter();
-			// console.log(entities)
 		});
 	}
 
@@ -54,10 +52,6 @@ export class Entities {
 		this.entities = this.allEntities.filter(entity => entityTypes[entity.type] && entity.baseForm.toLowerCase().indexOf(text) != -1);
 	}
 
-	async filter() {
-		// this.entities = this.allEntities;
-	}
-
 	select(entity) {
 		this.selected = entity;
 	}
@@ -70,7 +64,7 @@ export class Entities {
 		};
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {

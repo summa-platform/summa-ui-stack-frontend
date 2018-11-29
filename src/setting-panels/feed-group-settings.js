@@ -8,7 +8,6 @@ import {BootstrapFormRenderer} from 'validation/bootstrap-form-renderer';
 @inject(Store, NewInstance.of(ValidationController), Validator, BootstrapFormRenderer)
 export class FeedGroupSettings {
 	@bindable feedGroup = {};
-	// @bindable({defaultBindingMode: bindingMode.twoWay}) feed;
 
 	@bindable({defaultBindingMode: bindingMode.oneWayOut}) validate;
 
@@ -23,10 +22,8 @@ export class FeedGroupSettings {
 		this.validate = () => this.validationController.validate();
 
 		this.feedTypes = this.store.feedTypes;
-		// log.debug('Feed types:', this.feedTypes);
 		this.store.getFeedGroups().then(feedGroups => this.allFeedGroups = feedGroups);
 		this.store.getFeeds().then(feeds => this.allFeeds = feeds);
-		// this.allFeedGroups = this.store.getFeedGroups();
 	}
 
 	feedGroupChanged() {
@@ -51,7 +48,7 @@ export class FeedGroupSettings {
 				this.feedGroup.feeds = [];
 			}
 			if(this.selectedFeed) {
-				log.debug('selected feed:', this.selectedFeed);
+				log.debug('Selected feed:', this.selectedFeed);
 				let index = this.feedGroup.feeds.findIndex((item, index, array) => {
 					return this.selectedFeed.id === item.id;
 				});
@@ -64,9 +61,4 @@ export class FeedGroupSettings {
 			}
 		}
 	}
-
-	log() {
-		log.debug('Feed Group:', this.feedGroup);
-	}
-
 }

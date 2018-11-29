@@ -129,10 +129,8 @@ export class Trending {
 	selectedEntity = '';
 	selectedFeedGroup = undefined;
 	// https://www.npmjs.com/package/aurelia-bootstrap-datetimepicker
-	// @observable timeFromString = moment().subtract({hours: 24});
-	// @observable timeTillString = moment();
-	@observable timeFromString;	// NOTE: setting values here led to conflicts with restoring state
-	@observable timeTillString;	// NOTE: setting values here led to conflicts with restoring state
+	@observable timeFromString;	// NOTE: do not set here, will conflict with state restoring
+	@observable timeTillString;	// NOTE: do not set here, will conflict with state restoring
 
 	@observable perPage = 100;
 	@observable page = 1;
@@ -191,13 +189,10 @@ export class Trending {
 		{ key: 'es', value: "es", short: "ES", name: 'Spanish' },
 		{ key: 'uk', value: "uk", short: "UK", name: 'Ukrainian' },
 	];
-	// filterSettings = {
 	filters = {
 		mediaTypes: { article: true, audio: true, video: true },
 		languages: { lv: true, en: true, de: true, ar: true, ru: true, es: true, fa: true, uk: true },
 	};
-	// filterSettings = { article: true, audio: true, video: true,// latest: undefined,
-	// 	languages: { lv: true, en: true, de: true, ar: true, ru: true, es: true } };
 	
 	subscriptions = [];
 
@@ -208,15 +203,13 @@ export class Trending {
 	}
 
 	restoreState(state) {
-		console.log('RESTORE STATE:', state);
+		log.debug('RESTORE STATE:', state);
 		if(!state) {
 			// default state
 			this.fromTag = fromTagDefault;
 			this.tillTag = tillTagDefault;
-			// this.selectedFeedGroups = [];
-			// this.selectedEntities = [];
-			this.selectedFeedGroups.splice(0, this.selectedFeedGroups.length);
-			this.selectedEntities.splice(0, this.selectedEntities.length);
+			this.selectedFeedGroups.splice(0, this.selectedFeedGroups.length);	// clear existing array
+			this.selectedEntities.splice(0, this.selectedEntities.length);		// clear existing array
 			this.setAllProperties(this.filters.mediaTypes, true);
 			this.setAllProperties(this.filters.languages, true);
 			this.fullTextSearch = '';
@@ -268,7 +261,6 @@ export class Trending {
 					this.selectedFeedGroups.push({ name: 'Feed: ' + feed.name, feed: feed.id });
 				} else if(typeof feed === 'string') {
 					this.selectedFeedGroups.push({ name: 'Feed: '+this.allFeedNames[feed], feed: feed });
-					// this.selectedFeedGroups.push({ name: 'Feed: '+feed, feed: feed });
 				}
 			}
 		}
@@ -351,14 +343,12 @@ export class Trending {
 				this.active = 4;
 			}
 		}
-		console.log('RESTORED STATE:', this.fromTag, this.timeFromString, this.tillTag, this.timeTillString, this.selectedFeedGroups);
 	}
 
 	packState(override) {
 		if(!override) {
 			override = {};
 		}
-		console.log('PACK STATE:', this.fromTag, this.timeFromString, this.tillTag, this.timeTillString);
 		let from = (override.fromTag || this.fromTag);
 		let till = (override.tillTag || this.tillTag);
 		if(from == 'date' || from == 'date-time') {
@@ -436,7 +426,7 @@ export class Trending {
 			geoType: this.mapItemType,
 			mapZoom: this.mapZoom,
 		};
-		console.log('PACKED STATE:', state);
+		log.debug('PACKED STATE:', state);
 		return state;
 	}
 
@@ -748,19 +738,6 @@ export class Trending {
 		this.updateFetchQueryFilters();
 	}
 
-	// @observable selectedQuery;
-	// newQueryModal = undefined;
-	// editQueryModal = undefined;
-
-	// @bindable query = { namedEntities: [], feedGroups: [], from: { }, till: {} };
-	// @bindable query = { namedEntities: [], feedGroups: [] };
-	// fetchQuery = {
-	// 	entities: [],
-	// 	feedGroups: [],
-	// 	offset: 0,
-	// 	limit: 100,
-	// };
-
 	constructor(store, router, compositionService, services, bindingEngine, animator) {
 		this.store = store;
 		this.router = router;
@@ -771,13 +748,7 @@ export class Trending {
 
 		this.prepareFetchQuery();
 
-		// this.queriesPromise = this.store.getQueries().then(queries => this.allQueries = queries);
 		this.queriesPromise = this.store.getQueries().then(queries => { this.allQueries = queries; });
-		// if(!this.store.namedEntities || this.store.namedEntities.length == 0) {
-		// 	this.entitiesPromise = this.store.getNamedEntities();
-		// } else {
-		// 	this.entitiesPromise = Promise.resolve(this.store.namedEntities);
-		// }
 
 		this.feedGroupsPromise = this.store.getFeedGroups().then(feedGroups => {
 			this.allFeedGroups = feedGroups;
@@ -807,7 +778,7 @@ export class Trending {
 				if(!this.entities) {
 					return Promise.resolve([{ baseForm: origText }]);
 				}
-				let suggestions = this.entities.filter(entity => entity.baseForm.toLowerCase().indexOf(text) === 0); // TODO: fuzzy matching here
+				let suggestions = this.entities.filter(entity => entity.baseForm.toLowerCase().indexOf(text) === 0); // TODO: try fuzzy matching
 				suggestions.unshift({ baseForm: origText });
 				return Promise.resolve(suggestions);
 			},
@@ -819,48 +790,10 @@ export class Trending {
 
 	async activate(params, routeConfig) {
 		this.params = params;
-		console.log('ACTIVATE');
 
 		await this.feedGroupsPromise;
 		await this.feedsPromise;
 
-		// fast
-		/*
-		if(this.services.query) {
-			// TODO: search in queries list when queriesPromise...
-			// this.selectQuery(this.services.query);
-			this.selectedQuery = this.services.query;
-			this.queriesPromise.then(queries => {
-				if(this.selectedQuery) {
-					let query = queries.find(query => query.id === this.selectedQuery.id);
-					if(query) {
-						// this.selectedQuery = query;
-						this.selectQuery(query, true);
-					}
-				} else {
-					this.selectQuery(undefined, true);
-				}
-			});
-		}
-		*/
-
-		// moved to attached() because route is not yet correctly set up, so navigate does not work correctly from activate
-		// if(params.queryID) {
-		// 	// get from list by id
-		// 	this.queriesPromise.then(queries => {
-		// 		let query = queries.find(query => query.id === params.queryID);
-		// 		if(query) {
-		// 			this.selectQuery(query);
-		// 		}
-		// 	});
-		// }
-		//
-		//
-	
-
-
-		// console.log(this.params.queryID)
-        //
 		setTimeout(() => {
 			this.locationChanged();
 		}, 100);
@@ -869,83 +802,29 @@ export class Trending {
 
 	async locationChanged() {
 		if(this.params.queryID === 'all') {
-			// this.selectQuery();
 			this.restoreState();
 		} else if(this.params.queryID === 'all-list') {
-			// this.selectQuery();
 			this.restoreState();
 			this.active = 1;
 		} else if(this.params.queryID) {
 			this.restoreState(decode(this.params.queryID));
-			// let query = decode(this.params.queryID);
-			// console.log('DECODED QUERY:', query);
-			// this.selectQuery(query);
-
-			// let queryID = this.params.queryID;
-			// // get from list by id
-			// this.queriesPromise.then(queries => {
-			// 	let query = queries.find(query => query.id === queryID);
-			// 	if(query) {
-			// 		this.selectQuery(query);
-			// 	}
-			// });
 		}
 		this.fetchData();
 	}
 
 	async attached() {
-		console.log('TRENDING ATTACHED');
-		// await this.entitiesPromise;	// wait for entities first
-		// moved from activate() because route was not correctly set up, so navigate does not work correctly from activate
-		
 		this.fromPresetValues = jQuery(this.fromElement).children('option').map((i, v) => v.value).toArray();
 		this.tillPresetValues = jQuery(this.tillElement).children('option').map((i, v) => v.value).toArray();
 
-
-
-		/*
-		if(this.params.queryID === 'all') {
-			// this.selectQuery();
-			this.restoreState();
-		} else if(this.params.queryID === 'all-list') {
-			// this.selectQuery();
-			this.restoreState();
-			this.active = 1;
-		} else if(this.params.queryID) {
-			this.restoreState(decode(this.params.queryID));
-			// let query = decode(this.params.queryID);
-			// console.log('DECODED QUERY:', query);
-			// this.selectQuery(query);
-
-			// let queryID = this.params.queryID;
-			// // get from list by id
-			// this.queriesPromise.then(queries => {
-			// 	let query = queries.find(query => query.id === queryID);
-			// 	if(query) {
-			// 		this.selectQuery(query);
-			// 	}
-			// });
-		}
-
-		this.fetchData();
-		*/
 
 		this.selectedEntitiesSubscription = this.bindingEngine.collectionObserver(this.selectedEntities)
 			.subscribe(this.selectedEntitiesChanged.bind(this));
 		this.selectedFeedGroupsSubscription = this.bindingEngine.collectionObserver(this.selectedFeedGroups)
 			.subscribe(this.selectedFeedGroupsChanged.bind(this));
 
-		// let cb = () => this.filterSettingsChanged();
-		// this.observeObjectProperties(this.filterSettings, cb);
-		// this.observeObjectProperties(this.filterSettings.languages, cb);
 		let cb = () => this.filtersChanged();
 		this.observeObjectProperties(this.filters.mediaTypes, cb);
 		this.observeObjectProperties(this.filters.languages, cb);
-
-		// this.queryNamedEntitiesSubscription = this.bindingEngine.collectionObserver(this.query.namedEntities).subscribe(this.queryNamedEntitiesChanged);
-		// this.queryFeedGroupsSubscription = this.bindingEngine.collectionObserver(this.query.feedGroups).subscribe(this.queryFeedGroupsChanged);
-		// this.subscribeQueryNamedEntities();
-		// this.subscribeQueryFeedGroups();
 
 		jQuery('.selectpicker').selectpicker();
 		let self = this;
@@ -1003,11 +882,6 @@ export class Trending {
 			this.heatMap = undefined;
 			this.map = undefined;
 		}
-
-		// this.queryNamedEntitiesSubscription.dispose();
-		// this.queryNamedEntitiesSubscription = undefined;
-		// this.queryFeedGroupsSubscription.dispose();
-		// this.queryFeedGroupsSubscription = undefined;
 	}
 
 	observeObjectProperties(obj, callback) {
@@ -1017,55 +891,12 @@ export class Trending {
 		}
 	}
 
-	/*
-	subscribeQueryNamedEntities() {
-		if(this.queryNamedEntitiesSubscription) {
-			this.queryNamedEntitiesSubscription.dispose();
-			this.queryNamedEntitiesSubscription = undefined;
-		}
-		if(this.query) {
-			if(!this.query.namedEntities)
-				this.query.namedEntities = [];
-			this.queryNamedEntitiesSubscription = this.bindingEngine.collectionObserver(this.query.namedEntities)
-				.subscribe(this.queryNamedEntitiesChanged.bind(this));
-		}
-	}
-
-	subscribeQueryFeedGroups() {
-		if(this.queryFeedGroupsSubscription) {
-			this.queryFeedGroupsSubscription.dispose();
-			this.queryFeedGroupsSubscription = undefined;
-		}
-		if(this.query) {
-			if(!this.query.feedGroups)
-				this.query.feedGroups = [];
-			this.queryFeedGroupsSubscription = this.bindingEngine.collectionObserver(this.query.feedGroups)
-				.subscribe(this.queryFeedGroupsChanged.bind(this));
-		}
-	}
-	*/
-
-
-	/*
-	async newQuery() {
-		let query = await this.services.newQuery();
-		if(query) {
-			this.allQueries = await this.store.getQueries();
-			// this.selectQuery(query);
-			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
-		}
-	}
-	*/
 
 	async pinCurrentQuery() {
 		let name = prompt("Please enter name for the query", "Query "+(this.allQueries.length+1));
 		if(!name) {
 			return;
 		}
-		// let query = await this.services.newQuery();
-		// take current this.query and save
-		// this.query.name = name;
 		let mediaTypes = [];
 		for(let mediaType of this.filterMediaTypes) {
 			if(this.filters.mediaTypes[mediaType.key]) {
@@ -1102,43 +933,14 @@ export class Trending {
 			fullTextSearch: this.fullTextSearch,
 			clusterID: this.clusterID,
 		};
-		// let query = Object.assign({}, this.query);
-		// query.name = name;
-		// delete query.id;
-		let r = await this.store.saveQuery(query);
-		// let feedGroups = [];
-		// for(let feedGroup of r.feedGroups) {
-		// 	feedGroups.push(feedGroup.id)
-		// }
-		// r.feedGroups = feedGroups;
-		console.log(r);
+		await this.store.saveQuery(query);
 	}
-
-	/*
-	async editQuery(query) {
-		log.debug('edit query:', query);
-		if(query) {
-			query = Object.assign({}, await this.store.getQuery(query.id));
-		}
-		log.debug('edit query:', query);
-		// query = await this.editQueryModal(query);
-		let [dialog, destroy] = await this.compositionService.create('dialogs/query-settings-dialog');
-		dialog.viewModel.remove = (params) => { this.removeQuery(params.$model); };
-		query = await dialog.viewModel.edit(query);
-		destroy();
-
-		if(query) {
-			await this.store.saveQuery(query);
-		}
-	}
-	*/
 
 	async removeQuery(query, event) {
 		if(event) {
 			event.stopPropagation();
 		}
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Query`,
 			body: `Are you sure you want to delete query ${query.name} ?`,
@@ -1149,39 +951,20 @@ export class Trending {
 			try {
 				log.debug('remove query:', query);
 				let result = await this.store.removeQuery(query.id);
-				// this.selectedQuery = undefined;
 			} catch(e) {
 				console.error(e);
 			}
 		}
 	}
 
-	/*
-	defaultQuery(query) {
-		return false;
-		// TODO: check updated query etc, not current state
-		return this.fromTag === fromTagDefault && this.tillTag == tillTagDefault
-			&& this.selectedEntities.length === 0 && this.selectedFeedGroups.length === 0;
-	}
-	*/
-
 	updateNavigation(override, action) {
-		// console.log("UPDATE NAV:",query);
-		// if(query && !this.defaultQuery(query))
-		// if(this.fromTag === fromTagDefault && this.tillTag == tillTagDefault
-		// 	&& this.selectedEntities.length === 0 && this.selectedFeedGroups.length === 0)
-		// 	this.router.navigateToRoute('query-trending-id', { queryID: 'all' }, { trigger: false });	// default
-		// else
-		// 	this.router.navigateToRoute('query-trending-id', { queryID: encode(this.packState()) }, { trigger: false });
 		if(!override) {
 			override = {};
 		}
 		let state = 'all';
 		if(!this.isDefaultState(override)) {
-			console.log('STATE:', this.packState(override));
 			state = encode(this.packState(override));
-		} else 
-		if((override.active !== undefined ? override.active : this.active) == 1) {
+		} else if((override.active !== undefined ? override.active : this.active) == 1) {
 			state = 'all-list'
 		}
 		const route = 'query-trending-id';
@@ -1199,14 +982,11 @@ export class Trending {
 	}
 
 	async selectQuery(query, skipNavigation, event) {
-		console.log('SELECT QUERY:', query)
 		if(!query) {
 			this.restoreState();
 		} else {
-			// this.selectedFeedGroups = query.feedGroups.splice();
-			// this.selectedEntities = query.entities.splice();
-			Array.prototype.splice.apply(this.selectedFeedGroups, [0, this.selectedFeedGroups.length].concat(query.feedGroups));
-			Array.prototype.splice.apply(this.selectedEntities, [0, this.selectedEntities.length].concat(query.entities));
+			Array.prototype.splice.apply(this.selectedFeedGroups, [0, this.selectedFeedGroups.length].concat(query.feedGroups));	// update existing array
+			Array.prototype.splice.apply(this.selectedEntities, [0, this.selectedEntities.length].concat(query.entities));			// update existing array
 			this.tillTag = 'date-time-';
 			this.fromTag = 'date-time-';
 			if(isRelativeTag(query.till)) {
@@ -1269,118 +1049,16 @@ export class Trending {
 				this.active = 0;
 			}
 		}
-		// this.query = Object.assign({}, query);
-		// this.query = jQuery.extend(true, {}, query);
-		// this.query = Object.assign({}, query);
-		// this.query.feedGroups = Object.assign([], query.feedGroups)
-		// this.selectedQuery = this.query;
 		if(!skipNavigation) {
 			this.updateNavigation(query);
 		}
 		if(event) {
 			this.animator.animate(event.target, 'flash');
 		}
-		return
-		/*
-		if(!skipNavigation) {
-			// change representing route
-			// this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });
-			if(query)
-				this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: false });
-			else
-				this.router.navigateToRoute('query-trending-id', { queryID: 'all' }, { trigger: false });
-		}
-
-		log.debug('select query:', query);
-		this.selectedQuery = query;
-		this.trending = undefined;
-		this.trendingForQueryInProgress = query && query.id;
-		const trending = await this.store.getQueryTrending(query && query.id);
-		if(this.trendingForQueryInProgress !== (query && query.id))
-			return;
-		// this.selectedQuery = Object.assign(this.selectedQuery, query);
-		// trending = this.selectedQuery.trending;
-		// console.log(trending)
-
-		// function entityTrend(entity, trendObject) {
-		// 	const bins = [];
-		// 	let total = 0;
-		// 	for(let i=0; i<24; ++i) {
-		// 		total += bins[i] = trendObject[i-23 || '-0'] || 0;	// from -24 till 0
-		// 		// total += bins[i] = trendObject[-i || '-0'] || 0;	// from 0 till -24
-		// 	}
-		// 	return { entity, bins, total };
-		// }
-		function entityTrend(entity) {
-			const bins = [];
-			let total = 0;
-			for(let i=0; i<24; ++i) {
-				total += bins[i] = entity.bins[i-23 || '-0'] || 0;	// from -24 till 0
-				// total += bins[i] = trendObject[-i || '-0'] || 0;	// from 0 till -24
-			}
-			entity.bins = bins;
-			entity.total = total;
-			return entity;
-			// return { entity, bins, total };
-		}
-
-		function trendsOfEntities(trendsObject) {
-			const trends = [];
-			// for(let entity of Object.keys(trendsObject)) {
-			// 	trends.push(entityTrend(entity, trendsObject[entity]));
-			for(let entity of trendsObject) {
-				trends.push(entityTrend(entity));
-			}
-			return trends;
-		}
-
-		trending.selectedEntities = trendsOfEntities(trending.selectedEntities);
-		trending.topKEntities = trendsOfEntities(trending.topKEntities);
-		trending.topKEntities.sort((a, b) => {
-			return b.total - a.total;
-		});
-
-		// if(this.selectedQuery)
-		// 	this.selectedQuery.trending = trending;
-		this.trending = trending;
-		
-		// console.log('query:', query)
-		this.services.query = this.selectedQuery;
-
-		// TODO: scroll into screen
-		
-		*/
 	}
-
-	/*
-	storiesForQuery(query, event) {
-		// if(!this.selectedQuery)
-		// 	return true;
-		if(!query) {
-			query = { id: 'all' };
-		}
-
-		const route = 'stories';
-		const params = { queryID: query.id };
-
-		if(event !== undefined && (event === true || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey)) {
-			// use any modifier as and excuse to open in separate tab/window
-			const url = this.router.generate(route, params);
-			window.open(url, '_blank');
-		} else {
-			this.router.navigateToRoute(route, params, { trigger: true });
-		}
-	}
-	*/
 
 	selectBin(entity, binIndex, event) {
 		const pastHour = -(binIndex-23);
-		console.log('SELECT BIN:', entity, binIndex, pastHour);
-		// if(!this.selectedEntities) {
-		// 	this.selectedEntities = [];
-		// }
-		// Array.prototype.splice.apply(this.selectedFeedGroups, [0, this.selectedFeedGroups.length].concat(query.feedGroups));
-		// Array.prototype.splice.apply(this.selectedEntities, [0, this.selectedEntities.length].concat(query.entities));
 		
 		let index;
 		if(entity) {
@@ -1413,7 +1091,6 @@ export class Trending {
 
 			override.timeTillString = date.subtract(pastHour, 'hours').format('YYYY-MM-DD HH:mm:ss');
 			override.timeFromString = moment(override.timeTillString).subtract(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
-			// this.timeFromString = date.subtract(pastHour+1, 'hours').format('YYYY-MM-DD HH:mm:ss');
 			override.clusterID = undefined;
 			override.active = 1;	// switch to list
 
@@ -1438,63 +1115,23 @@ export class Trending {
 
 			this.timeTillString = date.subtract(pastHour, 'hours').format('YYYY-MM-DD HH:mm:ss');
 			this.timeFromString = moment(this.timeTillString).subtract(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
-			// this.timeFromString = date.subtract(pastHour+1, 'hours').format('YYYY-MM-DD HH:mm:ss');
 			this.clusterID = undefined;
 			this.active = 1;	// switch to list
 
 			this.updateNavigation(undefined, 'trigger');
 		}
-		return;
-
-
-
-		// if(!this.selectedQuery)
-		// 	return;
-		// const pastHour = -(binIndex-23);
-		// console.log(trend, binIndex-24);
-
-		const params = {
-			queryID: this.selectedQuery && this.selectedQuery.id || 'all',
-			pastHour: this.trending.epochTimeSecs+'-'+pastHour,
-			// entity: entity.baseForm,
-			// entityID: entity.id,
-			entity: entity.id,
-			// entity: trend.entity
-		};
-
-		// console.log(this.trending.epochTimeSecs+'-'+pastHour);
-		if(this.services.altTouch || event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
-			// use any modifier as and excuse to open in separate tab/window
-			const url = this.router.generate('hour-media-items', params);
-			window.open(url, '_blank');
-		} else {
-			this.router.navigateToRoute('hour-media-items', params, { trigger: true });
-		}
 	}
-
-	// --------------------------
-
-	/*
-	getEntity(baseForm) {
-		if(this.store.namedEntities) {
-			return this.store.namedEntities.find(entity => entity.baseForm == baseForm);
-		}
-	}
-	*/
 
 	addSelectedFeedGroup() {
 		if(!this.selectedFeedGroup)
 			return;
-		// log.debug('add selected feed group:', this.selectedFeedGroup);
 		if(!this.feedGroups) {
 			this.feedGroups = [];
 		}
 		let index = this.feedGroups.findIndex((item, index, array) => {
 			return this.selectedFeedGroup === item;
-			// return this.selectedFeedGroup.id === item.id;
 		});
 		if(index === -1) {
-		// if(this.feedGroups.indexOf(this.selectedFeedGroup) === -1) {
 			this.selectedFeedGroups.push(this.selectedFeedGroup);
 		} else {
 			log.info('Feed group already added');
@@ -1503,12 +1140,7 @@ export class Trending {
 	}
 
 	entitySelected(event) {
-		log.debug('entity selected:', event.value);
-		log.debug('entity selected:', typeof event.value);
 		this.selectedEntity = event.value;
-		// if(!this.selectedEntities) {
-		// 	this.selectedEntities = [];
-		// }
 		let index = this.selectedEntities.findIndex((item, index, array) => {
 			if(typeof this.selectedEntity === 'string' && typeof item === 'string') {
 				return this.selectedEntity === item;
@@ -1518,13 +1150,11 @@ export class Trending {
 				} else {
 					return this.selectedEntity.baseForm === item.baseForm;
 				}
-				// return this.selectedEntity.baseForm === item.baseForm;
 			}
 			return false;
 			// return this.selectedEntity.baseForm === (typeof item === 'string' ? item : item.baseForm);
 		});
 		if(index === -1) {
-		// if(this.selectedEntities.indexOf(this.selectedEntity) === -1) {
 			this.selectedEntities.push(this.selectedEntity);
 			this.selectedEntity = '';
 		} else {
@@ -1540,174 +1170,12 @@ export class Trending {
 		return entity.baseForm;
 	}
 
-	// --------------------------
-
-	/*
-	// async refreshData(query, getTrending, getList) {
-	async refreshData(query, state) {
-
-		if(state === undefined) {
-			state = this.active;
-		}
-
-		let getTrending = state === 0;
-		let getList = state === 1;
-
-		if(getTrending) {
-
-			let trending = await this.store.getTrending(query);
-			this.trending = undefined;
-			// this.trendingForQueryInProgress = query && query.id;
-			// const trending = await this.store.getQueryTrending(query && query.id);
-			// if(this.trendingForQueryInProgress !== (query && query.id))
-			// 	return;
-			// this.selectedQuery = Object.assign(this.selectedQuery, query);
-			// trending = this.selectedQuery.trending;
-			// console.log(trending)
-
-			// function entityTrend(entity, trendObject) {
-			// 	const bins = [];
-			// 	let total = 0;
-			// 	for(let i=0; i<24; ++i) {
-			// 		total += bins[i] = trendObject[i-23 || '-0'] || 0;	// from -24 till 0
-			// 		// total += bins[i] = trendObject[-i || '-0'] || 0;	// from 0 till -24
-			// 	}
-			// 	return { entity, bins, total };
-			// }
-			function entityTrend(entity) {
-				const bins = [];
-				let total = 0;
-				for(let i=0; i<24; ++i) {
-					total += bins[i] = entity.bins[i-23 || '-0'] || 0;	// from -24 till 0
-					// total += bins[i] = trendObject[-i || '-0'] || 0;	// from 0 till -24
-				}
-				entity.bins = bins;
-				entity.total = total;
-				return entity;
-				// return { entity, bins, total };
-			}
-
-			function trendsOfEntities(trendsObject) {
-				const trends = [];
-				// for(let entity of Object.keys(trendsObject)) {
-				// 	trends.push(entityTrend(entity, trendsObject[entity]));
-				for(let entity of trendsObject) {
-					trends.push(entityTrend(entity));
-				}
-				return trends;
-			}
-
-			trending.selectedEntities = trendsOfEntities(trending.selectedEntities);
-			trending.topKEntities = trendsOfEntities(trending.topKEntities);
-			trending.topKEntities.sort((a, b) => {
-				return b.total - a.total;
-			});
-
-			// if(this.selectedQuery)
-			// 	this.selectedQuery.trending = trending;
-			this.trending = trending;
-		}
-
-		if(getList) {
-
-			let response = await this.store.getMediaItems(query);
-			this.totalCount = response.totalCount;
-			this.mediaItems = response.mediaItems;
-			// console.log('MEDIA ITEMS:', this.mediaItems);
-
-			let allTopics = {};
-			for(const mediaItem of this.mediaItems) {
-				let detectedTopics = {};
-				for(const [topic, confidence] of mediaItem.detectedTopics) {
-					// console.log(topic, confidence);
-					// detectedTopics[topic] = confidence;
-					detectedTopics[topic] = true;
-					if(!allTopics[topic]) {
-						allTopics[topic] = { count: 1, confidence, label: topic };
-					} else {
-						allTopics[topic].count += 1;
-						allTopics[topic].confidence += confidence;
-					}
-				}
-				mediaItem.detectedTopicsPresent = detectedTopics;
-			}
-			let allTopicsArray = [];
-			for(let topic of Object.keys(allTopics)) {
-				topic = allTopics[topic];
-				topic.confidence /= topic.count;
-				// allTopicsArray.push([ topic.name, topic.confidence, topic.count, selected: false ]);
-				topic.selected = false;
-				allTopicsArray.push(topic);
-			}
-			// this.allTopics = allTopicsArray.sort((a, b) => b[1] - a[1]);
-			// this.allTopics = allTopicsArray.sort((a, b) => b.confidence - a.confidence);
-			this.allTopics = allTopicsArray.sort((a, b) => (b.count - a.count) || (b.confidence - a.confidence));	// first by count, then by confidence
-		}
-	}
-	*/
-
 	async activeChanged(active) {
-		console.log('ACTIVE:', active);
-		// await this.refreshData(this.fetchQuery);
 		await this.fetchData();
 	}
 
-	/*
-	queryChanged(query) {
-		this.updateNavigation(query);
-		this.subscribeQueryNamedEntities();
-		this.subscribeQueryFeedGroups();
-		console.log('QUERY:', query);
-		if(this.query) {
-			this.queryNamedEntitiesChanged(this.query.namedEntities);
-			this.queryFeedGroupsChanged(this.query.feedGroups);
-		}
-		this.refreshData(this.fetchQuery);
-	}
-	*/
-
-	/*
-	queryNamedEntitiesChanged(value) {
-		this.updateNavigation(this.query);
-		// console.log('NAMED ENTITIES:', value);
-		// console.log('NAMED ENTITIES:', value);
-		console.log('NAMED ENTITIES:',this.query.namedEntities);
-		let entities = [];
-		if(this.query.namedEntities) {
-			for(let entity of this.query.namedEntities) {
-				if(typeof entity == 'string') {
-					entities.push(entity);
-				} else if(entity.id && entity.id.length > 0) {
-					entities.push({id: entity.id});
-				}
-			}
-		}
-		this.fetchQuery.entities = entities;
-		this.refreshData(this.fetchQuery);
-	}
-
-	queryFeedGroupsChanged(value) {
-		this.updateNavigation(this.query);
-		// console.log('FEED GROUPS:', value);
-		console.log('FEED GROUPS:', this.query.feedGroups);
-		let feedGroups = [];
-		if(this.query.feedGroups) {
-			for(let feedGroup of this.query.feedGroups) {
-				// feedGroups.push(feedGroup.id);
-				feedGroups.push(feedGroup);
-			}
-		}
-		this.fetchQuery.feedGroups = feedGroups;
-		this.refreshData(this.fetchQuery);
-	}
-	*/
-
 	async selectMediaItem(mediaItem) {
-		// change representing route
-		// this.router.navigateToRoute('story-media-item-id', { queryID: this.query.id, storyID: story.id, mediaItemID: mediaItem.id }, { trigger: false });
-
 		this.selectedMediaItem = mediaItem;
-		// NOTE: scroll into screen not needed if above is uncommented (no way to select specific story by URL
 		this.services.mediaItem = this.selectedMediaItem;
 	}
 
@@ -1718,14 +1186,6 @@ export class Trending {
 				// pastHour: this.params.pastHour,
 				mediaItemID: mediaItem.id
 		};
-		// if(this.params.queryID) {
-		//		params.queryID = this.params.queryID;
-		//		params.entity = this.params.entity;
-		//		route = 'hour-media-item';
-		// } else if(this.params.feedID) {
-		//		params.feedID = this.params.feedID;
-		//		route = 'feed-hour-media-item';
-		// }
 		route = 'media-item'
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
@@ -1742,11 +1202,7 @@ export class Trending {
 	}
 
 	async selectListCluster(cluster) {
-		// change representing route
-		// this.router.navigateToRoute('story-media-item-id', { queryID: this.query.id, storyID: story.id, mediaItemID: mediaItem.id }, { trigger: false });
-
 		this.selectedListCluster = cluster;
-		// NOTE: scroll into screen not needed if above is uncommented (no way to select specific story by URL
 		// this.services.cluster = this.selectedListCluster;
 	}
 
@@ -1764,7 +1220,7 @@ export class Trending {
 		this.updateFetchQueryClusterCount();
 		delete this.fetchQuery.geoloc;
 
-		console.log('FETCH QUERY:', this.fetchQuery);
+		log.debug('FETCH QUERY:', this.fetchQuery);
 
 		if(active === undefined) {
 			active = this.active;
@@ -1779,7 +1235,6 @@ export class Trending {
 		let fetchQuery = Object.assign({}, this.fetchQuery);
 
 		if(!getList && fetchQuery.cluster !== undefined) {
-			// fetchQuery.cluster = undefined;
 			delete fetchQuery.cluster;
 		}
 
@@ -1787,23 +1242,6 @@ export class Trending {
 
 			let trending = await this.store.getTrending(fetchQuery);
 			this.trending = undefined;
-			// this.trendingForQueryInProgress = query && query.id;
-			// const trending = await this.store.getQueryTrending(query && query.id);
-			// if(this.trendingForQueryInProgress !== (query && query.id))
-			// 	return;
-			// this.selectedQuery = Object.assign(this.selectedQuery, query);
-			// trending = this.selectedQuery.trending;
-			// console.log(trending)
-
-			// function entityTrend(entity, trendObject) {
-			// 	const bins = [];
-			// 	let total = 0;
-			// 	for(let i=0; i<24; ++i) {
-			// 		total += bins[i] = trendObject[i-23 || '-0'] || 0;	// from -24 till 0
-			// 		// total += bins[i] = trendObject[-i || '-0'] || 0;	// from 0 till -24
-			// 	}
-			// 	return { entity, bins, total };
-			// }
 			
 			function binsToArray(binsObject) {
 				const bins = [];
@@ -1825,13 +1263,10 @@ export class Trending {
 				entity.bins = bins;
 				entity.total = total;
 				return entity;
-				// return { entity, bins, total };
 			}
 
 			function trendsOfEntities(trendsObject) {
 				const trends = [];
-				// for(let entity of Object.keys(trendsObject)) {
-				// 	trends.push(entityTrend(entity, trendsObject[entity]));
 				for(let entity of trendsObject) {
 					trends.push(entityTrend(entity));
 				}
@@ -1847,8 +1282,6 @@ export class Trending {
 				return b.total - a.total;
 			});
 
-			// if(this.selectedQuery)
-			// 	this.selectedQuery.trending = trending;
 			this.trending = trending;
 		}
 
@@ -1859,13 +1292,11 @@ export class Trending {
 			this.totalPages = Math.ceil(this.totalCount / this.perPage);
 			this.mediaItems = response.mediaItems;
 			this.highlights = response.highlights;
-			// console.log('MEDIA ITEMS:', this.mediaItems);
 
 			let allTopics = {};
 			for(const mediaItem of this.mediaItems) {
 				let detectedTopics = {};
 				for(const [topic, confidence] of mediaItem.detectedTopics) {
-					// console.log(topic, confidence);
 					// detectedTopics[topic] = confidence;
 					detectedTopics[topic] = true;
 					if(!allTopics[topic]) {
@@ -1907,7 +1338,6 @@ export class Trending {
 		if(getGeolocationData) {
 			if(this.map) {
 				this.updateFetchQueryGeolocation();
-				// fetchQuery.geoloc = undefined;
 				let LatLng = google.maps.LatLng
 				fetchQuery.limit = 0;
 				fetchQuery.offset = 0;
@@ -1972,18 +1402,9 @@ export class Trending {
 			this.fetchMediaItemsAtLocationNow();
 			this.fetchTimeout2 = undefined;
 		}, 500);
-		// if(!this.waitingForFetch2) {
-		// 	 setTimeout(() => {
-		// 		this.updateNavigation();
-		// 		this.fetchMediaItemsAtLocationNow();
-		// 		this.waitingForFetch2 = false;
-		// 	}, 100);
-		// 	this.waitingForFetch2 = true;
-		// }
 	}
 
 	async fetchData(active) {
-		console.log("FETCH DATA TILL STRING:", this.timeTillString)
 		if(!this.fetchTimeout) {
 			clearTimeout(this.fetchTimeout);
 		}
@@ -1992,18 +1413,9 @@ export class Trending {
 			this.fetchDataNow(active);
 			this.fetchTimeout = undefined;
 		}, 100);
-		// if(!this.waitingForFetch) {
-		// 	this.fetchTimeout = setTimeout(() => {
-		// 		this.updateNavigation();
-		// 		this.fetchDataNow(active);
-		// 		this.waitingForFetch = false;
-		// 	}, 100);
-		// 	this.waitingForFetch = true;
-		// }
 	}
 
 	async selectedEntitiesChanged(value) {
-		console.log('SELECTED ENTITIES:', this.selectedEntities)
 		this.page = 1;
 		this.page2 = 1;
 		this.updateFetchQueryEntities();
@@ -2038,7 +1450,6 @@ export class Trending {
 	}
 
 	async pageChanged(value) {
-		// console.log('PAGE:', value);
 		this.updateFetchQueryWindow();
 		await this.fetchData();
 	}
@@ -2077,7 +1488,6 @@ export class Trending {
 	}
 
 	async timeTillStringChanged(timeTill) {
-		console.log("TILL STRING:", timeTill, this.timeTillString)
 		this.page = 1;
 		this.page2 = 1;
 		this.updateFetchQueryWindow();
@@ -2090,7 +1500,6 @@ export class Trending {
 			let date = relativeDate(oldValue, this.getTillDate());
 			// this.timeFromString = date.toISOString().replace('T', ' ');
 			this.timeFromString = date.format('YYYY-MM-DD HH:mm:ss');
-			console.log('FROM:', oldValue, date, this.timeFromString, this.getTillDate());
 		}
 		this.page = 1;
 		this.page2 = 1;
@@ -2100,12 +1509,10 @@ export class Trending {
 	}
 
 	async tillTagChanged(value, oldValue) {
-		// console.log(value, oldValue, this.timeTillString);
 		if((value == 'date' || value == 'date-time') && (oldValue != 'date' && oldValue != 'date-time' && oldValue != 'date-time-')) {
 			let date = oldValue == 'now' ? moment(new Date()) : relativeDate(oldValue);
 			// this.timeTillString = date.toISOString().replace('T', ' ');
 			this.timeTillString = date.format('YYYY-MM-DD HH:mm:ss');
-			console.log('TILL:', oldValue, date, this.timeTillString);
 		}
 		this.page = 1;
 		this.page2 = 1;
@@ -2120,9 +1527,7 @@ export class Trending {
 		await this.fetchData();
 	}
 
-	// filterSettingsChanged() {
 	async filtersChanged() {
-		console.log('FILTERS CHANGED:', this.filters)
 		this.page = 1;
 		this.page2 = 1;
 		this.updateFetchQueryWindow();
@@ -2230,10 +1635,8 @@ export class Trending {
 		} else {
 			radius = this.mapPositionRadius;
 		}
-		// console.log(this.map.zoom, zoomRatios[this.map.zoom], radius)
 		this.mapPositionRadius = radius;
 		this.mapUpdateMarkerRadius(radius);
-		// this.mapUpdateMarkerRadius(radius);
 	}
 
 	mapClearMarker() {

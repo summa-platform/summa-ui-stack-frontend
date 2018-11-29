@@ -2,7 +2,8 @@ import {inject, bindable, observable} from 'aurelia-framework';
 import {Store} from 'store';
 import {Router, Redirect} from 'aurelia-router';
 import {Services} from 'services';
-//
+import log from 'logger';
+
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 // https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
 // alternate (possibly compatible) implementation: https://jsfiddle.net/gabrieleromanato/qAGHT/
@@ -59,14 +60,6 @@ export class FeedSettingsDialog {
 			let re = new RegExp(':'+param, 'g');
 			url = url.replace(re, params[param])
 		}
-
-		if(this.services.altTouch || event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
-			// use any modifier as and excuse to open in separate tab/window
-			window.open(url, '_blank');
-		} else {
-			window.location.href = url;
-			resolve(); // dismiss dialog
-		}
 		*/
 
 		let state = {
@@ -78,28 +71,11 @@ export class FeedSettingsDialog {
 			active: 'list',
 		}
 
-		console.log(state);
+		log.debug(state);
 
-		let action = 'new';
 		// let state = encode(this.packState(override));
 		state = encode(state);
-		// const route = 'query-trending-id';
-		// let url;
-		// if(action == 'url' || action == 'new') {
-		// 	url = this.router.generate(route, { queryID: state });
-		// }
-		// if(action == 'url') {
-		// 	return url;
-		// } else if(action == 'new') {
-		// 	window.open(url, '_blank');
-		// } else {
-		// 	this.router.navigateToRoute(route, { queryID: state }, { trigger: action == 'trigger' });
-		// }
 		let url = '#/trending/'+state;
-		// for(const param of Object.keys(params)) {
-		// 	let re = new RegExp(':'+param, 'g');
-		// 	url = url.replace(re, params[param])
-		// }
 
 		if(this.services.altTouch || event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
 			// use any modifier as and excuse to open in separate tab/window
@@ -114,7 +90,7 @@ export class FeedSettingsDialog {
 		if(!override) {
 			override = {};
 		}
-		console.log('PACK STATE:', this.fromTag, this.timeFromString, this.tillTag, this.timeTillString);
+		log.debug('PACK STATE:', this.fromTag, this.timeFromString, this.tillTag, this.timeTillString);
 		let from = (override.fromTag || this.fromTag);
 		let till = (override.tillTag || this.tillTag);
 		if(from == 'date' || from == 'date-time') {
@@ -163,7 +139,7 @@ export class FeedSettingsDialog {
 			// languages: languages,
 			active: active,
 		};
-		console.log('PACKED STATE:', state);
+		log.debug('PACKED STATE:', state);
 		return state;
 	}
 
@@ -171,9 +147,6 @@ export class FeedSettingsDialog {
 
 		let query = { feeds: [feed.id], from: '-24h', till: 'now', totalOnly: true }
 		let trending = await this.store.getTrending(query);
-		// let trending = await this.store.getFeedTrending(feed.id);
-		// trending.epochTimeSecs
-		// trending.last24hStats
 
 		this.epochTimeSecs = trending.epochTimeSecs;
 		// const trendObject = trending.last24hStats;

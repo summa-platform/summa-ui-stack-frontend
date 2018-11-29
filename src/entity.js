@@ -15,17 +15,6 @@ export class Entity {
 		this.router = router;
 		this.store = store;
 		this.services = services;
-		/*
-		if(this.store.namedEntities && this.store.namedEntities.length > 0) {
-			this.entities = this.store.namedEntities;
-			this.entitiesPromise = Promise.resolve(this.entities);
-		} else {
-			this.entitiesPromise = this.store.getNamedEntities().then(entities => { 
-				this.entities = entities;
-				return entities;
-			});
-		}
-		*/
 	}
 
 	fixDetails() {
@@ -151,18 +140,6 @@ export class Entity {
 				this.entity = this.entityDetails = entity;
 				this.fixDetails();
 			});
-			// this.entity = this.entityDetails = await this.store.getNamedEntityDetails(params.entityID);
-			// this.fixDetails();
-			/*
-			this.entitiesPromise.then(async entities => {
-				this.entity = entities.find(entity => entity.id == params.entityID);
-				if(this.entity) {
-					this.entityDetails = await this.store.getNamedEntityDetails(this.entity.id);
-					this.fixDetails();
-				}
-			});
-			*/
-			// this.mediaItems = await this.store.getNamedEntityMediaItems(params.entityID);
 		}
 	}
 
@@ -185,7 +162,7 @@ export class Entity {
 		}
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			// const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {

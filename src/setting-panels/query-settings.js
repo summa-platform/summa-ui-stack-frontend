@@ -51,19 +51,6 @@ export class QuerySettings {
 		};
 
 		this.validate = () => this.validationController.validate();
-
-		// ValidationRules.customRule(
-		// 	'matchesProperty',
-		// 	(value, obj, otherPropertyName) => 
-		// 		value === null
-		// 		|| value === undefined
-		// 		|| value === ''
-		// 		|| obj[otherPropertyName] === null
-		// 		|| obj[otherPropertyName] === undefined
-		// 		|| obj[otherPropertyName] === ''
-		// 		|| value === obj[otherPropertyName],
-		// 	'${$displayName} must match ${$getDisplayName($config.otherPropertyName)}', otherPropertyName => ({ otherPropertyName })
-		// );
 	}
 
 	queryChanged() {
@@ -87,7 +74,7 @@ export class QuerySettings {
 	addSelectedFeedGroup() {
 		if(!this.selectedFeedGroup)
 			return;
-		// log.debug('add selected feed group:', this.selectedFeedGroup);
+		log.debug('Add selected feed group:', this.selectedFeedGroup);
 		if(!this.query.feedGroups) {
 			this.query.feedGroups = [];
 		}
@@ -95,7 +82,6 @@ export class QuerySettings {
 			return this.selectedFeedGroup.id === item.id;
 		});
 		if(index === -1) {
-		// if(this.query.feedGroups.indexOf(this.selectedFeedGroup) === -1) {
 			this.query.feedGroups.push(this.selectedFeedGroup);
 		} else {
 			log.info('Feed group already added');
@@ -103,21 +89,8 @@ export class QuerySettings {
 		this.selectedFeedGroup = undefined;
 	}
 
-	// deprecated
-	addSelectedEntity() {
-		if(!this.query.entities) {
-			this.query.entities = [];
-		}
-		if(this.query.entities.indexOf(this.selectedEntity) === -1) {
-			this.query.entities.push(this.selectedEntity);
-			this.selectedEntity = '';
-		} else {
-			log.info('Entity already added');
-		}
-	}
-
 	entitySelected(event) {
-		log.debug('entity selected:', event.value);
+		log.debug('Entity selected:', event.value);
 		this.selectedEntity = event.value;
 		if(!this.query.namedEntities) {
 			this.query.namedEntities = [];
@@ -140,9 +113,5 @@ export class QuerySettings {
 			return entity;
 		}
 		return entity.baseForm;
-	}
-
-	log() {
-		log.debug('Feed Group:', this.query);
 	}
 }

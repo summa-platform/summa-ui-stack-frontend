@@ -24,7 +24,6 @@ export class Trending {
 		this.router = router;
 		config.title = 'Trending Stories';
 		config.map([
-			// { route: '', name: 'query-trending', moduleId: 'trending/trending', nav: false, title: 'Trending', settings: { } },
 			{ route: '', redirect: 'all' },
 			{ route: ':queryID', name: 'query-trending-id', moduleId: 'trending/trending2', nav: false, title: 'Trending', settings: { } },
 			{ route: ':queryID/stories', name: 'stories', moduleId: 'trending/stories', nav: false, title: 'Stories', settings: { } },
@@ -46,9 +45,6 @@ export class Trending {
 	}
 
 	async newQuery() {
-		// this.router.navigateToRoute('reports', {hei:222});
-		// return;
-		// let query = await this.newQueryModal({ feedGroups: [] });
 		let [dialog, destroy] = await this.compositionService.create('dialogs/query-settings-dialog');
 		let query = await dialog.viewModel.new({ feedGroups: [] });
 		destroy();
@@ -62,12 +58,10 @@ export class Trending {
 	}
 
 	async editQuery(query) {
-		log.debug('edit query:', query);
 		if(query) {
 			query = Object.assign({}, await this.store.getQuery(query.id));
 		}
-		log.debug('edit query:', query);
-		// query = await this.editQueryModal(query);
+		log.debug('Edit query:', query);
 		let [dialog, destroy] = await this.compositionService.create('dialogs/query-settings-dialog');
 		dialog.viewModel.remove = (params) => { this.removeQuery(params.$model); };
 		query = await dialog.viewModel.edit(query);
@@ -79,18 +73,17 @@ export class Trending {
 	}
 
 	async removeQuery(query) {
-		log.debug('remove query:', query);
+		log.debug('Remove query:', query);
 		let result = await this.store.removeQuery(query.id);
 		this.selectedQuery = undefined;
 	}
 
 	async selectQuery(query) {
-		log.debug('select query:', query);
+		log.debug('Select query:', query);
 		this.selectedQuery = query;
 		let trending = await this.store.getQueryTrending(query.id);
 		this.selectedQuery = Object.assign(this.selectedQuery, trending);
 		trending = this.selectedQuery.trending;
-		// console.log(trending)
 		let trending2 = [];
 		for(let entity in trending) {
 			let mapping = trending[entity];
@@ -101,15 +94,10 @@ export class Trending {
 			trending2.push({entity, bins})
 		}
 		this.selectedQuery.trending = trending2;
-		// console.log('TRENDING:', this.selectedQuery.trending);
-		// console.log(this.selectedQuery);
-		// if(feedGroup) {
-		// 	this.selectedFeedGroup = Object.assign(feedGroup, await this.store.getFeedGroup(feedGroup._id));
-		// }
 	}
 
 	storiesForQuery(query) {
-		// log.debug('path:', this.router.generate('stories', { queryID: query.id, storyID: null, mediaID: null }));
+		log.debug('Navigate to:', this.router.generate('stories', { queryID: query.id, storyID: null, mediaID: null }));
 		this.router.navigateToRoute('stories', { queryID: query.id, storyID: null, mediaID: null }, { trigger: true });
 	}
 

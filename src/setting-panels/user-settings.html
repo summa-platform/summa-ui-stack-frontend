@@ -4,27 +4,17 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-6">
-					<!-- <div class="form-group" validation-errors.bind="nameErrors" class.bind="nameErrors.length ? 'has-error' : ''"> -->
 					<div class="form-group">
 						<label style="width: 100%">
 							Name
-							<!-- <em></em> -->
 							<input type="text" class="form-control" value.bind="name & validate" />
 						</label>
-						<!-- <span class="help-block" repeat.for="errorInfo of nameErrors"> -->
-						<!-- 	${errorInfo.error.message} -->
-						<!-- </span> -->
 					</div>
-					<!-- <div class="form-group" validation-errors.bind="emailErrors" class.bind="nameErrors.length ? 'has-error' : ''"> -->
 					<div class="form-group">
 						<label style="width: 100%">
 							E-mail
-							<!-- <em></em> -->
 							<input type="email" class="form-control" value.bind="email & validate" />
 						</label>
-						<!-- <span class="help-block" repeat.for="errorInfo of emailErrors"> -->
-						<!-- 	${errorInfo.error.message} -->
-						<!-- </span> -->
 					</div>
 					<label style="width: 100%" show.bind="store.currentUser.role === 'admin'">
 						Role
@@ -35,7 +25,6 @@
 					<br />
 					<br />
 					<label style="width: 100%" class="noselect" show.bind="store.currentUser.role === 'admin'">
-						<!-- <em></em> -->
 						<input type="checkbox" checked.bind="isSuspended" />
 						&nbsp;
 						Suspended
@@ -43,19 +32,15 @@
 					<br />
 					<br />
 					<label style="width: 100%" class="noselect">
-						<!-- <em></em> -->
 						<input type="checkbox" checked.bind="data.hideTranscript" />
 						&nbsp;
 						Hide transcript
 					</label>
 				</div>
-			<!-- </div> -->
-			<!-- <div class="row"> -->
 				<div class="col-md-6">
 					<div class="form-group" show.bind="!new && store.currentUser.id === user.id">
 						<label style="width: 100%">
 							Current Password
-							<!-- <em></em> -->
 							<input type="password" class="form-control" placeholder="Enter current password..."
 									value.bind="currentPassword & validate" />
 						</label>
@@ -63,7 +48,6 @@
 					<div class="form-group">
 						<label style="width: 100%">
 							Password
-							<!-- <em></em> -->
 							<input type="password" class="form-control" placeholder="Set or change password..."
 									value.bind="password & validate" change.delegate="confirmPassword = ''" />
 						</label>
@@ -71,15 +55,11 @@
 					<div class="form-group">
 						<label style="width: 100%">
 							Confirm Password
-							<!-- <em></em> -->
 							<input type="password" class="form-control" placeholder="Confirm password..." value.bind="confirmPassword & validate" />
 						</label>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- <br/> -->
-		<!-- TODO: remove this -->
-		<!-- <button class="btn" click.trigger="log()">DEBUG: log object</button> <em>TODO: remove this</em> -->
 	</template>
 </template>

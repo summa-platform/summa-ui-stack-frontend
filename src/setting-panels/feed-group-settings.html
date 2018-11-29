@@ -5,7 +5,6 @@
 		<div class="form-group" style="margin-bottom: 0px">
 			<label style="width: 100%">
 				Feed Group Name
-				<!-- <em>Hint text - guidance on how to effectively name a feed group and an example feed group name</em> -->
 				<input type="text" class="form-control" value.bind="name & validate" />
 			</label>
 		</div>
@@ -13,17 +12,12 @@
 		<label style="width: 100%">
 			Feeds
 			<br/>
-			<!-- <em></em> -->
-				<!-- class="form-control" style="display: inline; width: calc(100% - 60px)" -->
 			<select value.bind="$parent.selectedFeed" enter-press.call="addSelectedFeed()"
 				class="form-control" style="display: inline; width: 100%"
 				change.delegate="addSelectedFeed()">
 				<option model.bind="undefined">Select Feed</option>
 				<option repeat.for="feed of $parent.allFeeds" model.bind="feed">${feed.name}</option>
 			</select>
-			<!-- <button class="btn btn-default" click.trigger="addSelectedFeed()" -->
-			<!-- 	disabled.bind="!$parent.selectedFeed" -->
-			<!-- 	style="width: 60px; position: relative; top: -1px">Add</button> -->
 		</label>
 		<strong>You have selected:</strong>
 		<br />
@@ -31,8 +25,5 @@
 		<keywords items.bind="feeds">
 			<template replace-part="title">${item.name & oneTime}</template>
 		</keywords>
-		<!-- <br /> -->
-		<!-- TODO: remove this -->
-		<!-- <button class="btn" click.trigger="log()">DEBUG: log object</button> <em>TODO: remove this</em> -->
 	</template>
 </template>

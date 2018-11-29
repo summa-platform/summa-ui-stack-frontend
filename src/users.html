@@ -1,6 +1,5 @@
 <template>
 	<require from="resources/attributes/enter-press"></require>
-	<!-- <require from="setting-panels/user-settings"></require> -->
 	<div class="fill headbar height" style="height: 80px">
 		<span class="title">Users</span>
 		<button class="btn btn-dark" style="float: right" click.trigger="newUser()">
@@ -13,17 +12,13 @@
 				<span class="sub-title">Select User</span>
 			</div>
 			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
-				<!-- <li class="${selectedUser === currentUser?'selected':''}" click.delegate="selectUser(currentUser)"> -->
-				<!-- 	<strong>Current User</strong> -->
-				<!-- </li> -->
-				<li repeat.for="user of users" click.delegate="selectUser(user)" click.trigger=""
+				<li repeat.for="user of users" click.delegate="selectUser(user)"
 					class="${selectedUser === user?'selected':''} ${user.isSuspended?'inactive':''}">
 					${user.name} <strong if.bind="user === currentUser">(current)</strong>
 				</li>
 			</ul>
 		</div>
 		<div class="fill padding20" style="left: 300px">
-			<!-- ${selectedUser|json} -->
 			<template with.bind="selectedUser">
 				<div>
 					<span class="sub-title" show-.bind="selectedUser">${selectedUser.name || 'Current User'}</span>

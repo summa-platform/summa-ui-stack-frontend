@@ -1,8 +1,7 @@
-// import {bindable, observable, bindingMode, children} from 'aurelia-framework';
-// import log from 'logger';
 import {inject, bindable} from 'aurelia-framework';
 import * as d3 from 'd3';
 import $ from 'jquery';
+import log from 'logger';
 
 
 @inject(Element)
@@ -15,11 +14,11 @@ export class Clustering {
 	minFontSize = "8px";
 	maxFontSize = "24px";
 
+	isAttached = false;
+
 	constructor(element) {
 
-		console.log('CLUSTERING INIT');
 		this.element = element;
-		// this.svg = d3.select(this.element).select('svg');
 
 		this.treemap = d3.treemap()
 			.size([100, 100])
@@ -27,14 +26,12 @@ export class Clustering {
 			//.tile(d3.treemapSquarify.ratio(1))
 			.round(true)
 			.paddingInner(0);
-
 	}
-
-
 
 	attached() {
       	this.container = d3.select(this.element).select(".clustering-container");
 
+		this.isAttached = true;
 		this.draw(this.clusters);
 		
 		window.addEventListener('resize', this.onResize.bind(this));
@@ -45,10 +42,7 @@ export class Clustering {
 	}
 
 	clustersChanged(data) {
-		console.log('CLUSTER DATA:', data);
-		if(data) {
-			this.draw(data)
-		} else {
+		if(this.isAttached) {
 			this.draw(data);
 		}
 	}
@@ -91,7 +85,7 @@ export class Clustering {
 	}
 
 	draw(data) {
-		console.log('CLUSTER DATA:', data);
+		log.debug('CLUSTER DATA:', data);
 		if(!data) {
 			return;
 		}
@@ -104,7 +98,6 @@ export class Clustering {
 		let id = 0;
 		for(let topic of data) {
 			let topicClusters = [];
-			// console.log(topic)
 			for(let cluster of topic.clusters) {
 				topicClusters.push({
 					id: id++,
@@ -131,13 +124,13 @@ export class Clustering {
 			// parent: null,
 			children: topics,
 		};
-		console.log('CLUSTER DATA2:', data);
+		log.debug('CLUSTER DATA AUGMENTED:', data);
 		
 		var root = d3.hierarchy(data)
 			.sum(function (d) { return d.value; })
 			.sort(function (a, b) { return b.height - a.height || b.value - a.value; });
-		//.eachBefore(function (d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; });
-			console.log("ROOT:", root)
+			//.eachBefore(function (d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; });
+		log.debug("ROOT:", root)
 
 		this.treemap(root);
 
@@ -198,7 +191,6 @@ export class Clustering {
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
 			})
-						
 
 		var image = cell.append("div")
 			.attr("class", "clustering-image");
@@ -216,8 +208,8 @@ export class Clustering {
 				return "clustering-text " + color;
 			})
 			.text(function (d, v, e) {
-			return d.data.title;
-			})
+				return d.data.title;
+			});
 
 		let self = this;
 		cell.each(function (node, i, g) {
@@ -228,71 +220,73 @@ export class Clustering {
 		});
 
 
-          // if (this.watchText)
-          //   this.watchText();
-          // this.watchText = scope.$watchGroup(root.leaves().map(function (f) {
-          //   return function () { return f.data.title };
-          // }), (newval, oldval) => {
-          //   newval.forEach((f, i) => {
-          //     if (f != oldval[i]) {
-          //       var cell = instanceElement.find(".cell_" + root.leaves()[i].data.name);
-          //       var textelement = cell.find(".clustering-text");
-          //       textelement.text(f);
-          //       textelement.removeClass("loading");
-          //       this.resizeText(cell);
-          //     }
-          //   })
-          // });
-          //
-          // if (this.watchImages)
-          //   this.watchImages();
-          // this.watchImages = scope.$watchGroup(root.leaves().map(function (f) {
-          //   return function () { return f.data.image };
-          // }), (newval, oldval) => {
-          //   newval.forEach((f, i) => {
-          //     if (f != oldval[i]) {
-          //       var cell = instanceElement.find(".cell_" + root.leaves()[i].data.name);
-          //       cell.addClass("with-image");
-          //       var imageelement = cell.find(".clustering-image");
-          //       imageelement.css("background-image", "url(" + f + ")");
-          //     }
-          //   })
-          // });
+
+		// legacy code
+
+		// cluster images in angularjs
+		/*
+		if (this.watchText)
+			this.watchText();
+		this.watchText = scope.$watchGroup(root.leaves().map(function (f) {
+			return function () { return f.data.title };
+		}), (newval, oldval) => {
+			newval.forEach((f, i) => {
+				if (f != oldval[i]) {
+					var cell = instanceElement.find(".cell_" + root.leaves()[i].data.name);
+					var textelement = cell.find(".clustering-text");
+					textelement.text(f);
+					textelement.removeClass("loading");
+					this.resizeText(cell);
+				}
+			})
+		});
+
+		if (this.watchImages)
+			this.watchImages();
+		this.watchImages = scope.$watchGroup(root.leaves().map(function (f) {
+			return function () { return f.data.image };
+		}), (newval, oldval) => {
+			newval.forEach((f, i) => {
+				if (f != oldval[i]) {
+					var cell = instanceElement.find(".cell_" + root.leaves()[i].data.name);
+					cell.addClass("with-image");
+					var imageelement = cell.find(".clustering-image");
+					imageelement.css("background-image", "url(" + f + ")");
+				}
+			})
+		});
+		*/
 
 
+		// cluster image animations in angularjs
+		/*
+		var animations = ["up", "down", "left", "right"];
+		var interval = setInterval(function () {
+			var cell_with_images = instanceElement.find(".with-image");
+			var visible = cell_with_images.filter(":not(.text-hidden)");
+			var hidden = cell_with_images.filter(".text-hidden");
+			if (hidden.length) {
+				var n = Math.floor(Math.random() * hidden.length);
+				for (var i = 0; i < n; i++) {
+					var idx = Math.floor(Math.random() * hidden.length);
+					hidden[idx].classList.remove("text-hidden");
+					animations.forEach(function (f) {
+						hidden[idx].classList.remove(f);
+					});
+				}
+			}
 
+			if (visible.length) {
+				var n = Math.random() > 0.5 ? 3 : 6;
+				for (var i = 0; i < n; i++) {
+					var idx = Math.floor(Math.random() * visible.length);
+					visible[idx].classList.add("text-hidden");
 
-
-
-
-      // var animations = ["up", "down", "left", "right"];
-      // var interval = setInterval(function () {
-      //   var cell_with_images = instanceElement.find(".with-image");
-      //   var visible = cell_with_images.filter(":not(.text-hidden)");
-      //   var hidden = cell_with_images.filter(".text-hidden");
-      //
-      //   if (hidden.length) {
-      //     var n = Math.floor(Math.random() * hidden.length);
-      //     for (var i = 0; i < n; i++) {
-      //       var idx = Math.floor(Math.random() * hidden.length);
-      //       hidden[idx].classList.remove("text-hidden");
-      //       animations.forEach(function (f) {
-      //         hidden[idx].classList.remove(f);
-      //       });
-      //     }
-      //   }
-      //
-      //   if (visible.length) {
-      //     var n = Math.random() > 0.5 ? 3 : 6;
-      //     for (var i = 0; i < n; i++) {
-      //       var idx = Math.floor(Math.random() * visible.length);
-      //       visible[idx].classList.add("text-hidden");
-      //
-      //       var anim = animations[Math.floor(Math.random() * animations.length)];
-      //       visible[idx].classList.add(anim);
-      //     }
-      //   }
-      // }, 3000);
-
+					var anim = animations[Math.floor(Math.random() * animations.length)];
+					visible[idx].classList.add(anim);
+				}
+			}
+		}, 3000);
+		*/
 	}
 }

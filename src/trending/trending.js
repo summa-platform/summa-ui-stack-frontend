@@ -32,14 +32,11 @@ export class Trending {
 
 		// fast
 		if(this.services.query) {
-			// TODO: search in queries list when queriesPromise...
-			// this.selectQuery(this.services.query);
 			this.selectedQuery = this.services.query;
 			this.queriesPromise.then(queries => {
 				if(this.selectedQuery) {
 					let query = queries.find(query => query.id === this.selectedQuery.id);
 					if(query) {
-						// this.selectedQuery = query;
 						this.selectQuery(query, true);
 					}
 				} else {
@@ -47,21 +44,9 @@ export class Trending {
 				}
 			});
 		}
-
-		// moved to attached() because route is not yet correctly set up, so navigate does not work correctly from activate
-		// if(params.queryID) {
-		// 	// get from list by id
-		// 	this.queriesPromise.then(queries => {
-		// 		let query = queries.find(query => query.id === params.queryID);
-		// 		if(query) {
-		// 			this.selectQuery(query);
-		// 		}
-		// 	});
-		// }
 	}
 
 	async attached() {
-		console.log('TRENDING ATTACHED');
 		await this.entitiesPromise;	// wait for entities first
 		// moved from activate() because route was not correctly set up, so navigate does not work correctly from activate
 		if(this.params.queryID === 'all') {
@@ -82,19 +67,15 @@ export class Trending {
 		let query = await this.services.newQuery();
 		if(query) {
 			this.allQueries = await this.store.getQueries();
-			// this.selectQuery(query);
 			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
 		}
 	}
 
 	async editQuery(query) {
-		log.debug('edit query:', query);
 		if(query) {
 			query = Object.assign({}, await this.store.getQuery(query.id));
 		}
-		log.debug('edit query:', query);
-		// query = await this.editQueryModal(query);
+		log.debug('Edit query:', query);
 		let [dialog, destroy] = await this.compositionService.create('dialogs/query-settings-dialog');
 		dialog.viewModel.remove = (params) => { this.removeQuery(params.$model); };
 		query = await dialog.viewModel.edit(query);
@@ -107,7 +88,6 @@ export class Trending {
 
 	async removeQuery(query) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Query`,
 			body: `Are you sure you want to delete query ${query.name} ?`,
@@ -116,7 +96,7 @@ export class Trending {
 		});
 		if(result) {
 			try {
-				log.debug('remove query:', query);
+				log.debug('Remove query:', query);
 				let result = await this.store.removeQuery(query.id);
 				this.selectedQuery = undefined;
 			} catch(e) {
@@ -128,14 +108,13 @@ export class Trending {
 	async selectQuery(query, skipNavigation) {
 		if(!skipNavigation) {
 			// change representing route
-			// this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });
 			if(query)
 				this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: false });
 			else
 				this.router.navigateToRoute('query-trending-id', { queryID: 'all' }, { trigger: false });
 		}
 
-		log.debug('select query:', query);
+		log.debug('Select query:', query);
 		this.selectedQuery = query;
 		this.trending = undefined;
 		this.trendingForQueryInProgress = query && query.id;
@@ -144,7 +123,6 @@ export class Trending {
 			return;
 		// this.selectedQuery = Object.assign(this.selectedQuery, query);
 		// trending = this.selectedQuery.trending;
-		// console.log(trending)
 
 		function entityTrend(entity, trendObject) {
 			const bins = [];
@@ -174,11 +152,7 @@ export class Trending {
 		// 	this.selectedQuery.trending = trending;
 		this.trending = trending;
 		
-		// console.log('query:', query)
 		this.services.query = this.selectedQuery;
-
-		// TODO: scroll into screen
-		
 	}
 
 	storiesForQuery(query, event) {
@@ -192,7 +166,7 @@ export class Trending {
 		const params = { queryID: query.id };
 
 		if(event !== undefined && (event === true || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey)) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {
@@ -204,7 +178,6 @@ export class Trending {
 		// if(!this.selectedQuery)
 		// 	return;
 		const pastHour = -(binIndex-23);
-		// console.log(trend, binIndex-24);
 
 		const params = {
 			queryID: this.selectedQuery && this.selectedQuery.id || 'all',
@@ -212,9 +185,8 @@ export class Trending {
 			entity: trend.entity
 		};
 
-		// console.log(this.trending.epochTimeSecs+'-'+pastHour);
 		if(this.services.altTouch || event.altKey || event.shiftKey || event.metaKey || event.ctrlKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate('hour-media-items', params);
 			window.open(url, '_blank');
 		} else {

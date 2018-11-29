@@ -9,53 +9,40 @@ export class Histogram {
 	@bindable height = '100%';
 	@bindable width = '100%';
 
+	isAttached = false;
+
 	constructor(element) {
 		this.element = element;
-		this.svg = d3.select(this.element).select('svg');
 	}
 
 	attached() {
 		this.svg = d3.select(this.element).select('svg');
-		this.draw(this.data);
-		// function prevent() {
-		// 	d3.event.stopImmediatePropagation();
-		// 	d3.event.stopPropagation();
-		// 	d3.event.preventDefault();
-		// }
-		// this.svg.on("dblclick", function () {
-		// 	d3.event.stopImmediatePropagation();
-		// 	d3.event.stopPropagation();
-		// 	d3.event.preventDefault();
-		// });
-		// this.svg.on("click", prevent);
-		// this.svg.on("mouseup", prevent);
-		// this.svg.on("mousedown", prevent);
+		this.$svg = $(this.svg.node());
+		this.isAttached = true;
+		this.draw(this.data || []);
 	}
 
 	dataChanged(data) {
-		if(data) {
-			this.draw(data);
-		} else {
-			this.draw([]);
+		if(this.isAttached) {
+			this.draw(data || []);
 		}
 	}
 
 	draw(data) {
-		// var data = d3.range(1000).map(d3.randomBates(10));
-		var formatCount = d3.format(",.0f");
+		// random test data
+		// data = d3.range(1000).map(d3.randomBates(10));
+
+		let formatCount = d3.format(",.0f");
 
 		let svg =  this.svg;
-		// var svg = d3.select(this.svg),
 
 		svg.select('g').remove();	// remove any old elements
 
-		var margin = {top: 10, right: 20, bottom: 30, left: 20},
+		let margin = {top: 10, right: 20, bottom: 30, left: 20},
 			g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-		let $svg = $(svg.node());
-		let width = $svg.width();
-		let height = $svg.height();
-
+		let width = this.$svg.width();
+		let height = this.$svg.height();
 
 		let nonEmptyBin = false;
 		for(let bin of data) {
@@ -81,36 +68,36 @@ export class Histogram {
 		width -= margin.left + margin.right;
 		height -= margin.top + margin.bottom;
 
-		var xScale = d3.scaleLinear()
+		let xScale = d3.scaleLinear()
 			.domain([-data.length, 0])
 			// .domain([-1, data.length])
 			.range([0, width]);
 			// .rangeRound([0, width]);
 
-		var x = d3.scaleLinear()
+		let x = d3.scaleLinear()
 			.domain([0, data.length])
 			.range([0, width]);
 			// .rangeRound([0, width]);
 
-		var bins = d3.histogram()
+		let bins = d3.histogram()
 			.domain(x.domain())
 			// .thresholds(x.ticks(20))
 			.thresholds(data.length)
 			// .thresholds(x.ticks(data.length))
 			(data);
 
-		var y = d3.scaleLinear()
+		let y = d3.scaleLinear()
 			.domain([0, d3.max(data, function(d) { return d; })])
 			.range([height, 0]);
 
-		// var bar = g.selectAll(".bar")
+		// let bar = g.selectAll(".bar")
 		// 	.data(bins).enter().append("g")
 		// 	.attr("class", "bar")
 		// 	.attr("transform", function(d, i) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
 		
 		let barWidth = width/data.length;
 
-		var bar = g.selectAll(".bar")
+		let bar = g.selectAll(".bar")
 			.data(data).enter().append("g")
 			.attr("class", "bar")
 			.attr("transform", function(d, i) { return "translate(" + x(i) + "," + y(d) + ")"; });
@@ -133,11 +120,11 @@ export class Histogram {
 			}
 		}
 
-		function prevent() {
-			d3.event.stopImmediatePropagation();
-			d3.event.stopPropagation();
-			d3.event.preventDefault();
-		}
+		// function prevent() {
+		// 	d3.event.stopImmediatePropagation();
+		// 	d3.event.stopPropagation();
+		// 	d3.event.preventDefault();
+		// }
 
 		bar.append("rect")
 			.attr("x", 1)

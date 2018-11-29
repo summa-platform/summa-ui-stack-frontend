@@ -1,8 +1,6 @@
 import {bindable, observable, inject} from 'aurelia-framework';
 import {Tabset} from './tabset';
-// import velocity from 'velocity-animate';
 
-// @inject(RoutedTabset, Element)
 @inject(Tabset, Element)
 export class Tab {
 	@bindable header;

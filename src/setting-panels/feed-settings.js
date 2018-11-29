@@ -23,16 +23,12 @@ export class FeedSettings {
 		// this.validationController.validateTrigger = validateTrigger.changeOrBlur;
 		this.validate = () => this.validationController.validate();
 
-		// this.feedTypes = this.store.feedTypes;
 		this.store.getFeedTypes().then(feedTypes => {
 			this.feedTypes = feedTypes;
 			this.feedTypeTitle = this.feedTypes.reduce((acc, feed) => { acc[feed.internalval] = feed.label; return acc; }, {});
 		});
 
-		// log.debug('Feed types:', this.feedTypes);
 		this.store.getFeedGroups().then(feedGroups => this.allFeedGroups = feedGroups);
-		// this.allFeedGroups = this.store.getFeedGroups();
-		// log.debug('all feed groups:', this.allFeedGroups);
 
 		// this.saveRules = ValidationRules
 		// 	.ensure('name').required()
@@ -79,7 +75,7 @@ export class FeedSettings {
 			if(!this.feed.feedGroups) {
 				this.feed.feedGroups = [];
 			}
-			log.debug('selected feed group:', this.selectedFeedGroup);
+			log.debug('Selected feed group:', this.selectedFeedGroup);
 			if(this.selectedFeedGroup && this.feed.feedGroups.indexOf(this.selectedFeedGroup) === -1) {
 				this.feed.feedGroups.push(this.selectedFeedGroup);
 				this.error = '';
@@ -89,18 +85,4 @@ export class FeedSettings {
 		}
 		this.selectedFeedGroup = undefined;
 	}
-
-	feedGroupSelected() {
-		this.selectedFeedGroupError = '';
-		// if(this.selectedFeedGroup && this.feed.groups && this.feed.groups.indexOf(this.selectedFeedGroup) !== -1) {
-		// 	this.selectedFeedGroupError = 'Selected feed group already added!';
-		// } else {
-		// 	this.selectedFeedGroupError = '';
-		// }
-	}
-
-	log() {
-		log.debug('Feed:', this.feed);
-	}
-
 }

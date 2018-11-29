@@ -1,79 +1,9 @@
 <template>
 	<div class="fill headbar height" style="height: 80px">
-		<!-- <button class="btn btn-dark" style="float: right" click.delegate="newQuery()"> -->
-		<!-- 	Create a new query &nbsp; -->
-		<!-- 	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-		<!-- </button> -->
 		<span class="title">Media Item</span>
 		&nbsp;
 		<bookmark-border model.bind="{ color: '#000000'}" width="24px" height="24px" style="cursor: pointer"
 			title="Create Bookmark" click.trigger="createNewBookmark()"></bookmark-border>
-		<div style="-display: inline" class="path-bar default-cursor nowrap">
-			<!-- <span class="truncate node"> -->
-			<!-- 	<a route-href="route: trending" class="truncate node">Queries</a> -->
-			<!-- </span> -->
-			<!-- <span if.bind="params.queryID && params.queryID != 'all'" class="truncate node"> -->
-			<!-- <span if.bind="params.queryID && params.queryID != 'all'" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 	<a route-href="route: stories; params.bind: {queryID: params.queryID}" title="Stories of Query: ${query.name}"> -->
-			<!-- 		<span class="prefix">Stories of Query:</span> ${query.name} -->
-			<!-- 	</a> -->
-			<!-- </span> -->
-			<!-- <span if.bind="params.storyID" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 	<a route-href="route: story; params.bind: {queryID: params.queryID, storyID: params.storyID}" title="Story: ${story.title}"> -->
-			<!-- 		<span class="prefix">Story:</span> ${story.title} -->
-			<!-- 	</a> -->
-			<!-- </span> -->
-			<!-- <span if.bind="params.pastHour && params.entity && params.queryID" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 		([- title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -]) -->
-			<!-- 		([- <span title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -]) -->
-			<!-- 	<a route-href="route: hour-media-items; params.bind: {queryID: params.queryID, pastHour: params.pastHour, entity: params.entity}" -->
-			<!-- 		title.bind="title"> -->
-			<!-- 		<span title.bind="title"> -->
-			<!-- 			([- <strong> -]) -->
-			<!-- 				<span class="prefix">Media Items with Entity</span> -->
-			<!-- 				${params.entity} -->
-			<!-- 				<span class="prefix">of Query</span> -->
-			<!-- 				${query.name || 'All'} -->
-			<!-- 				<span class="prefix">from</span> -->
-			<!-- 				${pastHour}h -->
-			<!-- 				<span class="prefix">ago</span> -->
-			<!-- 			([- </strong> -]) -->
-			<!-- 		</span> -->
-			<!-- 	</a> -->
-			<!-- </span> -->
-			<!-- <span if.bind="params.pastHour && params.feedID" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 		([- title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -]) -->
-			<!-- 		([- <span title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -]) -->
-			<!-- 	<a route-href="route: feed-hour-media-items; params.bind: {feedID: params.feedID, pastHour: params.pastHour}" -->
-			<!-- 		title.bind="title"> -->
-			<!-- 		<span title.bind="title"> -->
-			<!-- 			([- <strong> -]) -->
-			<!-- 				<span class="prefix">Media Items for Feed</span> -->
-			<!-- 				${feed.name} -->
-			<!-- 				<span class="prefix">from</span> -->
-			<!-- 				${pastHour}h -->
-			<!-- 				<span class="prefix">ago</span> -->
-			<!-- 			([- </strong> -]) -->
-			<!-- 		</span> -->
-			<!-- 	</a> -->
-			<!-- </span> -->
-			<!-- <span if.bind="params.mediaItemID" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 	([- <a route-href="route: media-item; params.bind: {queryID: params.queryID, storyID: params.storyID, mediaItemID: params.mediaItemID}" -]) -->
-			<!-- 	([- 	title="Media Item: ${mediaItemTitle}"> -]) -->
-			<!-- 	([- 	title="Media Item: ${mediaItem.title.english}"> -]) -->
-			<!-- 		<span title="Media Item: ${mediaItemTitle}"> -->
-			<!-- 		([- <span title="Media Item: ${mediaItem.title.english}"> -]) -->
-			<!-- 			<strong><span class="prefix">Media Item:</span> ${mediaItemTitle}</strong> -->
-			<!-- 			([- <strong><span class="prefix">Media Item:</span> ${mediaItem.title.english}</strong> -]) -->
-			<!-- 		</span> -->
-			<!-- 	([- </a> -]) -->
-			<!-- </span> -->
-		</div>
 	</div>
 	<require from="resources/elements/scroll-table.html"></require>
 	<require from="resources/elements/keywords"></require>
@@ -81,13 +11,13 @@
 	<require from="resources/value-converters/number-format"></require>
 	<require from="icons/bookmark-border"></require>
 	<require from="./media-item.css"></require>
+	<require from="resources/attributes/url-like"></require>
+	<require from="resources/elements/universal-video"></require>
+	<require from="resources/elements/tab"></require>
+	<require from="resources/elements/tabset"></require>
+	<require from="resources/elements/transcript"></require>
 	<div class="fill content" style="top: 80px">
 		<div class="fill margin20">
-			<require from="resources/attributes/url-like"></require>
-			<require from="resources/elements/universal-video"></require>
-			<require from="resources/elements/tab"></require>
-			<require from="resources/elements/tabset"></require>
-			<require from="resources/elements/transcript"></require>
 			<template with.bind="mediaItem">
 				<span style="float: right; font-size: x-small; text-align: right; top: -6px; position: relative">
 					<em>
@@ -103,7 +33,6 @@
 				<h3 style="margin-top: 0px">
 					<div class="truncate" style="max-width: calc(100% - 240px); height: 30px; position: absolute; top: -6px"
 						title="${title.english || title.original}">${title.english || title.original}</div>
-					<!-- <span style="font-size: small" if.bind="story.mediaItems">(${story.mediaItems.length})</span> -->
 				</h3>
 				<div class="fill border-" style="top: 40px">
 					<div class="fill -light-border" style="right: 50%; margin-right: 10px; overflow-y: scroll" if.bind="originalMultiMedia.videoURL">
@@ -132,7 +61,7 @@
 								<th style="width: 300px"><div>Time Added</div></th>
 							</template>
 							<template replace-part="body">
-								<tr repeat.for="mediaItem of neighbourMediaItems" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
+								<tr repeat.for="mediaItem of neighbourMediaItems" click.delegate="selectMediaItem(mediaItem)"
 									dblclick.delegate="viewMediaItem(mediaItem, $event)" data-itemid.bind="mediaItem.id"
 									class="${selectedMediaItem === mediaItem?'selected':''}" css="font-weight: ${mediaItem.id == currentMediaItem.id ? 'bold' : 'normal'}">
 									<td class="truncate" title.one-time="mediaItem.title">
@@ -150,7 +79,6 @@
 							</template>
 						</scroll-table>
 					</div>
-					<!-- <div class="fill border" style="left: 50%; margin-left: 10px; overflow-y: scroll"> -->
 					<div class="fill light-border" css="left: ${originalMultiMedia.videoURL?'50%':'0px'}"
 						style="margin-left-: 10px; overflow-y: scroll; padding: 10px"
 						-if.bind="teaser.english || teaser.original">
@@ -158,7 +86,6 @@
 							<strong>Teaser:</strong><br/>
 							<tabset content-style="margin-top: 10px">
 								<tab header="English" if.bind="teaser.english">
-									<!-- ${teaser.english} -->
 									<text-with-entities text.bind="teaser.english"
 										mentions.bind="namedEntities.mentionsIn.teaser"
 										entities.bind="namedEntities.entities"></text-with-entities>
@@ -189,7 +116,6 @@
 							<strong>Main Text:</strong><br/>
 							<tabset content-style="margin-top: 10px">
 								<tab header="English" if.bind="mainText.english">
-									<!-- ${mainText.english} -->
 									<text-with-entities text.bind="mainText.english"
 										mentions.bind="namedEntities.mentionsIn.mainText"
 										entities.bind="namedEntities.entities"></text-with-entities>
@@ -219,7 +145,6 @@
 									<text-with-entities text.bind="transcript.english.text"
 										mentions.bind="namedEntities.mentionsIn.transcript"
 										entities.bind="namedEntities.entities"></text-with-entities>
-									<!-- ${transcript.english.text} -->
 								</tab>
 								<tab header="Original (${detectedLangCode})" if.bind="transcript.original.text" class="${detectedLangCode}">
 									${transcript.original.text}

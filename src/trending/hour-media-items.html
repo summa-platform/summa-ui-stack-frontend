@@ -19,48 +19,38 @@
 			</span>
 			<span if.bind="params.pastHour && params.entity && params.queryID" class="truncate node">
 				&nbsp;&gt;
-					<!-- title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -->
-					<!-- <span title="Media Items of Query: ${query.name || 'All'} and Entity: ${params.entity} for past hour: -${pastHour}"> -->
-				<!-- <a route-href="route: hour-media-items; params.bind: {queryID: params.queryID, pastHour: params.pastHour, entity: params.entity}" -->
-				<!-- 	title.bind="title"> -->
-					<span title.bind="title">
-						<strong>
-							<span class="prefix">Media Items with Entity</span>
-							${params.entity}
-							<span class="prefix">of Query</span>
-							${query.name || 'All'}
-							<span class="prefix">from</span>
-							${pastHour}h
-							<span class="prefix">ago</span>
-						</strong>
-					</span>
-				<!-- </a> -->
+				<span title.bind="title">
+					<strong>
+						<span class="prefix">Media Items with Entity</span>
+						${params.entity}
+						<span class="prefix">of Query</span>
+						${query.name || 'All'}
+						<span class="prefix">from</span>
+						${pastHour}h
+						<span class="prefix">ago</span>
+					</strong>
+				</span>
 			</span>
 			<span if.bind="params.pastHour && feed" class="truncate node">
 				&nbsp;&gt;
-					<!-- title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -->
-					<!-- <span title="Media Items from Feed: ${feed.name} for past hour: -${pastHour}"> -->
-				<!-- <a route-href="route: feed-hour-media-items; params.bind: {feedID: params.feedID, pastHour: params.pastHour}" -->
-				<!-- 	title.bind="title"> -->
-					<span title.bind="title">
-						<strong>
-							<span class="prefix">Media Items from Feed</span>
-							${feed.name}
-							<span class="prefix">from</span>
-							${pastHour}h
-							<span class="prefix">ago</span>
-						</strong>
-					</span>
-				<!-- </a> -->
+				<span title.bind="title">
+					<strong>
+						<span class="prefix">Media Items from Feed</span>
+						${feed.name}
+						<span class="prefix">from</span>
+						${pastHour}h
+						<span class="prefix">ago</span>
+					</strong>
+				</span>
 			</span>
-			<!-- <span if.bind="params.storyID" class="truncate node"> -->
-			<!-- 	&nbsp;&gt; -->
-			<!-- 	([- <a route-href="route: story; params.bind: {queryID: params.queryID, storyID: params.storyID}" title="Story: ${story.title}"> -]) -->
-			<!-- 		<span title="Story: ${story.title}"> -->
-			<!-- 			<strong><span class="prefix">Story:</span> ${story.title}</strong> -->
-			<!-- 		</span> -->
-			<!-- 	([- </a> -]) -->
-			<!-- </span> -->
+			<!--
+			<span if.bind="params.storyID" class="truncate node">
+				&nbsp;&gt;
+				<span title="Story: ${story.title}">
+					<strong><span class="prefix">Story:</span> ${story.title}</strong>
+				</span>
+			</span>
+			-->
 			<span if.bind="selectedMediaItem && params.queryID" class="truncate node">
 				&nbsp;&gt;
 				<a route-href="route: hour-media-item; params.bind: {queryID: params.queryID, pastHour: params.pastHour, mediaItemID: selectedMediaItem.id, entity: params.entity}"
@@ -89,19 +79,20 @@
 				<span class="truncate" style="max-width: 90%; height: 30px" title="${title}">${title}</span>
 				<span style="font-size: small" if.bind="mediaItems">(${(selectedCount?selectedCount+' of ':'') + allMediaItems.length})</span>
 			</h3>
-			<!-- <span class="sub-title"><strong>Summary</strong></span> -->
-			<!-- <span style="float: right"> -->
-			<!-- 	<em> -->
-			<!-- 		Last Changed: ${story.timeChanged.fromNow()} -->
-			<!-- 		(${story.timeChanged.utc().format('YYYY-MM-DD HH:mm [UTC]')}) -->
-			<!-- 	</em> -->
-			<!-- </span> -->
-			<!-- <br /> -->
-			<!-- <div class="border" style="width: 100%; height: 70px; overflow-y: auto; padding: 4px"> -->
-			<!-- 	${story.summary} -->
-			<!-- </div> -->
+			<!--
+			<span class="sub-title"><strong>Summary</strong></span>
+			<span style="float: right">
+				<em>
+					Last Changed: ${story.timeChanged.fromNow()}
+					(${story.timeChanged.utc().format('YYYY-MM-DD HH:mm [UTC]')})
+				</em>
+			</span>
+			<br />
+			<div class="border" style="width: 100%; height: 70px; overflow-y: auto; padding: 4px">
+				${story.summary}
+			</div>
+			-->
 		</div>
-		<!-- <div -if.bind="allTopics" class="fill height margin20h" style="top: 56px; height: 120px"> -->
 		<div -if.bind="allTopics" class="fill height margin20h" style="top: 56px; height: calc(50% - 66px)">
 			<strong>Topics:</strong><br/>
 			<div class="fill border noselect" style="top: 20px; overflow-y: scroll">
@@ -109,20 +100,10 @@
 					click.delegate="toggleTopic(topic)"
 					css="opacity: ${0.4+topic.confidence*0.6 & oneTime}"
 					title="${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.0%' & oneTime} (${topic.count & oneTime})">
-					<!-- title="Score: ${topic[1] & oneTime}"> -->
 					${topic.label & oneTime}: ${topic.confidence | numberFormat:'0.[0]%' & oneTime} (${topic.count & oneTime})
 				</span>
-				<!-- <span repeat.for="topic of allTopics" class="topic-keyword" -->
-				<!-- 	click.delegate="selectTopic(topic)" -->
-				<!-- 	css="opacity: ${0.4+topic[1]*0.6 & oneTime}" -->
-				<!-- 	title="${topic[0] & oneTime}: ${topic[1] | numberFormat:'0.0%' & oneTime}"> -->
-				<!-- 	([- title="Score: ${topic[1] & oneTime}"> -]) -->
-				<!-- 	${topic[0] & oneTime}: ${topic[1] | numberFormat:'0.[0]%' & oneTime} (${topic[2] & oneTime}) -->
-				<!-- </span> -->
 			</div>
 		</div>
-		<!-- <div class="fill padding20h" style="top: 56px; bottom: 74px;"> -->
-		<!-- <div class="fill padding20h" style="top: 186px; bottom: 74px;"> -->
 		<div class="fill padding20h" style="top: 50%; bottom: 74px;">
 			<scroll-table class="margin20h">
 				<template replace-part="head">
@@ -132,7 +113,7 @@
 					<th style="width: 280px"><div>Time Added</div></th>
 				</template>
 				<template replace-part="body">
-					<tr repeat.for="mediaItem of mediaItems" click.delegate="selectMediaItem(mediaItem)" click.trigger=""
+					<tr repeat.for="mediaItem of mediaItems" click.delegate="selectMediaItem(mediaItem)"
 						dblclick.delegate="viewMediaItem(mediaItem, $event)"
 						class="${selectedMediaItem === mediaItem?'selected':''}">
 						<td>
@@ -145,7 +126,6 @@
 						</td>
 						<td class="truncate" title.one-time="mediaItem.title">${mediaItem.title}</td>
 						<td class="nowrap">${mediaItem.sentiment}</td>
-						<!-- <td>${mediaItem.timeAdded}</td> -->
 						<td>
 							${mediaItem.timeAdded.fromNow() & oneTime}
 							<span style="float: right; margin-right: 10px">

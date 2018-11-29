@@ -3,7 +3,6 @@ import {Router} from 'aurelia-router';
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 @inject(Router, EventAggregator)
-// @children({ name: "tabs", selector: "routed-tab" })
 // @children({ name: "tabs", selector: "*" })
 // @useShadowDOM
 // @containerless
@@ -11,7 +10,6 @@ export class Tabset {
 	// @bindable type = bootstrapOptions.tabsetType;
 	// @bindable vertical = bootstrapOptions.tabsetVertical;
 	@bindable({defaultBindingMode: bindingMode.twoWay}) active = 0;
-	// @children({ selector: "routed-tab" }) tabs;
 	@children('tab') tabs;
 	@bindable({defaultBindingMode: bindingMode.twoWay}) headerStyle = 0;
 	@bindable({defaultBindingMode: bindingMode.twoWay}) contentStyle = 0;

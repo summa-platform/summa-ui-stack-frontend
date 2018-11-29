@@ -16,7 +16,6 @@ export class Keywords {
 	}
 
 	itemsChanged(items) {
-		// log.debug('keyword items changed');
 		setTimeout(() => this.animate = true);
 	}
 

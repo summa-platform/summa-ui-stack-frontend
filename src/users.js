@@ -14,22 +14,15 @@ export class Users {
 		this.aurelia = aurelia;
 		this.store = store;
 		this.compositionService = compositionService;
-		// this.store.getFeedGroups().then(feedGroups => this.allFeedGroups = feedGroups);
-		// this.store.getNamedEntities().then(namedEntities => this.namedEntities = namedEntities);
 		this.store.getUsers().then(users => {
 			this.users = users;
-			this.currentUser = users.find(user => user.id === this.store.currentUser.id);
-			this.selectedUser = this.currentUser;
+			this.selectedUser = this.currentUser = users.find(user => user.id === this.store.currentUser.id);
 		});
 		this.store.getUserRoleTypes().then(roleTypes => 
 				this.roleTypes = roleTypes.reduce((acc, item) => { acc[item.internalval] = item.label; return acc; }, {}));
-		// this.store.getUser(this.store.currentUser.id).then(user => { this.currentUser = user; this.selectedUser = user; });
 	}
 
 	attached() {
-		// this.currentUser = this.store.currentUser;
-		// console.log(this.store.currentUser)
-		// this.selectedUser = this.store.currentUser;
 	}
 
 	async newUser() {
@@ -37,9 +30,7 @@ export class Users {
 		let user = await dialog.viewModel.new({});
 		destroy();
 		if(user) {
-			console.log('new user:', user);
-			user = await this.store.addUser(user);
-			console.log('created user:', user);
+			log.debug('Created user:', user);
 		}
 	}
 
@@ -50,12 +41,12 @@ export class Users {
 		user = await dialog.viewModel.edit(user);
 		destroy();
 		if(user) {
-			console.log('patch user:', user);
+			log.debug('Patch user:', user);
 			user = await this.store.saveUser(user);
 			if(this.currentUser.id === user.id) {
 				this.currentUser = user;	// just in case, needs to be tested
 			}
-			console.log('patched user:', user);
+			log.debug('patched user:', user);
 		}
 	}
 
@@ -98,9 +89,5 @@ export class Users {
 
 	selectUser(user) {
 		this.selectedUser = user;
-	}
-
-	logFunc(method, func, value) {
-		console.log('log func:', method, value);
 	}
 }

@@ -2,9 +2,6 @@
 	<require from="resources/attributes/enter-press"></require>
 	<div class="fill headbar height" style="height: 80px">
 		<span class="title">Feed Management</span>
-		<!-- <button class="btn btn-dark" style="float: right" click.trigger="newFeedOrFeedGroup()"> -->
-		<!-- 	Add a new feed/feed group &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-		<!-- </button> -->
 		<button class="btn btn-dark" style="float: right" click.trigger="createFeedGroup()">
 			Create New Feed Group &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 		</button>
@@ -15,17 +12,14 @@
 			<span class="sub-title">Select Feed Group</span>
 			</div>
 			<ul class="list fill border-top-light" style="top: 65px; overflow-y: scroll; margin-bottom: 0px">
-				<li class="${selectedFeedGroup?'':'selected'}" click.delegate="selectFeedGroup()" click.trigger=""><strong>All</strong></li>
+				<li class="${selectedFeedGroup?'':'selected'}" click.delegate="selectFeedGroup()"><strong>All</strong></li>
 				<li repeat.for="feedGroup of allFeedGroups"
 					hammer-swipe.call="editFeedGroup(feedGroup, $event.hammerEvent)"
-					click.delegate="selectFeedGroup(feedGroup)" dblclick.delegate="editFeedGroup(feedGroup)" click.trigger=""
+					click.delegate="selectFeedGroup(feedGroup)" dblclick.delegate="editFeedGroup(feedGroup)"
 					class="${selectedFeedGroup === feedGroup?'selected':''}">${feedGroup.name}</li>
 			</ul>
 		</div>
 		<div class="fill padding20" style="left: 300px">
-			<!-- <require from="feed-settings"></require> -->
-			<!-- <feed-settings></feed-settings> -->
-
 			<!-- feed group -->
 			<span class="sub-title" show.bind="!selectedFeedGroup">All Feeds</span>
 			<span class="sub-title" show.bind="selectedFeedGroup">
@@ -62,7 +56,6 @@
 			</div>
 			<!-- feeds -->
 			<require from="resources/elements/scroll-table.html"></require>
-			<!-- <require from="table.css"></require> -->
 
 			<div class="fill padding20h noselect" style="top: 116px; bottom: 74px">
 				<scroll-table class="margin20h">
@@ -72,9 +65,8 @@
 						<th style="width: 140px"><div>Status</div></th>
 					</template>
 					<template replace-part="body">
-							<!-- click.delegate="selectFeed(feed)" dblclick.delegate="!selectedFeedGroup && editFeed(feed)" click.trigger="" -->
 						<tr repeat.for="feed of feeds"
-							click.delegate="selectFeed(feed)" dblclick.delegate="editFeed(feed)" click.trigger=""
+							click.delegate="selectFeed(feed)" dblclick.delegate="editFeed(feed)"
 							hammer-swipe.call="!selectedFeedGroup && editFeed(feed)"
 							class="${selectedFeed==feed?'selected':''}">
 							<td class="truncate" title.one-time="feed.name">${feed.name}</td>

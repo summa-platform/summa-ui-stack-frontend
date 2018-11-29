@@ -195,8 +195,6 @@ export class TextWithEntities {
 		// 		this.colors.push(colors[key]);
 		// 	}
 		// }
-		// console.log(this.colors);
-		// console.log(colors);
 	}
 
 	textChanged() {
@@ -205,7 +203,7 @@ export class TextWithEntities {
 	}
 
 	attached() {
-		let text = typeof this.text === "string" ? [this.text] : this.text;
+		let text = typeof this.text === "string" ? [this.text] : this.text || [];
 		let sentences = [];
 		for(let sentence of text) {
 			let spans = entitiesToSpanItems(this.mentions, sentence, this.entities);

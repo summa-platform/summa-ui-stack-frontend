@@ -7,28 +7,30 @@
 		<div class="fill padding20" style="left-: 300px">
 			<!-- bookmark filter bar -->
 			<div style="margin-top: 0px">
-				<!-- <div class="form-inline" style="display: inline; width-: 400px;"> -->
-				<!-- 	<label> -->
-				<!-- 		Bookmark Type: -->
-				<!-- 		&nbsp; -->
-				<!-- 		<div class="input-group" style-="left: 4px; top: -2px"> -->
-				<!-- 			<select value.bind="bookmarkType" class="form-control" style="display: inline; width: calc(100% - 0px); top: -2px"> -->
-				<!-- 				<option model.bind="undefined">All</option> -->
-				<!-- 				<option repeat.for="bookmarkType of bookmarkTypes | keys" model.bind="bookmarkType"> -->
-				<!-- 					${bookmarkTypes[bookmarkType]}</option> -->
-				<!-- 			</select> -->
-				<!-- 		</div> -->
-				<!-- 	</label> -->
-				<!-- </div> -->
-				<!-- &nbsp; -->
-				<!-- &nbsp; -->
+				<!--
+				<div class="form-inline" style="display: inline; -width: 400px;">
+					<label>
+						Bookmark Type:
+						&nbsp;
+						<div class="input-group" -style="left: 4px; top: -2px">
+							<select value.bind="bookmarkType" class="form-control" style="display: inline; width: calc(100% - 0px); top: -2px">
+								<option model.bind="undefined">All</option>
+								<option repeat.for="bookmarkType of bookmarkTypes | keys" model.bind="bookmarkType">
+									${bookmarkTypes[bookmarkType]}</option>
+							</select>
+						</div>
+					</label>
+				</div>
+				&nbsp;
+				&nbsp;
+				-->
 				<strong>Filter:</strong>
 				<div class="form-inline" style="display: inline; width: 200px;">
 					<label>
 						<!-- Filter:&nbsp; -->
 						<div class="input-group" style="left: 4px; top: -2px; width: 200px">
 							<input type="text" class="form-control" placeholder="Filter text..." value.bind="filterTextInput"
-								style-="display: inline; width: calc(100% - 80px)" enter-press.call="filterText = filterTextInput" />
+								-style="display: inline; width: calc(100% - 80px)" enter-press.call="filterText = filterTextInput" />
 							<span class="input-group-btn">
 								<button class="btn btn-default" click.delegate="filterText = filterTextInput">Filter</button>
 							</span>
@@ -47,8 +49,8 @@
 						<th style="width: 300px"><div>Created</div></th>
 					</template>
 					<template replace-part="body">
-						<tr repeat.for="bookmark of bookmarks" style=""
-							click.delegate="selectBookmark(bookmark)" dblclick.delegate="viewBookmark(bookmark, $event)" click.trigger=""
+						<tr repeat.for="bookmark of bookmarks"
+							click.delegate="selectBookmark(bookmark)" dblclick.delegate="viewBookmark(bookmark, $event)"
 							hammer-swipe.call="!selectedBookmark && editBookmark(bookmark)"
 							class="${selectedBookmark==bookmark?'selected':''}">
 							<td class="truncate" title.one-time="bookmarkTypes[bookmark.type]">${bookmarkTypes[bookmark.type]}</td>
@@ -73,10 +75,12 @@
 				<button class="btn btn-dark" disabled.bind="!selectedBookmark" click.delegate="editBookmark(selectedBookmark)">
 					Edit Selected Bookmark &nbsp;<span class="glyphicon glyphicon-pencil pointer" aria-hidden="true"></span>
 				</button>
-				<!-- &nbsp; -->
-				<!-- <button class="btn btn-dark" click.delegate="createNewBookmark()"> -->
-				<!-- 	Create New Bookmark &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
-				<!-- </button> -->
+				<!--
+				&nbsp;
+				<button class="btn btn-dark" click.delegate="createNewBookmark()">
+					Create New Bookmark &nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+				</button>
+				-->
 			</div>
 		</div>
 	</div>

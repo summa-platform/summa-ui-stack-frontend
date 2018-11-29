@@ -18,7 +18,6 @@ export class Bookmarks {
 		this.compositionService = compositionService;
 		this.services = services;
 		this.store.getBookmarks().then(bookmarks => { this.allBookmarks = bookmarks; this.filterBookmarks(); });
-		// this.bookmarkTypes = this.store.bookmarkTypes;
 		this.store.getBookmarkTypes().then(bookmarkTypes => {
 			this.bookmarkTypes = bookmarkTypes;
 		});
@@ -79,7 +78,6 @@ export class Bookmarks {
 
 	async removeBookmark(bookmark) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Bookmark`,
 			body: `Are you sure you want to delete bookmark created ${bookmark.timeAdded.utc().format('YYYY-MM-DD HH:mm [UTC]')} ?`,
@@ -101,7 +99,6 @@ export class Bookmarks {
 		bookmark = Object.assign({}, bookmark);
 		log.debug('Edit bookmark:', bookmark);
 		let [dialog, destroy] = await this.compositionService.create('dialogs/bookmark-settings-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeBookmark(params.$model); };
 		dialog.viewModel.remove = (params) => { this.removeBookmark(params.$model); };
 		dialog.viewModel.model = bookmark;
 		bookmark = await dialog.viewModel.edit(bookmark);
@@ -136,7 +133,7 @@ export class Bookmarks {
 			}
 
 			if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-				// use any modifier as and excuse to open in separate tab/window
+				// use any modifier as an excuse to open in separate tab/window
 				// const url = this.router.generate(route, params);
 				window.open(url, '_blank');
 			} else {

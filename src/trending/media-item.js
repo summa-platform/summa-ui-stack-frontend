@@ -24,6 +24,8 @@ export class MediaItem {
 		this.router = router;
 		this.services = services;
 		this.compositionService = compositionService;
+		this.janis = undefined;
+		this.janis2 = true;
 	}
 
 	@computedFrom('mediaItem')
@@ -38,7 +40,6 @@ export class MediaItem {
 		this.params = params;
 		this.routeConfig = routeConfig;
 		// this.navigationInstruction = navigationInstruction;
-		console.log('MEDIA ITEM ACTIVATE')
 
 		// fast
 		/*
@@ -93,7 +94,7 @@ export class MediaItem {
 				// mediaItem.topics = mediaItem.topics.slice(0, 3).join(', ');
 			}
 			this.neighbourMediaItems = mediaItems;
-			setTimeout(() => this.scrollToCurrent(), 100);
+			setTimeout(() => this.scrollToCurrent(), 500);
 		});
 	}
 
@@ -117,7 +118,6 @@ export class MediaItem {
 		let query = await this.services.newQuery();
 		if(query) {
 			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
 		}
 	}
 
@@ -126,7 +126,7 @@ export class MediaItem {
 		const params = { mediaItemID: id };
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {
@@ -162,7 +162,7 @@ export class MediaItem {
 			try {
 				await this.store.addBookmark(bookmark);
 			} catch(e) {
-				console.error('error storing bookmark');
+				console.error('Error storing bookmark');
 				console.error(e);
 			}
 		} else {

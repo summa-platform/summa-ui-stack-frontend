@@ -18,7 +18,6 @@ export class UserSettings {
 		this.formRenderer = formRenderer;
 		this.validationController.validateTrigger = validateTrigger.changeOrBlur;
 		this.store.getUserRoleTypes().then(roleTypes => this.roleTypes = roleTypes);
-		// this.store.getUserRoleTypes().then(roleTypes => console.log(roleTypes));
 		
 		this.validate = () => this.validationController.validate();
 
@@ -64,10 +63,5 @@ export class UserSettings {
 
 	detached() {
 		this.validationController.removeRenderer(this.formRenderer);
-	}
-
-	log() {
-		console.log(this.validationController.errors);
-		console.log(this);
 	}
 }

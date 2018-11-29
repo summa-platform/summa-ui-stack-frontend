@@ -20,7 +20,6 @@ export class Feeds {
 		this.compositionService = compositionService;
 		this.store.getFeedGroups(true).then(feedGroups => this.allFeedGroups = feedGroups);
 		this.store.getFeeds().then(feeds => { this.allFeeds = feeds; this.filterFeeds(); });
-		// this.feedTypes = this.store.feedTypes;
 		this.store.getFeedTypes().then(feedTypes => {
 			this.feedTypes = feedTypes;
 			this.feedTypeTitle = this.feedTypes.reduce((acc, feed) => { acc[feed.internalval] = feed.label; return acc; }, {});
@@ -61,14 +60,13 @@ export class Feeds {
 	}
 
 	selectFeed(feed) {
-		log.debug('select feed:', feed);
+		log.debug('Select feed:', feed);
 		this.selectedFeed = feed;
 	}
 
 	// deprecated
 	async newFeedOrFeedGroup() {
 		let result = await this.newFeedOrFeedGroupModal();
-		// log.debug(result.type);
 		if(result) {
 			if(result.type === 'feed') {
 				let feed = await this.newFeedModal({});	// TODO: pass new/empty feed object
@@ -100,9 +98,7 @@ export class Feeds {
 			if(feedGroup) {
 				log.debug('New Feed Group:', feedGroup);
 				// feedGroup.feeds = feedGroup.feeds.map(feed => feed._id);
-				console.log('before:', this.allFeedGroups);
 				await this.store.addFeedGroup(feedGroup);
-				console.log('after:', this.allFeedGroups);
 			} else {
 				log.info('Add feed group dialog cancelled');
 			}
@@ -151,7 +147,6 @@ export class Feeds {
 
 	async removeFeedGroup(feedGroup) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Feed Group`,
 			body: `Are you sure you want to delete feed group ${feedGroup.name} ?`,
@@ -162,8 +157,6 @@ export class Feeds {
 			try {
 				log.debug('Delete feed group:', feedGroup);
 				let result = await this.store.removeFeedGroup(feedGroup.id);
-				// console.log(result)
-				// console.log(this.allFeedGroups)
 				this.selectedFeedGroup = undefined;	// select All Feeds
 			} catch(e) {
 				console.error(e);
@@ -199,7 +192,6 @@ export class Feeds {
 
 	async removeFeed(feed) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Feed`,
 			body: `Are you sure you want to delete feed ${feed.name} ?`,
@@ -208,7 +200,7 @@ export class Feeds {
 		});
 		if(result) {
 			try {
-				log.debug('delete feed:', feed);
+				log.debug('Delete feed:', feed);
 				let result = await this.store.removeFeed(feed.id);
 				this.selectedFeed = undefined;
 			} catch(e) {

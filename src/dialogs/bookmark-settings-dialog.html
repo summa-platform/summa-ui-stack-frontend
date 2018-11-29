@@ -1,7 +1,7 @@
 <template bindable="model, new, edit, remove">
 	<require from="setting-panels/bookmark-settings"></require>
 	<require from="resources/elements/modal"></require>
-	<!-- New Query Dialog -->
+	<!-- New Bookmark Dialog -->
 	<modal open.one-way-out="new" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="{}"
 		-title="Create a new bookmark">
 		<template replace-part="header">
@@ -16,7 +16,7 @@
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 		</template>
 	</modal>
-	<!-- Edit Query Dialog -->
+	<!-- Edit Bookmark Dialog -->
 	<modal open.one-way-out="edit" options.bind="{ keyboard: true, backdrop: 'static' }" -model.bind="model"
 		-title="Edit bookmark">
 		<template replace-part="header">

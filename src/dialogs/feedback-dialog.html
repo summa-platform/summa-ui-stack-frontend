@@ -1,13 +1,12 @@
 <template bindable="open, edit, remove">
 	<require from="setting-panels/feedback-settings"></require>
 	<require from="resources/elements/modal"></require>
-	<!-- New Feed Group Dialog -->
+	<!-- New Feedback Dialog -->
 	<modal open.bind="open" options.bind="{ keyboard: true, backdrop: 'static' }" title="Provide some feedback" -model.bind="model">
 		<template replace-part="body">
 			<feedback-settings feedback.bind="model" validate.bind="$parent.validate"></feedback-settings>
 		</template>
 		<template replace-part="footer">
-				<!-- click.delegate="$parent.resolve($this)" -->
 			<button type="button" class="btn btn-success" data-dismiss-="modal"
 				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Send</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right">Cancel</button>
@@ -18,7 +17,6 @@
 			<feedback-settings feedback.bind="model" edit.bind="true" validate.bind="$parent.validate"></feedback-settings>
 		</template>
 		<template replace-part="footer">
-				<!-- click.delegate="$parent.resolve($this)" -->
 			<button type="button" class="btn btn-success" data-dismiss-="modal"
 				click.delegate="check($this, $parent.validate, $parent.resolve)" style="float: left">Save</button>
 			<button type="button" class="btn btn-danger" data-dismiss="modal" click.delegate="remove({$model:$this})">Delete</button>

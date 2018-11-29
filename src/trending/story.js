@@ -20,7 +20,6 @@ export class Story {
 	async activate(params, routeConfig, navigationInstruction) {
 		this.params = params;
 		this.routeConfig = routeConfig;
-		// this.navigationInstruction = navigationInstruction;
 
 		// fast
 		if(this.services.query) {
@@ -40,16 +39,12 @@ export class Story {
 
 		this.storyPromise.then(() => {
 			this.allMediaItems = this.mediaItems = this.story.mediaItems;
-			// console.log(this.mediaItems)
-			// console.log(this)
 			// total confidence = (confidence1 + confidence2 + ...) / N
 			let allTopics = {};
 			for(const mediaItem of this.mediaItems) {
 				// topics
 				let detectedTopics = {};
 				for(const [topic, confidence] of mediaItem.detectedTopics) {
-					// console.log(topic, confidence);
-					// detectedTopics[topic] = confidence;
 					detectedTopics[topic] = true;
 					if(!allTopics[topic]) {
 						allTopics[topic] = { count: 1, confidence, label: topic };
@@ -72,17 +67,6 @@ export class Story {
 			// this.allTopics = allTopicsArray.sort((a, b) => b.confidence - a.confidence);
 			this.allTopics = allTopicsArray.sort((a, b) => (b.count - a.count) || (b.confidence - a.confidence));	// first by count, then by confidence
 		});
-
-		// moved from to attached() because at this point the current route is not yet set up properly
-		// if(this.params.mediaItemID) {
-		// 	let mediaItemID = this.params.mediaItemID;
-		// 	this.storyPromise.then(query => {
-		// 		let mediaItem = story.mediaItems.find(mediaItem => mediaItem.id === mediaItemID);
-		// 		if(mediaItem) {
-		// 			this.selectMediaItem(mediaItem);
-		// 		}
-		// 	});
-		// }
 	}
 
 	attached() {
@@ -101,7 +85,6 @@ export class Story {
 
 	toggleTopic(topic) {
 		topic.selected = !topic.selected;
-		// TODO: filter by topics
 		this.filterMediaItems();
 	}
 
@@ -145,7 +128,7 @@ export class Story {
 		};
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {
@@ -157,7 +140,6 @@ export class Story {
 		let query = await this.services.newQuery();
 		if(query) {
 			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
 		}
 	}
 }

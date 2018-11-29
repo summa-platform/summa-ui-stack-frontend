@@ -4,13 +4,11 @@ import Hls from 'hls.js';
 
 export class UniversalVideo {
 	@bindable src;
-	// @observable time;
 	@bindable({defaultBindingMode: bindingMode.twoWay}) time;
 	@bindable({defaultBindingMode: bindingMode.oneWayOut}) video;
 	@bindable loaded;
 
 	attached() {
-		// log.debug('video:', this.video);
 		this.srcChanged();
 	}
 
@@ -27,7 +25,7 @@ export class UniversalVideo {
 	loadVideo() {
 		let isHLS = this.src && this.src.endsWith('.m3u8');
 		log.debug('HLS:', isHLS);
-		// log.debug('video:', this.video);
+		log.debug('Video:', this.video);
 		if(isHLS && Hls.isSupported()) {
 			var hls = new Hls();
 			hls.loadSource(this.src);

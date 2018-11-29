@@ -5,18 +5,15 @@
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 		</button>
 		<span class="title">Stories</span><br />
-		<div style="-display: inline" class="path-bar default-cursor nowrap">
+		<div class="path-bar default-cursor nowrap">
 			<span class="truncate node">
-				<!-- <a route-href="route: trending" class="truncate node">Queries</a> -->
 				<a route-href="route: query-trending-id; params.bind: {queryID: params.queryID}" class="truncate node">Queries</a>
 			</span>
 			<span if.bind="params.queryID" class="truncate node">
 				&nbsp;&gt;
-				<!-- <a route-href="route: stories; params.bind: {queryID: params.queryID}" title="Stories of Query: ${query.name}"> -->
-						<span title="Stories of Query: ${query.name}">
-							<strong><span class="prefix">Stories of Query:</span> ${query.name}</strong>
-						</span>
-				<!-- </a> -->
+				<span title="Stories of Query: ${query.name}">
+					<strong><span class="prefix">Stories of Query:</span> ${query.name}</strong>
+				</span>
 			</span>
 			<span if.bind="selectedStory" class="truncate node">
 				&nbsp;&gt;
@@ -41,7 +38,7 @@
 				<label>
 					Sort by:
 					&nbsp;
-					<div class="input-group" style-="left: 4px; top: -2px">
+					<div class="input-group" -style="left: 4px; top: -2px">
 						<select value.bind="sortBy" class="form-control" style="display: inline; width: calc(100% - 0px)">
 							<option model.bind="'most'">Most Instances</option>
 							<option model.bind="'least'">Least Instances</option>
@@ -92,7 +89,7 @@
 			&nbsp;
 			&nbsp;
 			<div class="form-inline" style="display: inline; width-: 400px;">
-				<div class="input-group" style-="left: 4px; top: -2px">
+				<div class="input-group" -style="left: 4px; top: -2px">
 					<select value.bind="filterSettings.latest" class="form-control" style="display: inline; width: calc(100% - 0px)">
 						<option model.bind="undefined">Anytime</option>
 						<option model.bind="30">Last 30 minutes</option>
@@ -106,47 +103,27 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="fill padding20h" style="top: 60px; bottom: 74px;"> -->
 		<div class="fill padding20h" style="top: 110px; bottom: 74px;">
 			<scroll-table class="margin20h">
 				<template replace-part="head">
-					<!-- <th style="width: 80px"><div>Instances</div></th> -->
 					<th style="width: 200px"><div>Instances</div></th>
 					<th><div>Story</div></th>
 					<th style="width: 300px"><div>Last Appearance</div></th>
 				</template>
 				<template replace-part="body">
-					<!-- <tr repeat.for="story of query.stories" click.delegate="selectStory(story)" -->
-					<tr repeat.for="story of stories" click.delegate="selectStory(story)" click.trigger=""
+					<tr repeat.for="story of stories" click.delegate="selectStory(story)"
 						dblclick.delegate="viewStory(story, $event)"
 						class="${selectedStory === story?'selected':''}">
 						<td>
 							${story.itemCount}
 							<span style="float: right">
-							<!-- &nbsp; -->
-							<!-- &nbsp; -->
 								&nbsp;
-								<!-- <span style="font-variant-caps: all-small-caps" repeat.for="lang of Object.keys(story.mediaItemLangs)">${lang}</span> -->
-								<!-- <span>${Object.keys(story.mediaItemLangs)}</span> -->
-								<!-- <span>${story.mediaItemLangs|json}</span> -->
-								<!-- <span style="font-variant-caps: all-small-caps" repeat.for="lang of story.mediaItemLangs | keys">${lang}</span> -->
 								<span style="font-variant-caps: all-small-caps">${story.mediaItemLangs | keys | join:' '}</span>
 								<span class="glyphicon glyphicon-facetime-video" title="Has video" aria-hidden="true"
 									if.one-time="story.mediaItemTypes['Video'] || story.mediaItemTypes['livefeed-logical-chunk']"></span>
 							</span>
-
-							<!-- (<span repeat.for="lang of story.languages"> -->
-							<!-- 	<span style="font-variant-caps: all-small-caps">${lang.code}</span> -->
-							<!-- 	${lang.count} -->
-							<!-- </span> -->
-							<!-- <span repeat.for="typ of story.types"> -->
-							<!-- 	<span class="glyphicon glyphicon-facetime-video" title="Has video" aria-hidden="true" -->
-							<!-- 		if.bind="typ.name == 'Video'"></span> -->
-							<!-- 	${type.count} -->
-							<!-- </span>) -->
 						</td>
 						<td class="truncate" title.one-time="story.title">${story.title & oneTime}</td>
-						<!-- <td>${story.latestItemTime}</td> -->
 						<td class="nowrap">
 							${story.latestItemTime.fromNow()}
 							<span style="float: right; margin-right: 10px">

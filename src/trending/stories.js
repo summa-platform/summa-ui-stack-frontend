@@ -35,50 +35,10 @@ export class Stories {
 			this.query = this.services.query;
 		}
 
-		// this.query = await this.store.getQueryStories(this.params.queryID);
-		// better non-blocking approach:
 		this.queryPromise = this.store.getQueryStories(this.params.queryID).then(query => { this.query = query; this.services.query = query; });
 		this.queryPromise.then(() => {
-			// this.stories = this.query.stories;
 			this.filter();
-			return;
-			for(const story of this.query.stories) {
-				// media types
-				const types = [];
-				const mediaItemTypes = story.mediaItemTypes;
-				for(const typ of Object.keys(mediaItemTypes)) {
-					if(typ !== 'unknown') {
-						types.push({name: typ, count: mediaItemTypes[typ]});	// TODO: append icon name ?
-					}
-				}
-				story.types = types;
-				// languages
-				const languages = [];
-				const mediaItemLangs = story.mediaItemLangs;
-				for(const lang of Object.keys(mediaItemLangs)) {
-					if(lang !== 'unknown') {
-						languages.push({code: lang, count: mediaItemLangs[lang]});
-					}
-				}
-				story.languages = languages;
-			}
 		});
-
-		// To test if await here blocks loading of page
-		// await new Promise((resolve, reject) => {
-		// 	setTimeout(() => resolve(), 5000);
-		// });
-		
-		// moved from to attached() because at this point the current route is not yet set up properly
-		// if(this.params.storyID) {
-		// 	let storyID = this.params.storyID;
-		// 	this.queryPromise.then(query => {
-		// 		let story = query.stories.find(story => story.id === storyID);
-		// 		if(story) {
-		// 			this.selectStory(story);
-		// 		}
-		// 	});
-		// }
 	}
 
 	attached() {
@@ -94,11 +54,9 @@ export class Stories {
 		// 	});
 		// }
 
-
 		let cb = () => this.filterSettingsChanged();
 		this.observeObjectProperties(this.filterSettings, cb);
 		this.observeObjectProperties(this.filterSettings.languages, cb);
-		// this.subscription = this.bindingEngine.propertyObserver(this.filterSettings, 'article').subscribe(this.filterSettingsChanged.bind(this));
 	}
 
 	observeObjectProperties(obj, callback) {
@@ -131,7 +89,7 @@ export class Stories {
 		};
 
 		if(this.services.altTouch || event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
-			// use any modifier as and excuse to open in separate tab/window
+			// use any modifier as an excuse to open in separate tab/window
 			const url = this.router.generate(route, params);
 			window.open(url, '_blank');
 		} else {
@@ -143,7 +101,6 @@ export class Stories {
 		let query = await this.services.newQuery();
 		if(query) {
 			this.router.navigateToRoute('query-trending-id', { queryID: query.id }, { trigger: true });	// to query trending view
-			// this.router.navigateToRoute('stories', { queryID: query.id }, { trigger: true }); // to stories view
 		}
 	}
 
@@ -156,7 +113,6 @@ export class Stories {
 	}
 
 	async filter() {
-		console.log('filtering');
 		let settings = this.filterSettings;
 		let stories = this.stories;
 		let allStories = this.query.stories;
@@ -190,7 +146,6 @@ export class Stories {
 		});
 		// Array.prototype.splice.apply(stories, [0, stories.length].concat(filtered));
 		stories = filtered;
-		// console.log(stories);
 		let sortFn;
 		if(this.sortBy == 'most') {
 			sortFn = (a, b) => b.itemCount - a.itemCount;

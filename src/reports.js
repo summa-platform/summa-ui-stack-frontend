@@ -6,6 +6,7 @@ import {Store} from 'store';
 import {CompositionService} from 'composition-service';
 import moment from 'moment';
 
+
 @inject(Router, Services, Store, CompositionService)
 export class Feedback {
 	allFeedback = [];
@@ -64,7 +65,6 @@ export class Feedback {
 
 	async removeFeedback(feedback) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Feedback Confirmation`,
 			body: `Are you sure you want to delete the feedback reported ${feedback.timeAdded.fromNow()} by ${feedback.user.name} ?`,
@@ -74,7 +74,7 @@ export class Feedback {
 		if(result) {
 			log.debug('Will remove feedback:', feedback);
 			result = await this.store.removeFeedbackItem(feedback.id);
-			log.debug('remove feedback result:', result);
+			log.debug('Remove feedback result:', result);
 			this.select();
 		}
 	}
@@ -87,9 +87,9 @@ export class Feedback {
 		feedback = await dialog.viewModel.edit(feedback);
 		destroy();
 		if(feedback) {
-			console.log('patch feedback:', feedback);
+			log.debug('Patch feedback:', feedback);
 			feedback = await this.store.saveFeedbackItem(feedback);
-			console.log('patched feedback:', feedback);
+			log.debug('Patched feedback:', feedback);
 			if(typeof feedback.user === 'string') {
 				feedback.user = this.store.users.find(user => user.id === feedback.user);
 			}
@@ -98,9 +98,6 @@ export class Feedback {
 	}
 
 	getUser(id) {
-		// if(!this.store.users || this.store.users.length === 0) {
-		// 	await this.store.getUsers();
-		// }
 		return this.store.users.find(user => user.id === id).name;
 	}
 
@@ -121,7 +118,6 @@ export class Feedback {
 
 	async removeResponse(response) {
 		let [dialog, destroy] = await this.compositionService.create('dialogs/confirmation-dialog');
-		// dialog.viewModel.remove = (params) => { this.removeUser(params.$model); };
 		let result = await dialog.viewModel.open({
 			title: `Delete Feedback Response Confirmation`,
 			body: `Are you sure you want to delete response created/edited ${response.time.fromNow()} by ${this.getUser(response.user)} ?`,

@@ -1,20 +1,22 @@
-/* histogram { */
-/*   font: 10px sans-serif; */
-/* } */
-/*  */
-/* histogram .bar rect { */
-/*   shape-rendering: crispEdges; */
-/* } */
-/*  */
-/* histogram .bar text { */
-/*   fill: #999999; */
-/* } */
-/*  */
-/* histogram .axis path, .axis line { */
-/*   fill: none; */
-/*   stroke: #000; */
-/*   shape-rendering: crispEdges; */
-/* } */
+/*
+histogram {
+  font: 10px sans-serif;
+}
+
+histogram .bar rect {
+  shape-rendering: crispEdges;
+}
+
+histogram .bar text {
+  fill: #999999;
+}
+
+histogram .axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+*/
 
 histogram .bar rect {
   /* fill: steelblue; */

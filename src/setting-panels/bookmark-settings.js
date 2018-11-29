@@ -42,8 +42,4 @@ export class BookmarkSettings {
 	detached() {
 		// this.validationController.removeRenderer(this.formRenderer);
 	}
-
-	log() {
-		log.debug('Bookmark:', this.bookmark);
-	}
 }
